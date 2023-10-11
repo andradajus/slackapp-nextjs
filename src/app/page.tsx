@@ -26,7 +26,9 @@ export default function Home() {
 
   return (
     <>
-    None
+    <div className="bg-slate-200">
+    <span className="bg-red-200 w-full">None</span>
+    </div>
     </>
     // <Router>
     //   <header className="headerContainer"></header>
