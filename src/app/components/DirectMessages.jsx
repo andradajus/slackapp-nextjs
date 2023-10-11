@@ -8,6 +8,8 @@ const DirectMessages = (loggedInUser, savedUsers) => {
   <div>
     <h1>Direct Message dito</h1>
   </div>;
+
+  //Initial branch commit
 };
 
 export default DirectMessages;
