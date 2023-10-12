@@ -1,27 +1,31 @@
 "use client";
 import React, { useState } from "react";
 import Link from "next/link";
+import LoginPage from "../login/page";
 
 const SignUpPage = () => {
-  // const [surname, setSurname] = useState("");
-  // const [firstName, setFirstName] = useState("");
-  // const [middleName, setMiddleName] = useState("");
-  // const [username, setUsername] = useState("");
+  const [surname, setSurname] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [middleName, setMiddleName] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
-  // const onSurnameChange = (e) => setSurname(e.target.value);
-  // const onFirstNameChange = (e) => setFirstName(e.target.value);
-  // const onMiddleNameChange = (e) => setMiddleName(e.target.value);
-  // const onUsernameChange = (e) => setUsername(e.target.value);
-  const onPasswordChange = (e) => setPassword(e.target.value);
-  const onConfirmPasswordChange = (e) => setConfirmPassword(e.target.value);
+
+  // @ts-ignore
+  const onSurnameChange = (e) => setSurname(e.target.value); // @ts-ignore
+  const onFirstNameChange = (e) => setFirstName(e.target.value); // @ts-ignore
+  const onMiddleNameChange = (e) => setMiddleName(e.target.value); // @ts-ignore
+  const onUsernameChange = (e) => setUsername(e.target.value); // @ts-ignore
+  const onPasswordChange = (e) => setPassword(e.target.value); // @ts-ignore
+  const onConfirmPasswordChange = (e) => setConfirmPassword(e.target.value); // @ts-ignore
   const onEmailChange = (e) => setEmail(e.target.value);
   const clearError = () => {
     setError("");
   };
 
+  // @ts-ignore
   const handleRegisterButton = async (e) => {
     e.preventDefault();
     if (
@@ -40,7 +44,11 @@ const SignUpPage = () => {
     }
 
     const requestBody = {
+      surname,
+      firstName,
+      middleName,
       email,
+      username,
       password,
       password_confirmation: confirmPassword,
     };
@@ -66,91 +74,73 @@ const SignUpPage = () => {
       console.error("Error:", error);
       setError("An error occurred. Please try again later.");
     }
-    // const newUser = {
-    //   surname,
-    //   firstName,
-    //   middleName,
-    //   username,
-    //   password,
-    //   email,
-    // };
-    // let savedUsers = JSON.parse(localStorage.getItem("savedUsers"));
-    // if (!savedUsers) {
-    //   savedUsers = [];
-    // }
-    // if (savedUsers.some((user) => user.username === newUser.username)) {
-    //   setError(
-    //     "Username is already taken. Please choose a different username."
-    //   );
-    //   return;
-    // }
-    // const updatedUsers = [...savedUsers, newUser];
-    // localStorage.setItem("savedUsers", JSON.stringify(updatedUsers));
-    // setError("");
-    // setTimeout(() => {
-    //   alert("Account succesfully created.");
-    //   navigate("/login");
-    // }, 1000);
   };
+
+  //   const updatedUsers = [...savedUsers, newUser];
+  //   localStorage.setItem("savedUsers", JSON.stringify(updatedUsers));
+  //   setError("");
+  //   setTimeout(() => {
+  //     alert("Account succesfully created.");
+  //     <LoginPage />
+  //   }, 1000);
+  // };
 
   return (
     <div>
-      <h2 className="accountRegistration">Account Registration</h2>
-      <h5 className="completeRegBelow">
-        Please complete the registration form below:
-      </h5>
-      <form className="signUpContainer">
-        {/* <input
-            key="surname"
-            label="Surname"
-            type="text"
-            id="surname"
-            value={surname}
-            onChange={(e) => {
-              setSurname(e.target.value);
-              clearError();
-            }}
-          /> 
+      <h2>Account Registration</h2>
+      <h5>Please complete the registration form below:</h5>
+      <form>
+        <label htmlFor="Surname">Surname</label>
+        <input
+          key="surname"
+          type="text"
+          id="surname"
+          value={surname}
+          onChange={(e) => {
+            setSurname(e.target.value);
+            clearError();
+          }}
+        />
 
-          <input
-            key="firstName"
-            label="First Name"
-            type="text"
-            id="firstName"
-            value={firstName}
-            onChange={(e) => {
-              setFirstName(e.target.value);
-              clearError();
-            }}
-          />
-       
-          <input
-            key="middleName"
-            label="Middle Name"
-            type="text"
-            id="middleName"
-            value={middleName}
-            onChange={(e) => {
-              setMiddleName(e.target.value);
-              clearError();
-            }}
-          />
-       
-          <input
-            key="username"
-            label="Username"
-            type="text"
-            id="username"
-            value={username}
-            onChange={(e) => {
-              setUsername(e.target.value);
-              clearError();
-            }}
-          />  */}
+        <label htmlFor="First Name">First Name</label>
+        <input
+          key="firstName"
+          type="text"
+          id="firstName"
+          value={firstName}
+          onChange={(e) => {
+            setFirstName(e.target.value);
+            clearError();
+          }}
+        />
 
+        <label htmlFor="Middle Name">Middle Name</label>
+        <input
+          key="middleName"
+          type="text"
+          id="middleName"
+          value={middleName}
+          onChange={(e) => {
+            setMiddleName(e.target.value);
+            clearError();
+          }}
+        />
+
+        <label htmlFor="Username">Username</label>
+        <input
+          key="username"
+          type="text"
+          id="username"
+          value={username}
+          onChange={(e) => {
+            setUsername(e.target.value);
+            clearError();
+          }}
+        />
+
+        <label htmlFor="Password">Password</label>
         <input
           key="password"
-          label="Password"
           type="password"
           id="password"
           value={password}
@@ -160,9 +150,9 @@ const SignUpPage = () => {
           }}
         />
 
+        <label htmlFor="Confirm Password">Confirm Password</label>
         <input
           key="confirmPassword"
-          label="Confirm Password"
           type="password"
           id="confirmPassword"
           value={confirmPassword}
@@ -172,9 +162,9 @@ const SignUpPage = () => {
           }}
         />
 
+        <label htmlFor="Email Address">Email Address</label>
         <input
           key="email"
-          label="Email Address"
           type="email"
           id="email"
           value={email}
