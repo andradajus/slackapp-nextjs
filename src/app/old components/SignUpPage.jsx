@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import Input from "./Input";
+import Input from "../Input";
+import Link from "next/link";
 
 const SignUpPage = () => {
   const [surname, setSurname] = useState("");
@@ -198,7 +198,7 @@ const SignUpPage = () => {
       </form>
 
       <h6 className="haveAccount">
-        Already have an account? <br /> <Link to="/login">Login</Link>!
+        Already have an account? <br /> <Link href="/login">Login</Link>!
       </h6>
     </div>
   );

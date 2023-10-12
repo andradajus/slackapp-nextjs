@@ -1,4 +1,5 @@
-import Image from 'next/image'
+import Image from "next/image";
+import WelcomePage from "./old components/WelcomePage";
 
 export default function Home() {
   // const [loggedInUser, setLoggedInUser] = useState(
@@ -26,9 +27,7 @@ export default function Home() {
 
   return (
     <>
-    <div className="bg-slate-200">
-    <span className="bg-red-200 w-full">None</span>
-    </div>
+      <WelcomePage />
     </>
     // <Router>
     //   <header className="headerContainer"></header>

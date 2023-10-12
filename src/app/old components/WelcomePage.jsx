@@ -1,5 +1,4 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 
 const WelcomePage = () => {
   return (
@@ -9,10 +8,10 @@ const WelcomePage = () => {
       <nav>
         <ul>
           <li className="welcomeOptions">
-            <Link to="/login">Log me in</Link>
+            <Link href="/login">Log me in</Link>
           </li>
           <li className="welcomeOptions">
-            <Link to="/signup">I wanna register</Link>
+            <Link href="/signup">I wanna register</Link>
           </li>
         </ul>
       </nav>

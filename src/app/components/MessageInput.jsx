@@ -1,6 +1,7 @@
+"use client";
 import { useState } from "react";
 
-const MessageInput = ({ loggedInUser }) => {
+const MessageInput = ({}) => {
   const [message, setMessage] = useState("");
 
   const handleSendMessage = () => {
