@@ -36,16 +36,15 @@ const MessageInput = ({}) => {
     <>
       <div className="bg-amber-200">
         <div className="flex gap-2 bg-red-100">
-          <span className="cursor-pointer" type="button" onClick={handleBold}>
+          <span className="cursor-pointer" onClick={handleBold}>
             Bold
           </span>
-          <span className="cursor-pointer" type="button" onClick={handleItalic}>
+          <span className="cursor-pointer"  onClick={handleItalic}>
             Italic
           </span>
 
           <span
             className="cursor-pointer"
-            type="button"
             onClick={handleUnderline}
           >
             Underline
@@ -53,7 +52,6 @@ const MessageInput = ({}) => {
 
           <span
             className="cursor-pointer"
-            type="button"
             onClick={handleStrikethrough}
           >
             Strikethrough
@@ -61,22 +59,18 @@ const MessageInput = ({}) => {
 
           <span
             className="cursor-pointer"
-            type="button"
             onClick={handleOrderedList}
           >
             OL
           </span>
           <span
-            className="cursor-pointer"
-            type="button"
             onClick={handleUnorderedList}
           >
             UL
           </span>
         </div>
-        <input
+        <textarea
           className="w-full pb-20"
-          type="text"
           value={message}
           onChange={(e) => setMessage(e.target.value)}
         />
@@ -84,7 +78,6 @@ const MessageInput = ({}) => {
           <span>Emojis</span>
           <span
             className="cursor-pointer"
-            type="button"
             onClick={handleSendMessage}
           >
             Send Message
