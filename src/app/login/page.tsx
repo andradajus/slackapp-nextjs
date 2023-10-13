@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 const LoginPage = ({}) => {
   const router = useRouter();
@@ -85,9 +86,25 @@ const LoginPage = ({}) => {
   // }
 
   return (
-    <div>
-      <form className="loginForm" onSubmit={handleLogin}>
+    <div className="min-h-screen flex flex-col items-center justify-center text-center bg-indigo-900 text-white">
+      <header className="m-0 p-10">
+        <h1 className="inline-flex text-5xl font-bold mb-0 text-yellow-400 font-serif">
+          Conversa
+          <Image
+            src="/ConversaImage.png"
+            alt="ConversaImage"
+            width={100}
+            height={100}
+            className="px-5 mx-auto"
+          />
+        </h1>
+        <p className="text-s mb-4 italic">Your Communication Friend Online</p>
+      </header>
+
+      <form className="flex flex-col text-l" onSubmit={handleLogin}>
+        <label htmlFor="email">Email Address</label>
         <input
+          className="text-black font-mono m-4 px-1"
           key="email"
           type="email"
           value={email}
@@ -97,7 +114,9 @@ const LoginPage = ({}) => {
           }}
         />
 
+        <label htmlFor="password">Password</label>
         <input
+          className="text-black font-mono m-4 px-1"
           key="password"
           type="password"
           value={password}
@@ -107,17 +126,27 @@ const LoginPage = ({}) => {
           }}
         />
 
-        {error && <p className="loginError">{error}</p>}
+        {error && <p className="">{error}</p>}
 
-        <span className="cursor-pointer" onClick={handleLogin}>
+        <span
+          className="font-serif w-14 h-6 m-auto bg-indigo-200 text-black size mt-4 cursor-pointer hover:text-orange-300 hover:underline"
+          onClick={handleLogin}
+        >
           Login
         </span>
       </form>
 
-      <h5 className="loginLink">
+      <h5 className="mt-9 p-4">
         Don't have an account yet? <br />
-        <Link href="/signup">Sign up</Link>!
+        <Link href="/signup" className="hover:text-orange-300 hover:underline">
+          Sign up
+        </Link>
+        !
       </h5>
+
+      <footer className="mt-8">
+        <h6 className="text-xs">&copy; 2023 Conversa</h6>
+      </footer>
     </div>
   );
 };

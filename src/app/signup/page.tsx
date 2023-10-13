@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import LoginPage from "../login/page";
+import Image from "next/image";
 
 const SignUpPage = () => {
   const [surname, setSurname] = useState("");
@@ -86,12 +87,30 @@ const SignUpPage = () => {
   // };
 
   return (
-    <div>
-      <h2>Account Registration</h2>
-      <h5>Please complete the registration form below:</h5>
-      <form>
+    <div className="min-h-screen flex flex-col items-center justify-center text-center bg-indigo-900 text-white">
+      <header className="m-0 p-10">
+        <h1 className="inline-flex text-5xl font-bold mb-0 text-yellow-400 font-serif">
+          Conversa
+          <Image
+            src="/ConversaImage.png"
+            alt="ConversaImage"
+            width={100}
+            height={100}
+            className="px-5 mx-auto"
+          />
+        </h1>
+        <p className="text-s mb-0 italic">Your Communication Friend Online</p>
+      </header>
+
+      <h2 className="inline-flex text-2xl font-bold mb-0 text-yellow-300">
+        Account Registration
+      </h2>
+      <h5 className="mb-4">Please complete the registration form below:</h5>
+
+      <form className="flex flex-col text-sm">
         <label htmlFor="Surname">Surname</label>
         <input
+          className="text-black font-mono m-1 px-1"
           key="surname"
           type="text"
           id="surname"
@@ -104,6 +123,7 @@ const SignUpPage = () => {
 
         <label htmlFor="First Name">First Name</label>
         <input
+          className="text-black font-mono m-1 px-1"
           key="firstName"
           type="text"
           id="firstName"
@@ -116,6 +136,7 @@ const SignUpPage = () => {
 
         <label htmlFor="Middle Name">Middle Name</label>
         <input
+          className="text-black font-mono m-1 px-1"
           key="middleName"
           type="text"
           id="middleName"
@@ -128,6 +149,7 @@ const SignUpPage = () => {
 
         <label htmlFor="Username">Username</label>
         <input
+          className="text-black font-mono m-1 px-1"
           key="username"
           type="text"
           id="username"
@@ -140,6 +162,7 @@ const SignUpPage = () => {
 
         <label htmlFor="Password">Password</label>
         <input
+          className="text-black font-mono m-1 px-1"
           key="password"
           type="password"
           id="password"
@@ -152,6 +175,7 @@ const SignUpPage = () => {
 
         <label htmlFor="Confirm Password">Confirm Password</label>
         <input
+          className="text-black font-mono m-1 px-1"
           key="confirmPassword"
           type="password"
           id="confirmPassword"
@@ -164,6 +188,7 @@ const SignUpPage = () => {
 
         <label htmlFor="Email Address">Email Address</label>
         <input
+          className="text-black font-mono m-1 px-1"
           key="email"
           type="email"
           id="email"
@@ -174,13 +199,15 @@ const SignUpPage = () => {
           }}
         />
 
-        {error && <p className="registrationError">{error}</p>}
-        <h5 className="beforeSubmitText">
+        {error && (
+          <p className="text-black bg-yellow-300 mt-4 text-sm">{error}</p>
+        )}
+        <h5 className="mt-5 p-3 text-base">
           Before clicking 'Register', please review and ensure correct
           information in the registration details. <br />
           <br />
           <button
-            className="registerButton"
+            className="font-serif w-20 h-6 m-auto bg-indigo-200 text-black cursor-pointer hover:text-orange-300 hover:underline"
             type="submit"
             onClick={handleRegisterButton}
           >
@@ -188,9 +215,16 @@ const SignUpPage = () => {
           </button>
         </h5>
       </form>
-      <h6 className="haveAccount">
-        Already have an account? <br /> <Link href="/login">Login</Link>!
+      <h6 className="mt-5 p-4">
+        Already have an account? <br />{" "}
+        <Link href="/login" className="hover:text-orange-300 hover:underline">
+          Login
+        </Link>
+        !
       </h6>
+      <footer className="mt-8 pb-4">
+        <h6 className="text-xs">&copy; 2023 Conversa</h6>
+      </footer>
     </div>
   );
 };
