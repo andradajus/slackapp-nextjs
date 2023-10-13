@@ -44,14 +44,12 @@ const SignUpPage = () => {
     }
 
     const requestBody = {
-      surname,
-      firstName,
-      middleName,
       email,
-      username,
       password,
       password_confirmation: confirmPassword,
     };
+    
+    
 
     try {
       const response = await fetch("http://206.189.91.54/api/v1/auth", {
@@ -64,6 +62,19 @@ const SignUpPage = () => {
 
       if (response.ok) {
         const data = await response.json();
+        const id = data.data.id
+        const userDetails = {
+          id: id,
+          username: username, 
+          surname: surname, 
+          firstName: firstName, 
+          middleName: middleName
+        }
+
+        const storedUserData = JSON.parse(localStorage.getItem("storedUserData")) || [];
+        storedUserData.push(userDetails);
+        localStorage.setItem("storedUserData", JSON.stringify(storedUserData));
+
         console.log("Registration successful:", data);
       } else {
         const errorData = await response.json();
@@ -76,15 +87,9 @@ const SignUpPage = () => {
     }
   };
 
-  //   const updatedUsers = [...savedUsers, newUser];
-  //   localStorage.setItem("savedUsers", JSON.stringify(updatedUsers));
-  //   setError("");
-  //   setTimeout(() => {
-  //     alert("Account succesfully created.");
-  //     <LoginPage />
-  //   }, 1000);
-  // };
-
+    
+    
+  
   return (
     <div>
       <h2>Account Registration</h2>
