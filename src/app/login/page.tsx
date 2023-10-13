@@ -1,33 +1,29 @@
 "use client";
 import React, { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 const LoginPage = ({}) => {
+  const router = useRouter();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState(null);
+  const [error, setError] = useState("");
   const [email, setEmail] = useState("");
-  // const navigate = navigate();
-
-  const onUsernameChange = (e) => setUsername(e.target.value);
-  const onPasswordChange = (e) => setPassword(e.target.value);
+  // const onUsernameChange = (e) => setUsername(e.target.value);
+  // const onPasswordChange = (e) => setPassword(e.target.value);
 
   const clearError = () => {
     setError("");
   };
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    loginUser();
-  };
-
-  const loginUser = async () => {
-    const requestBody = {
-      email,
-      password,
-    };
-
     try {
+      const requestBody = {
+        email,
+        password,
+      };
+
       const response = await fetch("http://206.189.91.54/api/v1/auth/sign_in", {
         method: "POST",
         headers: {
@@ -41,62 +37,52 @@ const LoginPage = ({}) => {
         const client = response.headers.get("client");
         const expiry = response.headers.get("expiry");
         const uid = response.headers.get("uid");
+        const nickname = response.headers.get("nickname");
+        const name = response.headers.get("name");
+        const id = response.headers.get("id");
 
         console.log("Login successful");
         console.log("Access Token:", accessToken);
         console.log("Client:", client);
         console.log("Expiry:", expiry);
         console.log("UID:", uid);
+        console.log("Nickname:", nickname);
+        console.log("Name:", name);
+        console.log("ID:", id);
 
-        const authenticatedResponse = await fetch(
-          "http://206.189.91.54/api/v1/some_authenticated_endpoint",
-          {
-            method: "GET",
-            headers: {
-              "access-token": accessToken,
-              client,
-              expiry,
-              uid,
-            },
-          }
-        );
+        sessionStorage.setItem("access-token", accessToken);
+        sessionStorage.setItem("client", client);
+        sessionStorage.setItem("expiry", expiry);
+        sessionStorage.setItem("uid", uid);
 
-        if (authenticatedResponse.ok) {
-          const authenticatedData = await authenticatedResponse.json();
-          console.log("Authenticated request successful:", authenticatedData);
-        } else {
-          console.error(
-            "Authenticated request failed:",
-            authenticatedResponse.statusText
-          );
-        }
+        router.push("/home");
       } else {
         console.error("Login failed:", response.statusText);
       }
     } catch (error) {
       console.error("Error:", error);
     }
-
-    // const savedUsers = JSON.parse(localStorage.getItem("savedUsers"));
-
-    // if (
-    //   savedUsers &&
-    //   savedUsers.some(
-    //     (user) => user.username === username && user.password === password
-    //   )
-    // ) {
-    //   setError("");
-    //   const loggedInUser = savedUsers.find(
-    //     (user) => user.username === username
-    //   );
-    //   if (loggedInUser) setLoggedInUser(loggedInUser);
-    //   navigate("/home");
-    // } else {
-    //   setUsername("");
-    //   setPassword("");
-    //   setError("Invalid username or password. Please try again.");
-    // }
   };
+
+  // const savedUsers = JSON.parse(localStorage.getItem("savedUsers"));
+
+  // if (
+  //   savedUsers &&
+  //   savedUsers.some(
+  //     (user) => user.username === username && user.password === password
+  //   )
+  // ) {
+  //   setError("");
+  //   const loggedInUser = savedUsers.find(
+  //     (user) => user.username === username
+  //   );
+  //   if (loggedInUser) setLoggedInUser(loggedInUser);
+  //   navigate("/home");
+  // } else {
+  //   setUsername("");
+  //   setPassword("");
+  //   setError("Invalid username or password. Please try again.");
+  // }
 
   return (
     <div>
@@ -123,9 +109,9 @@ const LoginPage = ({}) => {
 
         {error && <p className="loginError">{error}</p>}
 
-        <button className="loginButton" type="submit">
+        <span className="cursor-pointer" onClick={handleLogin}>
           Login
-        </button>
+        </span>
       </form>
 
       <h5 className="loginLink">
