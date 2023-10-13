@@ -19,5 +19,3 @@ useEffect(() => {
 };
 
 export default MyProfile;
-
-export default MyProfile
