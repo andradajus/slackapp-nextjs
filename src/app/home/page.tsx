@@ -3,6 +3,7 @@
   import MessageInput from '../components/MessageInput';
   import MessageBox from '../components/MessageBox';
   import NominateName from './NominateName';
+  import Sidebar from './Sidebar';
   
   const Home = () => {
     const [nominatedName, setNominatedName] = useState('');
@@ -65,9 +66,10 @@
   
     return (
       <>
+      <Sidebar />
         {shouldShowNominateName && <NominateName closeName={closeName}  />}
         <h1>This is the Homepage for this App</h1>
-        <div>Display name here: {nominatedName}</div>
+        <div className="text-md">Display name here: <span className="text-lg">{nominatedName}</span></div>
         <MessageBox />
         <MessageInput />
       </>

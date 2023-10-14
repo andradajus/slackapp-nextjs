@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import Image from 'next/image'
 
 const MessageInput = ({}) => {
   const [message, setMessage] = useState("");
@@ -34,28 +35,39 @@ const MessageInput = ({}) => {
 
   return (
     <>
-      <div className="bg-amber-200">
-        <div className="flex gap-2 bg-red-100">
-          <span className="cursor-pointer" onClick={handleBold}>
-            Bold
-          </span>
-          <span className="cursor-pointer"  onClick={handleItalic}>
-            Italic
-          </span>
+      <div className="bg-indigo-500 ml-2 mr-2">
+        <div className="flex gap-2  ml-2">
+          <Image 
+          className="cursor-pointer hover:bg-indigo-700 hover:rounded-sm" 
+          src="https://www.svgrepo.com/show/491501/text-bold.svg"
+          width={15}
+          height={15}
+          onClick={handleBold}
+          />
 
-          <span
-            className="cursor-pointer"
-            onClick={handleUnderline}
-          >
-            Underline
-          </span>
+          <Image 
+          className="cursor-pointer hover:bg-indigo-700 hover:rounded-sm" 
+          src="https://www.svgrepo.com/show/491503/text-italic.svg"
+          width={15}
+          height={15}
+          onClick={handleItalic}
+          />
 
-          <span
-            className="cursor-pointer"
-            onClick={handleStrikethrough}
-          >
-            Strikethrough
-          </span>
+          <Image 
+          className="cursor-pointer hover:bg-indigo-700 hover:rounded-sm" 
+          src="https://www.svgrepo.com/show/491504/text-underline.svg"
+          width={15}
+          height={15}
+          onClick={handleUnderline}
+          />
+
+          <Image 
+          className="cursor-pointer hover:bg-indigo-700 hover:rounded-sm" 
+          src="https://www.svgrepo.com/show/376261/strikethrough.svg"
+          width={17}
+          height={17}
+          onClick={handleStrikethrough}
+          />
 
           <span
             className="cursor-pointer"
@@ -64,6 +76,7 @@ const MessageInput = ({}) => {
             OL
           </span>
           <span
+            className="cursor-pointer"
             onClick={handleUnorderedList}
           >
             UL
@@ -74,14 +87,23 @@ const MessageInput = ({}) => {
           value={message}
           onChange={(e) => setMessage(e.target.value)}
         />
-        <div className="flex bg-cyan-200 justify-between">
-          <span>Emojis</span>
-          <span
-            className="cursor-pointer"
-            onClick={handleSendMessage}
-          >
-            Send Message
-          </span>
+        <div className="flex bg-indigo-500 justify-between">
+        <Image 
+          className="cursor-pointer hover:bg-yellow-500 ml-2" 
+          src="https://www.svgrepo.com/show/447618/emoticon-smile.svg"
+          width={17}
+          height={17}
+          onClick={handleStrikethrough}
+          />
+
+        <Image 
+          className="cursor-pointer hover:bg-indigo-700 mr-2" 
+          src="https://www.svgrepo.com/show/533310/send-alt-1.svg"
+          width={20}
+          height={20}
+          onClick={handleSendMessage}
+          alt="Send Message"
+          />
         </div>
       </div>
     </>
