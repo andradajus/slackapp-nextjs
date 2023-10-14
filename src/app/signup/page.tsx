@@ -49,8 +49,6 @@ const SignUpPage = () => {
       password,
       password_confirmation: confirmPassword,
     };
-    
-    
 
     try {
       const response = await fetch("http://206.189.91.54/api/v1/auth", {
@@ -63,16 +61,17 @@ const SignUpPage = () => {
 
       if (response.ok) {
         const data = await response.json();
-        const id = data.data.id
+        const id = data.data.id;
         const userDetails = {
           id: id,
-          username: username, 
-          surname: surname, 
-          firstName: firstName, 
-          middleName: middleName
-        }
+          username: username,
+          surname: surname,
+          firstName: firstName,
+          middleName: middleName,
+        };
 
-        const storedUserData = JSON.parse(localStorage.getItem("storedUserData")) || [];
+        const storedUserData =
+          JSON.parse(localStorage.getItem("storedUserData")) || [];
         storedUserData.push(userDetails);
         localStorage.setItem("storedUserData", JSON.stringify(storedUserData));
 
@@ -88,12 +87,9 @@ const SignUpPage = () => {
     }
   };
 
-    
-    
-  
   return (
     <div className="min-h-screen flex flex-col items-center justify-center text-center bg-indigo-900 text-white">
-      <header className="m-0 p-10">
+      <header className="m-0 p-5">
         <h1 className="inline-flex text-5xl font-bold mb-0 text-yellow-400 font-serif">
           Conversa
           <Image
@@ -104,96 +100,75 @@ const SignUpPage = () => {
             className="px-5 mx-auto"
           />
         </h1>
-        <p className="text-s mb-0 italic">Your Communication Friend Online</p>
+        <p className="text-sm mb-4 italic">Your Communication Friend Online</p>
       </header>
 
-      <h2 className="inline-flex text-2xl font-bold mb-0 text-yellow-300">
+      <h2 className="inline-flex text-lg font-bold mb-0 text-yellow-300">
         Account Registration
       </h2>
-      <h5 className="mb-4">Please complete the registration form below:</h5>
+      <h5 className="text-base mb-6 font-sans">
+        Please complete the registration form below:
+      </h5>
 
-      <form className="flex flex-col text-sm">
-        <label htmlFor="Surname">Surname</label>
-        <input
-          className="text-black font-mono m-1 px-1"
-          key="surname"
-          type="text"
-          id="surname"
-          value={surname}
-          onChange={(e) => {
-            setSurname(e.target.value);
-            clearError();
-          }}
-        />
+      <form className="flex flex-col text-sm font-medium font-sans">
+        <div className="flex items-center mb-5">
+          <div className="w-1/3">
+            <label htmlFor="Surname" className="m-1 block">
+              Surname
+            </label>
+            <input
+              className=" text-black font-mono mb-1 px-1 w-48 rounded-lg"
+              key="surname"
+              type="text"
+              id="surname"
+              value={surname}
+              onChange={(e) => {
+                setSurname(e.target.value);
+                clearError();
+              }}
+            />
+          </div>
 
-        <label htmlFor="First Name">First Name</label>
-        <input
-          className="text-black font-mono m-1 px-1"
-          key="firstName"
-          type="text"
-          id="firstName"
-          value={firstName}
-          onChange={(e) => {
-            setFirstName(e.target.value);
-            clearError();
-          }}
-        />
+          <div className="w-1/3">
+            <label htmlFor="First Name" className="m-1 block">
+              First Name
+            </label>
+            <input
+              className="text-black font-mono mb-1 px-1 w-48 rounded-lg"
+              key="firstName"
+              type="text"
+              id="firstName"
+              value={firstName}
+              onChange={(e) => {
+                setFirstName(e.target.value);
+                clearError();
+              }}
+            />
+          </div>
 
-        <label htmlFor="Middle Name">Middle Name</label>
-        <input
-          className="text-black font-mono m-1 px-1"
-          key="middleName"
-          type="text"
-          id="middleName"
-          value={middleName}
-          onChange={(e) => {
-            setMiddleName(e.target.value);
-            clearError();
-          }}
-        />
+          <div className="w-1/3">
+            <label htmlFor="Middle Name" className="m-1 block">
+              Middle Name
+            </label>
+            <input
+              className="text-black font-mono mb-1 px-1 w-48 rounded-lg"
+              key="middleName"
+              type="text"
+              id="middleName"
+              value={middleName}
+              onChange={(e) => {
+                setMiddleName(e.target.value);
+                clearError();
+              }}
+            />
+          </div>
+        </div>
 
-        <label htmlFor="Username">Username</label>
+        <label htmlFor="Email Address" className="m-1">
+          Email Address
+        </label>
         <input
-          className="text-black font-mono m-1 px-1"
-          key="username"
-          type="text"
-          id="username"
-          value={username}
-          onChange={(e) => {
-            setUsername(e.target.value);
-            clearError();
-          }}
-        />
-
-        <label htmlFor="Password">Password</label>
-        <input
-          className="text-black font-mono m-1 px-1"
-          key="password"
-          type="password"
-          id="password"
-          value={password}
-          onChange={(e) => {
-            setPassword(e.target.value);
-            clearError();
-          }}
-        />
-
-        <label htmlFor="Confirm Password">Confirm Password</label>
-        <input
-          className="text-black font-mono m-1 px-1"
-          key="confirmPassword"
-          type="password"
-          id="confirmPassword"
-          value={confirmPassword}
-          onChange={(e) => {
-            setConfirmPassword(e.target.value);
-            clearError();
-          }}
-        />
-
-        <label htmlFor="Email Address">Email Address</label>
-        <input
-          className="text-black font-mono m-1 px-1"
+          className="text-black font-mono mb-3 px-1 w-48 mx-auto rounded-lg"
           key="email"
           type="email"
           id="email"
@@ -204,15 +179,62 @@ const SignUpPage = () => {
           }}
         />
 
+        <label htmlFor="Username" className="m-1">
+          Username
+        </label>
+        <input
+          className="text-black font-mono mb-3 px-1 w-48 mx-auto rounded-lg"
+          key="username"
+          type="text"
+          id="username"
+          value={username}
+          onChange={(e) => {
+            setUsername(e.target.value);
+            clearError();
+          }}
+        />
+
+        <label htmlFor="Password" className="m-1">
+          Password
+        </label>
+        <input
+          className="text-black font-mono mb-3 px-1 w-48 mx-auto rounded-lg"
+          key="password"
+          type="password"
+          id="password"
+          value={password}
+          onChange={(e) => {
+            setPassword(e.target.value);
+            clearError();
+          }}
+        />
+
+        <label htmlFor="Confirm Password" className="m-1">
+          Confirm Password
+        </label>
+        <input
+          className="text-black font-mono mb-3 px-1 w-48 mx-auto rounded-lg"
+          key="confirmPassword"
+          type="password"
+          id="confirmPassword"
+          value={confirmPassword}
+          onChange={(e) => {
+            setConfirmPassword(e.target.value);
+            clearError();
+          }}
+        />
+
         {error && (
-          <p className="text-black bg-yellow-300 mt-4 text-sm">{error}</p>
+          <p className="flex items-center justify-center m-auto mt-4 py-1 px-3 text-black bg-yellow-300 text-sm font-bold rounded">
+            {error}
+          </p>
         )}
-        <h5 className="mt-5 p-3 text-base">
+        <h5 className="mt-3 p-1 text-sm">
           Before clicking 'Register', please review and ensure correct
           information in the registration details. <br />
           <br />
           <button
-            className="font-serif w-20 h-6 m-auto bg-indigo-200 text-black cursor-pointer hover:text-orange-300 hover:underline"
+            className="flex items-center justify-center m-auto text-sm font-bold font-sans w-20 h-6 rounded bg-yellow-100  text-black  cursor-pointer hover:text-orange-300 hover:underline"
             type="submit"
             onClick={handleRegisterButton}
           >
@@ -220,14 +242,16 @@ const SignUpPage = () => {
           </button>
         </h5>
       </form>
-      <h6 className="mt-5 p-4">
+      <h6 className="mt-3 p-4 text-base font-sans">
         Already have an account? <br />{" "}
-        <Link href="/login" className="hover:text-orange-300 hover:underline">
-          Login
+        <Link
+          href="/login"
+          className="block font-sans hover:text-orange-300 hover:underline"
+        >
+          Login!
         </Link>
-        !
       </h6>
-      <footer className="mt-8 pb-4">
+      <footer className="mt-6 pb-4">
         <h6 className="text-xs">&copy; 2023 Conversa</h6>
       </footer>
     </div>

@@ -114,7 +114,7 @@ const LoginPage = ({}) => {
           Email Address
         </label>
         <input
-          className="text-black font-mono mb-3 px-1"
+          className="text-black font-mono mb-3 px-1 rounded-lg"
           key="email"
           id="email"
           type="email"
@@ -129,7 +129,7 @@ const LoginPage = ({}) => {
           Password
         </label>
         <input
-          className="text-black font-mono mb-2 px-1"
+          className="text-black font-mono mb-2 px-1 rounded-lg"
           key="password"
           id="password"
           type="password"
@@ -141,20 +141,20 @@ const LoginPage = ({}) => {
         />
 
         {error && (
-          <p className="flex items-center justify-center m-auto mt-4 text-white bg-yellow-500">
+          <p className="flex items-center justify-center m-auto mt-4 y-1 px-3 text-black bg-yellow-300 text-sm font-bold rounded">
             {error}
           </p>
         )}
 
         <span
-          className="flex items-center justify-center m-auto mt-4 text-sm font-bold font-sans w-14 h-6 rounded bg-yellow-100  text-black  cursor-pointer hover:text-orange-300 hover:underline"
+          className="flex items-center justify-center m-auto mt-4 py-1 px-3 text-sm font-bold font-sans w-14 h-6 rounded bg-yellow-100  text-black  cursor-pointer hover:text-orange-300 hover:underline"
           onClick={handleLogin}
         >
           Login
         </span>
       </form>
 
-      <h5 className="mt-9 mb-2 p-4 text-md font-sans">
+      <h5 className="mt-9 mb-2 p-4 text-base font-sans">
         Don't have an account yet?
         <Link
           href="/signup"
