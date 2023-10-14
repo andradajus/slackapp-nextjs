@@ -17,6 +17,7 @@ const LoginPage = ({}) => {
     setError("");
   };
 
+  // @ts-ignore
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
@@ -66,7 +67,7 @@ const LoginPage = ({}) => {
   };
 
   // const savedUsers = JSON.parse(localStorage.getItem("savedUsers"));
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
+
   // if (
   //   savedUsers &&
   //   savedUsers.some(
@@ -101,11 +102,21 @@ const LoginPage = ({}) => {
         <p className="text-s mb-4 italic">Your Communication Friend Online</p>
       </header>
 
-      <form className="flex flex-col text-l" onSubmit={handleLogin}>
-        <label htmlFor="email">Email Address</label>
+      <p className="text-base mb-4 font-sans text-yellow-200 font-semibold">
+        Please enter the following information
+      </p>
+
+      <form
+        className="flex flex-col text-base font-medium font-sans"
+        onSubmit={handleLogin}
+      >
+        <label htmlFor="email" className="m-1">
+          Email Address
+        </label>
         <input
-          className="text-black font-mono m-4 px-1"
+          className="text-black font-mono mb-3 px-1"
           key="email"
+          id="email"
           type="email"
           value={email}
           onChange={(e) => {
@@ -114,10 +125,13 @@ const LoginPage = ({}) => {
           }}
         />
 
-        <label htmlFor="password">Password</label>
+        <label htmlFor="password" className="m-1">
+          Password
+        </label>
         <input
-          className="text-black font-mono m-4 px-1"
+          className="text-black font-mono mb-2 px-1"
           key="password"
+          id="password"
           type="password"
           value={password}
           onChange={(e) => {
@@ -126,22 +140,28 @@ const LoginPage = ({}) => {
           }}
         />
 
-        {error && <p className="">{error}</p>}
+        {error && (
+          <p className="flex items-center justify-center m-auto mt-4 text-white bg-yellow-500">
+            {error}
+          </p>
+        )}
 
         <span
-          className="font-serif w-14 h-6 m-auto bg-indigo-200 text-black size mt-4 cursor-pointer hover:text-orange-300 hover:underline"
+          className="flex items-center justify-center m-auto mt-4 text-sm font-bold font-sans w-14 h-6 rounded bg-yellow-100  text-black  cursor-pointer hover:text-orange-300 hover:underline"
           onClick={handleLogin}
         >
           Login
         </span>
       </form>
 
-      <h5 className="mt-9 p-4">
-        Don't have an account yet? <br />
-        <Link href="/signup" className="hover:text-orange-300 hover:underline">
-          Sign up
+      <h5 className="mt-9 mb-2 p-4 text-md font-sans">
+        Don't have an account yet?
+        <Link
+          href="/signup"
+          className="block font-sans hover:text-orange-300 hover:underline"
+        >
+          Sign up now!
         </Link>
-        !
       </h5>
 
       <footer className="mt-8">
