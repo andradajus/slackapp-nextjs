@@ -4,9 +4,10 @@ const CreateChannelModal = ({ closeChannel }) => {
   const [name, setName] = useState("");
 
   const handleCreateChannel = () => {
+    const uid = sessionStorage.getItem("uid");
     const requestBody = {
       name: name,
-      user_ids: "",
+      user_ids: uid,
     };
 
     const headers = new Headers();

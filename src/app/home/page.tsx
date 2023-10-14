@@ -4,7 +4,8 @@
   import MessageBox from '../components/MessageBox';
   import NominateName from './NominateName';
   import Sidebar from './Sidebar';
-  
+  import Link from 'next/link';
+
   const Home = () => {
     const [nominatedName, setNominatedName] = useState('');
     const [isNameModalOpen, setNameModalOpen] = useState(false);

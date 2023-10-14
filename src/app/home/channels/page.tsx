@@ -4,10 +4,13 @@ import MessageBox from "@/app/components/MessageBox";
 import MessageInput from "@/app/components/MessageInput";
 import MemberModal from "./MemberModal";
 import CreateChannelModal from "./CreateChannelModal";
+import ChannelDetailsModal from "./ChannelDetailsModal";
+import Link from "next/link";
 
 const Channels = () => {
   const [isMemberModalOpen, setMemberModalOpen] = useState(false);
   const [isChannelModalOpen, setChannelModalOpen] = useState(false);
+  const [isChannelDetailsModalOpen, setChannelDetailsModalOpen] = useState(false);
   const [channelDetails, setChannelDetails] = useState({
     id: "None",
     name: "None",
@@ -37,6 +40,8 @@ const Channels = () => {
             id: firstChannel.id,
             name: firstChannel.name,
           });
+
+          console.log("Channel details:", firstChannel)
         }
       })
       .catch((error) => console.error("Error showing channel details:", error));
@@ -62,17 +67,27 @@ const Channels = () => {
     console.log("closeChannelModal");
   };
 
+  const openChannelDetails = () => {
+    setChannelDetailsModalOpen(true);
+    console.log("openChannelModal");
+  };
+
+  const closeChannelDetails = () => {
+    setChannelDetailsModalOpen(false);
+    console.log("closeChannelModal");
+  };
+
   return (
     <>
       {isMemberModalOpen && <MemberModal closeMember={closeMember} />}
       {isChannelModalOpen && <CreateChannelModal closeChannel={closeChannel} />}
+      {isChannelDetailsModalOpen && <ChannelDetailsModal closeChannelDetails={closeChannelDetails} />}
 
       <div className="bg-red-200 m-2">
         <div className="flex justify-between">
           <div className="cursor-pointer">
-            Channel ID: {channelDetails.id}
-            <br />
-            Channel Name: {channelDetails.name}
+            <span>Channel ID: {channelDetails.id}</span>
+            <span className="cursor-pointer" onClick={openChannelDetails}>Channel Name: {channelDetails.name}</span>
           </div>
           <div className="flex flex-row gap-2">
             <div className="cursor-pointer" onClick={openChannel}>

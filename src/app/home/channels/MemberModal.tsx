@@ -26,7 +26,7 @@ const MemberModal = ({ closeMember }) => {
         return response.json();
       })
       .then((data) => {
-        console.log("List of members", data);
+        console.log("Channels List", data);
       })
       .catch((error) => {
         console.error("Error showing list of members:", error);

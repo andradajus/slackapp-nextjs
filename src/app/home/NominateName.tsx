@@ -7,7 +7,7 @@ const NominateName = ({closeName}) => {
   
     const handleNominateName = () => {
       const requestBody = {
-        receiver_id: 3907,
+        receiver_id: 3907, //channel 3907 for name requests
         receiver_class: 'User',
         body: `uid: ${uid} name: ${nominatedName}`,
       };
