@@ -120,8 +120,8 @@ const Sidebar = () => {
             alt="Menu"
             width={30}
             height={30}
-            className={`absolute cursor-pointer -right-3 top-9 w-7 border-dark-purple
-         border-2 rounded-full  ${!open && "rotate-180"}`}
+            className={`absolute cursor-pointer -right-3 top-9 w-7 border-dark-purple bg-white
+         hover:bg-orange-200 rounded-full  ${!open && "rotate-180"}`}
             onClick={() => setOpen(!open)}
           />
           <div className="flex gap-x-4 items-center">
@@ -164,7 +164,7 @@ const Sidebar = () => {
               >
                 <Link
                   href={Menu.href}
-                  className=" hover:text-orange-300 hover:underline"
+                  className=" hover:text-orange-300 hover:underline hover:scale-110 ease-in-out duration-300"
                 >
                   <div className="flex flex-row" onClick={Menu.onclick}>
                     <Image
