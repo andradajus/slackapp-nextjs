@@ -3,40 +3,39 @@ import { useState } from "react";
 const CreateChannelModal = ({ closeChannel }) => {
   const [name, setName] = useState("");
 
-  const handleCreateChannel = () => {
-    const uid = sessionStorage.getItem("uid");
-    const requestBody = {
-      name: name,
-      user_ids: uid,
-    };
+  const handleCreateChannel = async () => {
+    try {
+      const uid = sessionStorage.getItem("uid");
+      const requestBody = {
+        name: name,
+        user_ids: uid, //may something here haha
+      };
 
-    const headers = new Headers();
-    headers.append("Content-Type", "application/json");
-    headers.append("access-token", sessionStorage.getItem("access-token"));
-    headers.append("client", sessionStorage.getItem("client"));
-    headers.append("expiry", sessionStorage.getItem("expiry"));
-    headers.append("uid", sessionStorage.getItem("uid"));
-    console.log(headers);
-
-    fetch("http://206.189.91.54/api/v1/channels", {
-      method: "POST",
-      headers: headers,
-      body: JSON.stringify(requestBody),
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        return response.json();
-      })
-      .then((data) => {
-        console.log("Channel has been created", data);
-        closeChannel();
-      })
-      .catch((error) => {
-        console.error("Error creating channel:", error);
+      const headers = new Headers();
+      headers.append("Content-Type", "application/json");
+      headers.append("access-token", sessionStorage.getItem("access-token"));
+      headers.append("client", sessionStorage.getItem("client"));
+      headers.append("expiry", sessionStorage.getItem("expiry"));
+      headers.append("uid", sessionStorage.getItem("uid"));
+  
+      const response = await fetch("http://206.189.91.54/api/v1/channels", {
+        method: "POST",
+        headers: headers,
+        body: JSON.stringify(requestBody),
       });
+
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+
+      const data = await response.json();
+      console.log("Channel has been created", data);
+      closeChannel();
+    } catch (error) {
+      console.error("Error creating channel:", error);
+    }
   };
+
 
   return (
     <>
