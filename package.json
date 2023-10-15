@@ -9,11 +9,13 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@react-icons/all-files": "^4.1.0",
     "@types/next": "^9.0.0",
     "emoji-picker-react": "^4.5.2",
     "next": "13.5.4",
     "react": "^18",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "react-icons": "^4.11.0"
   },
   "devDependencies": {
     "@types/node": "^20",

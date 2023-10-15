@@ -8,7 +8,7 @@ const CreateChannelModal = ({ closeChannel }) => {
       const uid = sessionStorage.getItem("uid");
       const requestBody = {
         name: name,
-        user_ids: uid, //may something here haha
+        user_ids: [3892], //may something here haha
       };
 
       const headers = new Headers();
@@ -17,7 +17,7 @@ const CreateChannelModal = ({ closeChannel }) => {
       headers.append("client", sessionStorage.getItem("client"));
       headers.append("expiry", sessionStorage.getItem("expiry"));
       headers.append("uid", sessionStorage.getItem("uid"));
-  
+
       const response = await fetch("http://206.189.91.54/api/v1/channels", {
         method: "POST",
         headers: headers,
@@ -30,12 +30,12 @@ const CreateChannelModal = ({ closeChannel }) => {
 
       const data = await response.json();
       console.log("Channel has been created", data);
+
       closeChannel();
     } catch (error) {
       console.error("Error creating channel:", error);
     }
   };
-
 
   return (
     <>

@@ -81,11 +81,12 @@ const MessageInput = ({}) => {
           </span>
         </div>
         <textarea
-          className="w-full pb-20"
+          className="w-full pb-20 overflow-auto rounded-md"
           value={message}
           onChange={(e) => setMessage(e.target.value)}
         />
         <div className="flex bg-indigo-500 justify-between">
+
           <Image
             className="cursor-pointer hover:bg-yellow-500 ml-2"
             src="https://www.svgrepo.com/show/447618/emoticon-smile.svg"

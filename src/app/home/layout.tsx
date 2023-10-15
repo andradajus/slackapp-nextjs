@@ -1,17 +1,17 @@
+import Home from "./page";
+import Sidebar from "./Sidebar";
+import Footer from "./Footer";
 
-import Home from "./page"
-import Sidebar from "./Sidebar"
 const Layout = ({ children }) => {
-    return (
-        <>
-        <div className="flex flex-row">
+  return (
+    <>
+      <div className="flex flex-row bg-indigo-900">
         <Sidebar />
-        <div className="w-full h-full">
-        {children}
-        </div>
-        </div>
-        </>
-    )
-}
+        <div className="w-full h-full">{children}</div>
+      </div>
+      <Footer />
+    </>
+  );
+};
 
-export default Layout
+export default Layout;

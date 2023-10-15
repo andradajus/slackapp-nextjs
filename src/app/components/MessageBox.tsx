@@ -1,7 +1,7 @@
 const MessageBox = ({}) => {
   return (
     <>
-      <div className=" bg-green-200 w-full h-80 ">
+      <div className="bg-white w-full h- ">
         <ul className="flex flex-col justify-end">
           <li>
             <div className="bg-blue-400">

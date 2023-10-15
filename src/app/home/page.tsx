@@ -1,13 +1,13 @@
-'use client'
-  import React, { useState, useEffect } from 'react';
-  import MessageInput from '../components/MessageInput';
-  import MessageBox from '../components/MessageBox';
-  import NominateName from './NominateName';
-  import Layout from './layout';
-  import Sidebar from './Sidebar'; 
-  import Link from 'next/link';
+"use client";
+import React, { useState, useEffect } from "react";
+import MessageInput from "../components/MessageInput";
+import MessageBox from "../components/MessageBox";
+import NominateName from "./NominateName";
+import Layout from "./layout";
+import Sidebar from "./Sidebar";
+import Link from "next/link";
 
-  const Home = () => {
+const Home = () => {
   const [nominatedName, setNominatedName] = useState("");
   const [isNameModalOpen, setNameModalOpen] = useState(false);
 
@@ -67,7 +67,6 @@
   const shouldShowNominateName = !nominatedName;
 
   return (
-
     <div className="h-screen flex flex-col overflow-hidden">
       <div className="flex h-full border-2 border-solid border-white">
         {shouldShowNominateName && <NominateName closeName={closeName} />}
@@ -85,7 +84,6 @@
         </footer>
       </div>
     </div>
-
   );
 };
 

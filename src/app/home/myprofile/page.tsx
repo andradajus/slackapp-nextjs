@@ -39,10 +39,6 @@ const MyProfile = ({ nominatedName, username }) => {
           <p>Username: {username}</p>
           <p>Email: {email}</p>
         </main>
-
-        <footer className="mt-auto text-center absolute bottom-0 bg-indigo-900 text-white">
-          <h6 className="text-xs text-end">&copy; 2023 Conversa</h6>
-        </footer>
       </div>
     </>
   );
