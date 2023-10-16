@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 
-const NominateName = ({ closeName }) => {
+const NominateName = ({ closeName }: { closeName: () => void }) => {
   const [nominatedName, setNominatedName] = useState("");
   const uid = sessionStorage.getItem("uid");
 
@@ -14,10 +14,14 @@ const NominateName = ({ closeName }) => {
 
     const headers = new Headers();
     headers.append("Content-Type", "application/json");
-    headers.append("access-token", sessionStorage.getItem("access-token"));
-    headers.append("client", sessionStorage.getItem("client"));
-    headers.append("expiry", sessionStorage.getItem("expiry"));
-    headers.append("uid", sessionStorage.getItem("uid"));
+
+    headers.append(
+      "access-token",
+      sessionStorage.getItem("access-token") || ""
+    );
+    headers.append("client", sessionStorage.getItem("client") || "");
+    headers.append("expiry", sessionStorage.getItem("expiry") || "");
+    headers.append("uid", sessionStorage.getItem("uid") || "");
 
     fetch("http://206.189.91.54/api/v1/messages", {
       method: "POST",
@@ -32,8 +36,9 @@ const NominateName = ({ closeName }) => {
       })
       .then((data) => {
         console.log("Message sent successfully:", data);
+
         window.location.reload();
-        closeName();
+
       })
       .catch((error) => {
         console.error("Error sending message:", error);
