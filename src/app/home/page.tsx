@@ -21,10 +21,13 @@ const Home = () => {
 
       const headers = new Headers();
       headers.append("Content-Type", "application/json");
-      headers.append("access-token", sessionStorage.getItem("access-token"));
-      headers.append("client", sessionStorage.getItem("client"));
-      headers.append("expiry", sessionStorage.getItem("expiry"));
-      headers.append("uid", sessionStorage.getItem("uid"));
+      headers.append(
+        "access-token",
+        sessionStorage.getItem("access-token") || ""
+      );
+      headers.append("client", sessionStorage.getItem("client") || "");
+      headers.append("expiry", sessionStorage.getItem("expiry") || "");
+      headers.append("uid", sessionStorage.getItem("uid") || "");
 
       const response = await fetch(url, {
         method: "GET",
@@ -37,10 +40,12 @@ const Home = () => {
 
       const data = await response.json();
 
-      const messageWithMatchingUid = data.data.find((message) => {
-        const uidIndex = message.body.indexOf(`uid: ${uid}`);
-        return uidIndex !== -1;
-      });
+      const messageWithMatchingUid = data.data.find(
+        (message: { body: string | string[] }) => {
+          const uidIndex = message.body.indexOf(`uid: ${uid}`);
+          return uidIndex !== -1;
+        }
+      );
 
       if (messageWithMatchingUid) {
         const bodyParts = messageWithMatchingUid.body.split(" ");
@@ -78,10 +83,6 @@ const Home = () => {
             <MessageInput />
           </div>
         </div>
-
-        <footer className="w-28 mt-auto text-center absolute bottom-0 left-1 bg-indigo-900 text-white">
-          <h6 className="text-xs text-end">&copy; 2023 Conversa</h6>
-        </footer>
       </div>
     </div>
   );

@@ -14,20 +14,32 @@ const SignUpPage = () => {
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
 
-  // @ts-ignore
-  const onSurnameChange = (e) => setSurname(e.target.value); // @ts-ignore
-  const onFirstNameChange = (e) => setFirstName(e.target.value); // @ts-ignore
-  const onMiddleNameChange = (e) => setMiddleName(e.target.value); // @ts-ignore
-  const onUsernameChange = (e) => setUsername(e.target.value); // @ts-ignore
-  const onPasswordChange = (e) => setPassword(e.target.value); // @ts-ignore
-  const onConfirmPasswordChange = (e) => setConfirmPassword(e.target.value); // @ts-ignore
-  const onEmailChange = (e) => setEmail(e.target.value);
+  const onSurnameChange = (e: {
+    target: { value: React.SetStateAction<string> };
+  }) => setSurname(e.target.value);
+  const onFirstNameChange = (e: {
+    target: { value: React.SetStateAction<string> };
+  }) => setFirstName(e.target.value);
+  const onMiddleNameChange = (e: {
+    target: { value: React.SetStateAction<string> };
+  }) => setMiddleName(e.target.value);
+  const onUsernameChange = (e: {
+    target: { value: React.SetStateAction<string> };
+  }) => setUsername(e.target.value);
+  const onPasswordChange = (e: {
+    target: { value: React.SetStateAction<string> };
+  }) => setPassword(e.target.value);
+  const onConfirmPasswordChange = (e: {
+    target: { value: React.SetStateAction<string> };
+  }) => setConfirmPassword(e.target.value);
+  const onEmailChange = (e: {
+    target: { value: React.SetStateAction<string> };
+  }) => setEmail(e.target.value);
   const clearError = () => {
     setError("");
   };
 
-  // @ts-ignore
-  const handleRegisterButton = async (e) => {
+  const handleRegisterButton = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
     if (
       password.trim() === "" ||
@@ -70,10 +82,17 @@ const SignUpPage = () => {
           middleName: middleName,
         };
 
-        const storedUserData =
-          JSON.parse(localStorage.getItem("storedUserData")) || [];
-        storedUserData.push(userDetails);
-        localStorage.setItem("storedUserData", JSON.stringify(storedUserData));
+        const storedUserData = JSON.parse(
+          localStorage.getItem("storedUserData") || "[]"
+        );
+
+        if (storedUserData) {
+          storedUserData.push(userDetails);
+          localStorage.setItem(
+            "storedUserData",
+            JSON.stringify(storedUserData)
+          );
+        }
 
         console.log("Registration successful:", data);
       } else {
