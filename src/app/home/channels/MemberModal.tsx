@@ -36,9 +36,9 @@ const MemberModal = ({ closeMember }) => {
 
       const data = await response.json();
       console.log("Channel Deatails", data);
-      const channelMembers = data.channel_members
-        ? data.channel_members.map((member) => member.user_id)
-        : [];
+      const channelMembers = data.data.channel_members.map(
+        (member) => member.user_id
+      );
       console.log("Channel Members", channelMembers);
       setChannelMembers(channelMembers);
     } catch (error) {
@@ -58,8 +58,8 @@ const MemberModal = ({ closeMember }) => {
             <div className="relative p-6 flex-auto">
               {channelMembers?.length > 0 && (
                 <ul>
-                  {channelMembers?.map((member) => (
-                    <li key={member.id}>User ID: {member.user_id}</li>
+                  {channelMembers?.map((user_id) => (
+                    <li key={user_id}>User ID: {user_id}</li>
                   ))}
                 </ul>
               )}

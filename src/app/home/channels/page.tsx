@@ -1,15 +1,16 @@
 "use client";
 import { useState, useEffect } from "react";
-import MessageBox from "@/app/components/MessageBox";
-import MessageInput from "@/app/components/MessageInput";
+import ChannelMessages from "./ChannelMessages";
 import MemberModal from "./MemberModal";
 import CreateChannelModal from "./CreateChannelModal";
 import ChannelDetailsModal from "./ChannelDetailsModal";
 import SubSideBar from "./SubSideBar";
 import Image from "next/image";
+import AddMemberModal from "./AddMemberModal";
 import Link from "next/link";
 
 const Channels = () => {
+  const [isAddMemberModalOpen, setAddMemberModalOpen] = useState(false);
   const [isMemberModalOpen, setMemberModalOpen] = useState(false);
   const [isChannelModalOpen, setChannelModalOpen] = useState(false);
   const [isChannelDetailsModalOpen, setChannelDetailsModalOpen] =
@@ -81,6 +82,16 @@ const Channels = () => {
     console.log("openChannelModal");
   };
 
+  const closeAddMember = () => {
+    setAddMemberModalOpen(false);
+    console.log("openMemberModal");
+  };
+
+  const openAddMember = () => {
+    setAddMemberModalOpen(true);
+    console.log("openChannelModal");
+  };
+
   const closeChannel = () => {
     setChannelModalOpen(false);
     console.log("closeChannelModal");
@@ -98,6 +109,9 @@ const Channels = () => {
 
   return (
     <>
+      {isAddMemberModalOpen && (
+        <AddMemberModal closeAddMember={closeAddMember} />
+      )}
       {isMemberModalOpen && <MemberModal closeMember={closeMember} />}
       {isChannelModalOpen && (
         <CreateChannelModal
@@ -109,22 +123,27 @@ const Channels = () => {
       {isChannelDetailsModalOpen && (
         <ChannelDetailsModal closeChannelDetails={closeChannelDetails} />
       )}
+
       <div className="grid grid-cols-12 grid-rows-5 h-screen">
         <div className="col-span-2 row-span-5 h-full w-full">
           <SubSideBar channels={channels} onChannelClick={handleChannelClick} />
         </div>
         <div className="col-span-10 row-span-5 bg-amber-200 col-start-3 h-full w-full">
-          <div className="bg-green-200 h-full">
-            <div className="flex justify-between col-span-9 row-span-5 col-start-4">
+          <div className="flex flex-col justify-between bg-green-200 h-full">
+            <div className="bg-amber-200 flex justify-between col-span-9 row-span-5 col-start-4">
               <div className="bg-slate-200 ml-2 p-2 hover:bg-indigo-700 text-lg">
                 <span className="ml-2 p-2">{channelDetails.id}</span>
               </div>
-              <span
-                className="cursor-pointer font-bold ml-2 p-2 hover:bg-indigo-700 text-2xl"
-                onClick={openChannelDetails}
-              >
-                {channelDetails.name}
-              </span>
+
+              <div>
+                <span
+                  className="cursor-pointer font-bold ml-2 p-2 hover:bg-indigo-700 text-2xl"
+                  onClick={openChannelDetails}
+                >
+                  {channelDetails.name}
+                </span>
+              </div>
+
               <div className="flex flex-row gap-2 mr-2">
                 <div className="cursor-pointer">
                   <Image
@@ -136,10 +155,22 @@ const Channels = () => {
                     onClick={openChannel}
                   />
                 </div>
+
                 <div className="cursor-pointer">
                   <Image
                     className="cursor-pointer hover:bg-indigo-700 hover:rounded-sm"
                     src="https://www.svgrepo.com/show/513862/user-add.svg"
+                    alt="Add Members"
+                    width={40}
+                    height={40}
+                    onClick={openAddMember}
+                  />
+                </div>
+
+                <div className="cursor-pointer">
+                  <Image
+                    className="cursor-pointer hover:bg-indigo-700 hover:rounded-sm"
+                    src="https://www.svgrepo.com/show/421147/friend-group-members.svg"
                     alt="Add Members"
                     width={40}
                     height={40}
@@ -149,9 +180,8 @@ const Channels = () => {
               </div>
             </div>
 
-            <div className="bg-red-200 justify-items-end">
-              <MessageBox />
-              <MessageInput />
+            <div>
+              <ChannelMessages />
             </div>
           </div>
         </div>
