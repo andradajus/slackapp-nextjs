@@ -61,6 +61,7 @@ const Sidebar = () => {
     sessionStorage.removeItem("client");
     sessionStorage.removeItem("expiry");
     sessionStorage.removeItem("uid");
+    sessionStorage.removeItem("id");
     router.push("/login");
   };
 

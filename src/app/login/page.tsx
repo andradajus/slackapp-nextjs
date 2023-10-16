@@ -41,7 +41,9 @@ const LoginPage = ({}) => {
         const uid = response.headers.get("uid");
         const nickname = response.headers.get("nickname");
         const name = response.headers.get("name");
-        const id = response.headers.get("id");
+
+        const responseData = await response.json();
+        const id = responseData.data.id;
 
         console.log("Login successful");
         console.log("Access Token:", accessToken);
@@ -56,6 +58,7 @@ const LoginPage = ({}) => {
         sessionStorage.setItem("client", client);
         sessionStorage.setItem("expiry", expiry);
         sessionStorage.setItem("uid", uid);
+        sessionStorage.setItem("id", id);
 
         router.push("/home");
       } else {
