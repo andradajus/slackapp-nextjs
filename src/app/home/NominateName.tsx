@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 
-const NominateName = ({ closeName }) => {
+const NominateName = ({ closeName }: { closeName: () => void }) => {
   const [nominatedName, setNominatedName] = useState("");
   const uid = sessionStorage.getItem("uid");
 
@@ -9,33 +9,36 @@ const NominateName = ({ closeName }) => {
     const requestBody = {
       receiver_id: 3907,
       receiver_class: "User",
-      body: `uid: ${uid} name: ${nominatedName}`
+      body: `uid: ${uid} name: ${nominatedName}`,
     };
 
     const headers = new Headers();
-    headers.append('Content-Type', 'application/json');
-    headers.append('access-token', sessionStorage.getItem('access-token'));
-    headers.append('client', sessionStorage.getItem('client'));
-    headers.append('expiry', sessionStorage.getItem('expiry'));
-    headers.append('uid', sessionStorage.getItem('uid'));
+    headers.append("Content-Type", "application/json");
+    headers.append(
+      "access-token",
+      sessionStorage.getItem("access-token") || ""
+    );
+    headers.append("client", sessionStorage.getItem("client") || "");
+    headers.append("expiry", sessionStorage.getItem("expiry") || "");
+    headers.append("uid", sessionStorage.getItem("uid") || "");
 
-    fetch('http://206.189.91.54/api/v1/messages', {
-      method: 'POST',
+    fetch("http://206.189.91.54/api/v1/messages", {
+      method: "POST",
       headers: headers,
       body: JSON.stringify(requestBody),
     })
       .then((response) => {
         if (!response.ok) {
-          throw new Error('Network response was not ok');
+          throw new Error("Network response was not ok");
         }
         return response.json();
       })
       .then((data) => {
-        console.log('Message sent successfully:', data);
-        closeName(); 
+        console.log("Message sent successfully:", data);
+        closeName();
       })
       .catch((error) => {
-        console.error('Error sending message:', error);
+        console.error("Error sending message:", error);
       });
   };
 

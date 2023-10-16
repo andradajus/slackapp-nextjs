@@ -10,15 +10,12 @@ const LoginPage = ({}) => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [email, setEmail] = useState("");
-  // const onUsernameChange = (e) => setUsername(e.target.value);
-  // const onPasswordChange = (e) => setPassword(e.target.value);
 
   const clearError = () => {
     setError("");
   };
 
-  // @ts-ignore
-  const handleLogin = async (e) => {
+  const handleLogin = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
     try {
       const requestBody = {
@@ -54,10 +51,13 @@ const LoginPage = ({}) => {
         console.log("Name:", name);
         console.log("ID:", id);
 
-        sessionStorage.setItem("access-token", accessToken);
-        sessionStorage.setItem("client", client);
-        sessionStorage.setItem("expiry", expiry);
-        sessionStorage.setItem("uid", uid);
+        sessionStorage.setItem("access-token", accessToken!);
+        sessionStorage.setItem("client", client!);
+        sessionStorage.setItem("expiry", expiry!);
+        sessionStorage.setItem(
+          "uid",
+          uid!
+        ); /* <!> - an assertion to Typescript that the values are not null */
         sessionStorage.setItem("id", id);
 
         router.push("/home");
@@ -68,26 +68,6 @@ const LoginPage = ({}) => {
       console.error("Error:", error);
     }
   };
-
-  // const savedUsers = JSON.parse(localStorage.getItem("savedUsers"));
-
-  // if (
-  //   savedUsers &&
-  //   savedUsers.some(
-  //     (user) => user.username === username && user.password === password
-  //   )
-  // ) {
-  //   setError("");
-  //   const loggedInUser = savedUsers.find(
-  //     (user) => user.username === username
-  //   );
-  //   if (loggedInUser) setLoggedInUser(loggedInUser);
-  //   navigate("/home");
-  // } else {
-  //   setUsername("");
-  //   setPassword("");
-  //   setError("Invalid username or password. Please try again.");
-  // }
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center text-center bg-indigo-900 text-white">
@@ -102,7 +82,7 @@ const LoginPage = ({}) => {
             className="px-5 mx-auto"
           />
         </h1>
-        <p className="text-s mb-4 italic">Your Communication Friend Online</p>
+        <p className="text-sm mb-4 italic">Your Communication Friend Online</p>
       </header>
 
       <p className="text-base mb-4 font-sans text-yellow-200 font-semibold">
@@ -144,7 +124,7 @@ const LoginPage = ({}) => {
         />
 
         {error && (
-          <p className="flex items-center justify-center m-auto mt-4 y-1 px-3 text-black bg-yellow-300 text-sm font-bold rounded">
+          <p className="flex items-center justify-center m-auto mt-4 py-1 px-3 text-black bg-yellow-300 text-sm font-bold rounded">
             {error}
           </p>
         )}

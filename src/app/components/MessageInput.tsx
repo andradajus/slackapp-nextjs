@@ -34,9 +34,9 @@ const MessageInput = ({}) => {
   };
 
   return (
-    <>
-      <div className="bg-indigo-500 ml-2 mr-2">
-        <div className="flex gap-2  ml-2">
+    <div className="p-2 m-auto">
+      <div className="bg-indigo-500 ml-1 mr-1 rounded-md content-center">
+        <div className="flex gap-2 m-1 ml-2">
           <Image
             className="cursor-pointer hover:bg-indigo-700 hover:rounded-sm"
             src="https://www.svgrepo.com/show/491501/text-bold.svg"
@@ -81,12 +81,11 @@ const MessageInput = ({}) => {
           </span>
         </div>
         <textarea
-          className="w-full pb-20 overflow-auto rounded-md"
+          className="w-full overflow-auto rounded-md bg-indigo-100"
           value={message}
           onChange={(e) => setMessage(e.target.value)}
         />
-        <div className="flex bg-indigo-500 justify-between">
-
+        <div className="flex bg-indigo-500 justify-between rounded-md">
           <Image
             className="cursor-pointer hover:bg-yellow-500 ml-2"
             src="https://www.svgrepo.com/show/447618/emoticon-smile.svg"
@@ -106,7 +105,7 @@ const MessageInput = ({}) => {
           />
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

@@ -125,7 +125,7 @@ const Sidebar = () => {
          hover:bg-orange-200 rounded-full  ${!open && "rotate-180"}`}
             onClick={() => setOpen(!open)}
           />
-          <div className="flex gap-x-4 items-center">
+          <div className="flex gap-x-4 items-center mb-2">
             <Image
               src="/ConversaImage.png"
               alt="ConversaImage"
@@ -160,7 +160,7 @@ const Sidebar = () => {
             {Menus.map((Menu, index) => (
               <li
                 key={index}
-                className={`flex  rounded-md p-2 cursor-pointer hover:bg-light-white text-gray-300 text-sm items-center gap-x-4 
+                className={`flex rounded-md p-2 cursor-pointer hover:bg-light-white text-gray-300 text-sm items-center gap-x-4 
             ${Menu.gap ? "mt-9" : "mt-2"} ${index === 0 && "bg-light-white"} `}
               >
                 <Link
