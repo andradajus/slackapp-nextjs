@@ -60,6 +60,7 @@ const Channels = () => {
       id: channel.id,
       name: channel.name,
     });
+    sessionStorage.setItem("currentChannelID", channel.id);
   };
 
   const updateChannels = (newChannels) => {
