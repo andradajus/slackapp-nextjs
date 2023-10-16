@@ -1,14 +1,19 @@
 import { useState } from "react";
 
-const CreateChannelModal = ({ closeChannel }) => {
+const CreateChannelModal = ({ closeChannel, updateChannels, channels }) => {
   const [name, setName] = useState("");
+
+  const updateChannelsHandler = () => {
+    let newChannels = [];
+    updateChannels(newChannels);
+  };
 
   const handleCreateChannel = async () => {
     try {
-      const uid = sessionStorage.getItem("uid");
+      const id = sessionStorage.getItem("id");
       const requestBody = {
         name: name,
-        user_ids: [3892], //may something here haha
+        user_ids: [id],
       };
 
       const headers = new Headers();
@@ -30,7 +35,7 @@ const CreateChannelModal = ({ closeChannel }) => {
 
       const data = await response.json();
       console.log("Channel has been created", data);
-
+      updateChannelsHandler();
       closeChannel();
     } catch (error) {
       console.error("Error creating channel:", error);

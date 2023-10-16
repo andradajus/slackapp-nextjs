@@ -18,38 +18,53 @@ const Channels = () => {
     id: "None",
     name: "None",
   });
+  const [channels, setChannels] = useState([]);
+
+  const headers = new Headers();
 
   useEffect(() => {
     showChannelDetails();
   }, []);
 
-  const showChannelDetails = () => {
-    const headers = new Headers();
+  const showChannelDetails = async () => {
+    const url = "http://206.189.91.54/api/v1/channels/";
     headers.append("Content-Type", "application/json");
     headers.append("access-token", sessionStorage.getItem("access-token"));
     headers.append("client", sessionStorage.getItem("client"));
     headers.append("expiry", sessionStorage.getItem("expiry"));
     headers.append("uid", sessionStorage.getItem("uid"));
 
-    fetch("http://206.189.91.54/api/v1/channels", {
-      method: "GET",
-      headers: headers,
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        if (data?.data?.length > 0) {
-          const [firstChannel] = data.data;
-          setChannelDetails({
-            id: firstChannel.id,
-            name: firstChannel.name,
-          });
+    try {
+      const response = await fetch(url, {
+        method: "GET",
+        headers: headers,
+      });
+      const data = await response.json();
 
-          console.log("Channel details:", firstChannel);
-        }
-      })
-      .catch((error) => console.error("Error showing channel details:", error));
+      if (data?.data?.length > 0) {
+        const [firstChannel] = data.data;
+        setChannels(data.data);
+        setChannelDetails({
+          id: firstChannel.id,
+          name: firstChannel.name,
+        });
+        console.log("Channel details:", data);
+      }
+    } catch (error) {
+      console.error("Error showing channel details:", error);
+    }
   };
 
+  const handleChannelClick = (channel) => {
+    setChannelDetails({
+      id: channel.id,
+      name: channel.name,
+    });
+  };
+
+  const updateChannels = (newChannels) => {
+    setChannels(newChannels);
+  };
   const openMember = () => {
     setMemberModalOpen(true);
     console.log("openMemberModal");
@@ -83,14 +98,19 @@ const Channels = () => {
   return (
     <>
       {isMemberModalOpen && <MemberModal closeMember={closeMember} />}
-      {isChannelModalOpen && <CreateChannelModal closeChannel={closeChannel} />}
+      {isChannelModalOpen && (
+        <CreateChannelModal
+          closeChannel={closeChannel}
+          channels={channels}
+          updateChannels={updateChannels}
+        />
+      )}
       {isChannelDetailsModalOpen && (
         <ChannelDetailsModal closeChannelDetails={closeChannelDetails} />
       )}
-
       <div className="grid grid-cols-12 grid-rows-5 h-screen">
         <div className="col-span-2 row-span-5 h-full w-full">
-          <SubSideBar />
+          <SubSideBar channels={channels} onChannelClick={handleChannelClick} />
         </div>
         <div className="col-span-10 row-span-5 bg-amber-200 col-start-3 h-full w-full">
           <div className="bg-green-200 h-full">
