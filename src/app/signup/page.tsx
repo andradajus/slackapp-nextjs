@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import LoginPage from "../login/page";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 const SignUpPage = () => {
   const [surname, setSurname] = useState("");
@@ -13,6 +14,7 @@ const SignUpPage = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
+  const router = useRouter();
 
   const onSurnameChange = (e: {
     target: { value: React.SetStateAction<string> };
@@ -82,17 +84,12 @@ const SignUpPage = () => {
           middleName: middleName,
         };
 
-        const storedUserData = JSON.parse(
-          localStorage.getItem("storedUserData") || "[]"
-        );
+        const storedUserData =
+          JSON.parse(localStorage.getItem("storedUserData")) || [];
+        storedUserData.push(userDetails);
+        localStorage.setItem("storedUserData", JSON.stringify(storedUserData));
+        router.push("/login");
 
-        if (storedUserData) {
-          storedUserData.push(userDetails);
-          localStorage.setItem(
-            "storedUserData",
-            JSON.stringify(storedUserData)
-          );
-        }
 
         console.log("Registration successful:", data);
       } else {

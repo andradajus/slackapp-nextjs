@@ -14,6 +14,7 @@ const NominateName = ({ closeName }: { closeName: () => void }) => {
 
     const headers = new Headers();
     headers.append("Content-Type", "application/json");
+
     headers.append(
       "access-token",
       sessionStorage.getItem("access-token") || ""
@@ -35,7 +36,9 @@ const NominateName = ({ closeName }: { closeName: () => void }) => {
       })
       .then((data) => {
         console.log("Message sent successfully:", data);
-        closeName();
+
+        window.location.reload();
+
       })
       .catch((error) => {
         console.error("Error sending message:", error);

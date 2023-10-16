@@ -2,35 +2,48 @@ import React from "react";
 import { useEffect, useState } from "react";
 
 const MemberModal = ({ closeMember }) => {
+  const [channelMembers, setChannelMembers] = useState([]);
+
   useEffect(() => {
     showMemberList();
   }, []);
 
-  const showMemberList = () => {
+  const showMemberList = async () => {
+    const currentChannelID = sessionStorage.getItem("currentChannelID");
+
+    if (!currentChannelID) {
+      console.error("No currentChannelID found in sessionStorage.");
+      return;
+    }
+
     const headers = new Headers();
     headers.append("Content-Type", "application/json");
     headers.append("access-token", sessionStorage.getItem("access-token"));
     headers.append("client", sessionStorage.getItem("client"));
     headers.append("expiry", sessionStorage.getItem("expiry"));
     headers.append("uid", sessionStorage.getItem("uid"));
-    console.log(headers);
+    const url = `http://206.189.91.54/api/v1/channels/${currentChannelID}`;
 
-    fetch("http://206.189.91.54/api/v1/channels", {
-      method: "GET",
-      headers: headers,
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        return response.json();
-      })
-      .then((data) => {
-        console.log("Channels List", data);
-      })
-      .catch((error) => {
-        console.error("Error showing list of members:", error);
+    try {
+      const response = await fetch(url, {
+        method: "GET",
+        headers: headers,
       });
+
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+
+      const data = await response.json();
+      console.log("Channel Deatails", data);
+      const channelMembers = data.channel_members
+        ? data.channel_members.map((member) => member.user_id)
+        : [];
+      console.log("Channel Members", channelMembers);
+      setChannelMembers(channelMembers);
+    } catch (error) {
+      console.error("Error showing list of members:", error);
+    }
   };
 
   return (
@@ -42,7 +55,18 @@ const MemberModal = ({ closeMember }) => {
               <h5 className="text-3xl font-semibold">Channel Members</h5>
             </div>
 
-            <div className="relative p-6 flex-auto">List of Members Here</div>
+            <div className="relative p-6 flex-auto">
+              {channelMembers?.length > 0 && (
+                <ul>
+                  {channelMembers?.map((member) => (
+                    <li key={member.id}>User ID: {member.user_id}</li>
+                  ))}
+                </ul>
+              )}
+              {channelMembers?.length === 0 && (
+                <p>Loading channel members...</p>
+              )}
+            </div>
 
             <div className="flex items-center justify-end p-6 border-t border-solid border-blueGray-200 rounded-b">
               <button

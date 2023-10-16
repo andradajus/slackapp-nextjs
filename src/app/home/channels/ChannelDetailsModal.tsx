@@ -1,45 +1,44 @@
-'use client'
-import { useEffect } from 'react'
+"use client";
+import { useEffect } from "react";
 
-
-const ChannelDetailsModal= ({closeChannelDetails}) => {
-
-const fetchChannelDetails = async () => {
+const ChannelDetailsModal = ({ closeChannelDetails }) => {
+  const fetchChannelDetails = async () => {
     try {
       const id = 5045;
-  
+
       const url = `http://206.189.91.54/api/v1/channels/3?=${id}`;
-  
+
       const headers = new Headers();
-      headers.append('Content-Type', 'application/json');
-      headers.append('access-token', sessionStorage.getItem('access-token'));
-      headers.append('client', sessionStorage.getItem('client'));
-      headers.append('expiry', sessionStorage.getItem('expiry'));
-      headers.append('uid', sessionStorage.getItem('uid'));
-  
+      headers.append("Content-Type", "application/json");
+      headers.append("access-token", sessionStorage.getItem("access-token"));
+      headers.append("client", sessionStorage.getItem("client"));
+      headers.append("expiry", sessionStorage.getItem("expiry"));
+      headers.append("uid", sessionStorage.getItem("uid"));
+
       const response = await fetch(url, {
-        method: 'GET',
+        method: "GET",
         headers: headers,
       });
-  
+
       if (!response.ok) {
-        throw new Error('Network response was not ok');
+        throw new Error("Network response was not ok");
       }
-  
+
       const responseData = await response.json();
-  
-      console.log('Channel details received:', responseData);
+
+      console.log("Channel details received:", responseData);
     } catch (error) {
-      console.error('Error fetching channel details:', error);
+      console.error("Error fetching channel details:", error);
     }
-}
-useEffect(() => {
+  };
+
+  useEffect(() => {
     fetchChannelDetails();
   }, []);
 
-    return (
-        <>
-        <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
+  return (
+    <>
+      <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
         <div className="relative w-auto my-6 mx-auto max-w-3xl">
           <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
             <div className="flex items-start justify-between p-5 border-b border-solid border-blueGray-200 rounded-t">
@@ -62,7 +61,7 @@ useEffect(() => {
       </div>
       <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
     </>
-    )
-}
+  );
+};
 
-export default ChannelDetailsModal
+export default ChannelDetailsModal;
