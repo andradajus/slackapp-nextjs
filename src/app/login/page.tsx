@@ -97,7 +97,7 @@ const LoginPage = ({}) => {
           Email Address
         </label>
         <input
-          className="text-black font-mono mb-3 px-1 rounded-lg"
+          className="text-black font-sans text-sm mb-3 px-1 rounded-lg"
           key="email"
           id="email"
           type="email"
@@ -112,7 +112,7 @@ const LoginPage = ({}) => {
           Password
         </label>
         <input
-          className="text-black font-mono mb-2 px-1 rounded-lg"
+          className="text-black font-sans text-sm mb-2 px-1 rounded-lg"
           key="password"
           id="password"
           type="password"

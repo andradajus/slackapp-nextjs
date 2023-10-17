@@ -23,10 +23,13 @@ const Sidebar = () => {
 
       const headers = new Headers();
       headers.append("Content-Type", "application/json");
-      headers.append("access-token", sessionStorage.getItem("access-token"));
-      headers.append("client", sessionStorage.getItem("client"));
-      headers.append("expiry", sessionStorage.getItem("expiry"));
-      headers.append("uid", sessionStorage.getItem("uid"));
+      headers.append(
+        "access-token",
+        sessionStorage.getItem("access-token") || ""
+      );
+      headers.append("client", sessionStorage.getItem("client") || "");
+      headers.append("expiry", sessionStorage.getItem("expiry") || "");
+      headers.append("uid", sessionStorage.getItem("uid") || "");
 
       const response = await fetch(url, {
         method: "GET",
@@ -39,10 +42,12 @@ const Sidebar = () => {
 
       const data = await response.json();
 
-      const messageWithMatchingUid = data.data.find((message) => {
-        const uidIndex = message.body.indexOf(`uid: ${uid}`);
-        return uidIndex !== -1;
-      });
+      const messageWithMatchingUid = data.data.find(
+        (message: { body: string | string[] }) => {
+          const uidIndex = message.body.indexOf(`uid: ${uid}`);
+          return uidIndex !== -1;
+        }
+      );
 
       if (messageWithMatchingUid) {
         const bodyParts = messageWithMatchingUid.body.split(" ");
@@ -113,19 +118,19 @@ const Sidebar = () => {
       <div className="flex">
         <div
           className={` ${
-            open ? "w-72" : "w-20 "
-          } bg-dark-purple h-screen p-5  pt-8 relative duration-300`}
+            open ? "w-72" : "w-20"
+          } bg-dark-purple h-screen p-5 pt-8 relative duration-300`}
         >
           <Image
             src="https://www.svgrepo.com/show/532195/menu.svg"
             alt="Menu"
-            width={30}
-            height={30}
-            className={`absolute cursor-pointer -right-3 top-9 w-7 border-dark-purple bg-white
-         hover:bg-orange-200 rounded-full  ${!open && "rotate-180"}`}
+            width={25}
+            height={25}
+            className={`absolute cursor-pointer -right-3 top-20 w-6 border-dark-purple bg-white
+         hover:bg-orange-200 rounded-full ${!open && "rotate-90"}`}
             onClick={() => setOpen(!open)}
           />
-          <div className="flex gap-x-4 items-center mb-2">
+          <div className="flex gap-x-4 items-center mb-4">
             <Image
               src="/ConversaImage.png"
               alt="ConversaImage"

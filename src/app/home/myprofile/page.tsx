@@ -23,7 +23,7 @@ const MyProfile = ({
 
   return (
     <>
-      <div className="min-h-screen flex flex-col text-left bg-indigo-900 text-white">
+      <div className="min-h-screen flex flex-col text-left bg-indigo-800 text-white border-2 border-solid border-white">
         <main className="m-auto flex flex-col items-center justify-center text-center font-san text-sm">
           {/* {ownerImage && (
             <Image src={ownerImage} alt="Your Photo" width={150} height={150} />
