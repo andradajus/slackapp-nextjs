@@ -4,9 +4,9 @@ import { useEffect } from "react";
 const ChannelDetailsModal = ({ closeChannelDetails }) => {
   const fetchChannelDetails = async () => {
     try {
-      const id = 5045;
+      const id = sessionStorage.getItem("currentChannelID");
 
-      const url = `http://206.189.91.54/api/v1/channels/3?=${id}`;
+      const url = `http://206.189.91.54/api/v1/channels/${id}`;
 
       const headers = new Headers();
       headers.append("Content-Type", "application/json");

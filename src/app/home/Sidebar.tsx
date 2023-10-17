@@ -82,7 +82,7 @@ const Sidebar = () => {
 
   const Menus = [
     {
-      title: "My Account",
+      title: "My Profile",
       src: "/Home-icon.png",
       alt: "My Account",
       href: "/home/myprofile",
