@@ -76,10 +76,10 @@ const Home = () => {
       <div className="flex h-full border-2 border-solid border-white">
         {shouldShowNominateName && <NominateName closeName={closeName} />}
         <div className="flex flex-col flex-grow">
-          <div className="h-3/4 bg-indigo-800 border-2 border-solid border-white overflow-y-auto">
+          <div className="h-3/4 bg-indigo-800 overflow-y-auto">
             <MessageBox />
           </div>
-          <div className="h-1/4 bg-indigo-900 border-2 border-solid border-white overflow-y-auto">
+          <div className="h-1/4 bg-indigo-900 pt-5 overflow-y-auto">
             <MessageInput />
           </div>
         </div>

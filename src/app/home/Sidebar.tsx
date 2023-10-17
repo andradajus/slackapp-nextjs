@@ -5,7 +5,6 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import NominateName from "./NominateName";
 import React, { useState, useEffect } from "react";
-import logoutimage from ".../public/logout-icon.png";
 
 const Sidebar = () => {
   const router = useRouter();
@@ -82,7 +81,7 @@ const Sidebar = () => {
 
   const Menus = [
     {
-      title: "My Account",
+      title: "My Profile",
       src: "/Home-icon.png",
       alt: "My Account",
       href: "/home/myprofile",
@@ -130,24 +129,27 @@ const Sidebar = () => {
          hover:bg-orange-200 rounded-full ${!open && "rotate-90"}`}
             onClick={() => setOpen(!open)}
           />
-          <div className="flex gap-x-4 items-center mb-4">
-            <Image
-              src="/ConversaImage.png"
-              alt="ConversaImage"
-              width={75}
-              height={75}
-              className={`cursor-pointer duration-500 ${
-                open && "rotate-[360deg]"
-              }`}
-            />
-            <h1
-              className={`block text-lg font-bold mb-0 text-yellow-400 font-serif origin-left duration-200 ${
-                !open && "scale-0"
-              }`}
-            >
-              Conversa
-            </h1>
-          </div>
+
+          <Link href="/home" passHref>
+            <div className="flex gap-x-4 items-center mb-4">
+              <Image
+                src="/ConversaImage.png"
+                alt="ConversaImage"
+                width={75}
+                height={75}
+                className={`cursor-pointer duration-500 ${
+                  open && "rotate-[360deg]"
+                }`}
+              />
+              <h1
+                className={`block text-lg font-bold mb-0 text-yellow-400 font-serif origin-left duration-200 ${
+                  !open && "scale-0"
+                }`}
+              >
+                Conversa
+              </h1>
+            </div>
+          </Link>
 
           <section
             className={`block text-lg font-bold mb-0 text-yellow-400 font-serif origin-left duration-200 ${

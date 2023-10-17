@@ -1,40 +1,73 @@
 "use client";
 import { useState } from "react";
 import Image from "next/image";
+import Picker from "emoji-picker-react";
 
 const MessageInput = ({}) => {
   const [message, setMessage] = useState("");
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+  const [selectedEmoji, setSelectedEmoji] = useState("");
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
 
-  const handleSendMessage = () => {
-    console.log("Message Sent"); //Sent message preparation
+  const handleSendMessage = async () => {
+    if (message.trim() === "") {
+      setError("Please enter a message");
+      return;
+    }
+
+    try {
+      const response = await fetch("http://206.189.91.54/api/v1/messages", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "access-token": "access-token",
+          client: "client",
+          expiry: "expiry",
+          uid: "uid",
+        },
+        body: JSON.stringify({
+          message: message,
+        }),
+      });
+
+      if (response.ok) {
+        setSuccess("Message sent!");
+        setMessage("");
+      } else {
+        setError("Failed to send the message. Please try again.");
+      }
+    } catch (error) {
+      console.error("Error sending message:", error);
+      setError("An error occured while sending the message. Please try again.");
+    }
   };
 
-  const handleBold = () => {
-    console.log("Text is bold");
-  };
-
-  const handleItalic = () => {
-    console.log("Text is italic");
-  };
-
-  const handleUnderline = () => {
-    console.log("Text is underlined");
-  };
-
-  const handleStrikethrough = () => {
-    console.log("Text is dashed?");
-  };
-
-  const handleInsertEmoji = () => {
-    console.log("InsertEmoji");
+  /*aayusin pa tong mga handle buttons*/
+  const handleFormatText = (format: string) => {
+    const text = message;
+    const selectedText = text.slice(0, 5);
+    const newText = format + selectedText + format + text.slice(5);
+    setMessage(newText);
   };
 
   const handleOrderedList = () => {
-    console.log("New ordered list created");
+    const updatedMessage = `1. ` + `${message}\n2. ` + `${message}\n`;
+    setMessage(updatedMessage);
   };
 
   const handleUnorderedList = () => {
-    console.log("New unordered list created");
+    const updatedMessage = `${message}\n. \n. \n`;
+    setMessage(updatedMessage);
+  };
+
+  const handleInsertEmoji = () => {
+    setShowEmojiPicker((prev) => !prev);
+  };
+
+  const handleEmojiSelect = (emoji: string) => {
+    const updatedMessage = message + emoji;
+    setMessage(updatedMessage);
   };
 
   return (
@@ -47,7 +80,7 @@ const MessageInput = ({}) => {
             alt="Bold-icon"
             width={15}
             height={15}
-            onClick={handleBold}
+            onClick={() => handleFormatText("**")}
           />
 
           <Image
@@ -56,7 +89,7 @@ const MessageInput = ({}) => {
             alt="Italic-icon"
             width={15}
             height={15}
-            onClick={handleItalic}
+            onClick={() => handleFormatText("*")}
           />
 
           <Image
@@ -65,7 +98,7 @@ const MessageInput = ({}) => {
             alt="Underline-icon"
             width={15}
             height={15}
-            onClick={handleUnderline}
+            onClick={() => handleFormatText("__")}
           />
 
           <Image
@@ -74,21 +107,34 @@ const MessageInput = ({}) => {
             alt="Strikethrough-icon"
             width={17}
             height={17}
-            onClick={handleStrikethrough}
+            onClick={() => handleFormatText("~~")}
           />
 
-          <span className="cursor-pointer" onClick={handleOrderedList}>
-            OL
-          </span>
-          <span className="cursor-pointer" onClick={handleUnorderedList}>
-            UL
-          </span>
+          <Image
+            className="cursor-pointer hover:bg-indigo-700 hover:rounded-sm"
+            src="https://www.svgrepo.com/show/532192/list.svg"
+            alt="BulletsList-icon"
+            width={17}
+            height={17}
+            onClick={handleUnorderedList}
+          />
+
+          <Image
+            className="cursor-pointer hover:bg-indigo-700 hover:rounded-sm"
+            src="https://www.svgrepo.com/show/532190/list-ol.svg"
+            alt="NumberedList-icon"
+            width={17}
+            height={17}
+            onClick={handleOrderedList}
+          />
         </div>
-        <textarea
-          className="w-full mx-2 p-2 text-sm overflow-auto rounded-md bg-indigo-100"
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
-        />
+        <div className="mx-2">
+          <textarea
+            className="w-full p-1 text-sm overflow-auto rounded-md bg-indigo-100"
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+          />
+        </div>
         <div className="flex bg-indigo-500 justify-between rounded-md">
           <Image
             className="cursor-pointer hover:bg-yellow-500 ml-2"
@@ -108,6 +154,13 @@ const MessageInput = ({}) => {
             onClick={handleSendMessage}
           />
         </div>
+        {showEmojiPicker && (
+          <Picker
+            onEmojiClick={(emoji: { emoji: string }) =>
+              handleEmojiSelect(emoji.emoji)
+            }
+          />
+        )}
       </div>
     </div>
   );
