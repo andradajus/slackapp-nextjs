@@ -9,7 +9,7 @@ import Image from "next/image";
 import AddMemberModal from "./AddMemberModal";
 import Link from "next/link";
 
-const Channels = () => {
+const Channels = ({ setMessages }) => {
   const [isAddMemberModalOpen, setAddMemberModalOpen] = useState(false);
   const [isMemberModalOpen, setMemberModalOpen] = useState(false);
   const [isChannelModalOpen, setChannelModalOpen] = useState(false);
