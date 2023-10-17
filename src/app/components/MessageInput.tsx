@@ -25,6 +25,10 @@ const MessageInput = ({}) => {
     console.log("Text is dashed?");
   };
 
+  const handleInsertEmoji = () => {
+    console.log("InsertEmoji");
+  };
+
   const handleOrderedList = () => {
     console.log("New ordered list created");
   };
@@ -81,7 +85,7 @@ const MessageInput = ({}) => {
           </span>
         </div>
         <textarea
-          className="w-full overflow-auto rounded-md bg-indigo-100"
+          className="w-full mx-2 p-2 text-sm overflow-auto rounded-md bg-indigo-100"
           value={message}
           onChange={(e) => setMessage(e.target.value)}
         />
@@ -92,7 +96,7 @@ const MessageInput = ({}) => {
             alt="Emoji-icon"
             width={17}
             height={17}
-            onClick={handleStrikethrough}
+            onClick={handleInsertEmoji}
           />
 
           <Image
