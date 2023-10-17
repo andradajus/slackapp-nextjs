@@ -1,12 +1,44 @@
 "useClient";
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
-const ChannelMessages = ({}) => {
+const ChannelMessages = () => {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
   const currentChannelID = sessionStorage.getItem("currentChannelID");
   const senderUID = sessionStorage.getItem("uid");
+  const headers = new Headers();
+  headers.append("Content-Type", "application/json");
+  headers.append("access-token", sessionStorage.getItem("access-token") || "");
+  headers.append("client", sessionStorage.getItem("client") || "");
+  headers.append("expiry", sessionStorage.getItem("expiry") || "");
+  headers.append("uid", sessionStorage.getItem("uid") || "");
+
+  const retrieveMessages = async () => {
+    const currentChannelID = sessionStorage.getItem("currentChannelID");
+    if (!currentChannelID) return;
+
+    const url = `http://206.189.91.54/api/v1/messages?receiver_id=${currentChannelID}&receiver_class=Channel`;
+
+    try {
+      const response = await fetch(url, {
+        method: "GET",
+        headers: headers,
+      });
+
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+
+      const data = await response.json();
+      if (data?.data) {
+        setMessages(Array.from(data.data));
+        console.log("Messages retrieved:", data.data);
+      }
+    } catch (error) {
+      console.error("Error retrieving messages:", error);
+    }
+  };
 
   const handleSendMessage = () => {
     const requestBody = {
@@ -20,16 +52,6 @@ const ChannelMessages = ({}) => {
       body: message,
       timestamp: new Date().toISOString(),
     };
-
-    const headers = new Headers();
-    headers.append("Content-Type", "application/json");
-    headers.append(
-      "access-token",
-      sessionStorage.getItem("access-token") || ""
-    );
-    headers.append("client", sessionStorage.getItem("client") || "");
-    headers.append("expiry", sessionStorage.getItem("expiry") || "");
-    headers.append("uid", sessionStorage.getItem("uid") || "");
 
     fetch("http://206.189.91.54/api/v1/messages", {
       method: "POST",
@@ -78,16 +100,21 @@ const ChannelMessages = ({}) => {
     console.log("New unordered list created");
   };
 
+  useEffect(() => {
+    retrieveMessages();
+  }, [currentChannelID]);
+
   return (
     <>
       <div className="bg-white">
         <ul className="flex flex-col justify-end">
-          {messages.map((msg, index) => (
+          {Array.from(messages).map((msg, index) => (
             <li key={index}>
               <div className="bg-blue-400">
                 <div className="text-xs">
-                  <span>{msg.sender}</span>
+                  <span>{msg.sender.uid}</span>
                   <span>{msg.body}</span>
+                  <span>{msg.created_at}</span>
                 </div>
                 <span className="text-xs">React Button?</span>
               </div>
@@ -95,7 +122,6 @@ const ChannelMessages = ({}) => {
           ))}
         </ul>
       </div>
-
       <div className="p-2 m-auto">
         <div className="bg-indigo-500 ml-1 mr-1 rounded-md content-center">
           <div className="flex gap-2 m-1 ml-2">
