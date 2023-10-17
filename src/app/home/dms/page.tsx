@@ -1,14 +1,10 @@
 "use client";
 import MessageInput from "@/app/components/MessageInput";
 import { useState, useEffect } from "react";
-
-type Message = {
-  uid: string;
-  text: string;
-};
+import MessageList from "@/app/components/MessageList";
 
 export default function DirectMessage() {
-  const [messages, setMessages] = useState<Message[]>([]);
+  const [messages, setMessages] = useState([]);
   const [uid, setUid] = useState("");
   const [text, setText] = useState("");
   const [receiverId, setReceiverId] = useState("");
@@ -20,10 +16,10 @@ export default function DirectMessage() {
         const data = await response.json();
         setMessages(data);
       } else {
-        throw new Error("Error retriving messages");
+        throw new Error("Error retrieving messages");
       }
     } catch (error) {
-      console.error("Error fetching messages:", error);
+      console.error("Error retrieving messages:", error);
     }
   };
 
@@ -50,7 +46,7 @@ export default function DirectMessage() {
       const requestBody = {
         receiver_id: receiverId,
         receiver_class: "User",
-        body: text,
+        message: text,
       };
 
       const response = await fetch("http://206.189.91.54/api/v1/messages", {
@@ -72,20 +68,20 @@ export default function DirectMessage() {
   return (
     <div className="h-screen border-solid border-2 border-white">
       <div className="m-3 p-3 flex flex-col justify-center content-center bg-indigo-800 rounded">
-        <div className="flex flex-col">
-          {messages.map((message, index) => (
-            <div key={index}>
-              <strong>{message.uid}:</strong> {message.text}
-            </div>
-          ))}
+        <div className="flex flex-col border-b-2 border-white">
+          <p className="font-sans text-base text-white">Inbox</p>
+          <MessageList messages={messages} />
         </div>
-        <input
-          type="text"
-          placeholder="Recipient's ID"
-          value={receiverId}
-          onChange={(e) => setReceiverId(e.target.value)}
-          className="bg-indigo-100 p-2 text-sm font-mono text-black rounded"
-        />
+
+        <div className="flex flex-col mt-5">
+          <input
+            type="text"
+            placeholder="Send to:"
+            value={receiverId}
+            onChange={(e) => setReceiverId(e.target.value)}
+            className="bg-indigo-100 p-2 text-sm font-mono text-black rounded"
+          />
+        </div>
         <div>
           <MessageInput />
         </div>
