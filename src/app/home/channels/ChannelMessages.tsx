@@ -6,6 +6,7 @@ const ChannelMessages = () => {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
   const currentChannelID = sessionStorage.getItem("currentChannelID");
+  const [filteredNames, setFilteredNames] = useState([]);
   const senderUID = sessionStorage.getItem("uid");
   const headers = new Headers();
   headers.append("Content-Type", "application/json");
@@ -13,6 +14,29 @@ const ChannelMessages = () => {
   headers.append("client", sessionStorage.getItem("client") || "");
   headers.append("expiry", sessionStorage.getItem("expiry") || "");
   headers.append("uid", sessionStorage.getItem("uid") || "");
+
+  const handleBold = () => {
+    console.log("Text is bold");
+  };
+
+  const handleItalic = () => {
+    console.log("Text is italic");
+  };
+
+  const handleUnderline = () => {
+    console.log("Text is underlined");
+  };
+  const handleStrikethrough = () => {
+    console.log("Text is dashed?");
+  };
+
+  const handleOrderedList = () => {
+    console.log("New ordered list created");
+  };
+
+  const handleUnorderedList = () => {
+    console.log("New unordered list created");
+  };
 
   const retrieveMessages = async () => {
     const currentChannelID = sessionStorage.getItem("currentChannelID");
@@ -40,7 +64,7 @@ const ChannelMessages = () => {
     }
   };
 
-  const handleSendMessage = () => {
+  const handleSendMessage = async () => {
     const requestBody = {
       receiver_id: currentChannelID,
       receiver_class: "Channel",
@@ -50,54 +74,56 @@ const ChannelMessages = () => {
     const newMessage = {
       sender: senderUID,
       body: message,
-      timestamp: new Date().toISOString(),
+      timestamp: new Date(),
     };
 
-    fetch("http://206.189.91.54/api/v1/messages", {
-      method: "POST",
-      headers: headers,
-      body: JSON.stringify(requestBody),
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        return response.json();
-      })
-      .then((data) => {
-        setMessages([...messages, newMessage]);
-        setMessage("");
-        console.log("Channel Message sent successfully:", data);
-      })
-      .catch((error) => {
-        console.error("Error sending message:", error);
+    try {
+      const response = await fetch("http://206.189.91.54/api/v1/messages", {
+        method: "POST",
+        headers: headers,
+        body: JSON.stringify(requestBody),
       });
 
-    console.log("Message Sent");
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+
+      const data = await response.json();
+      setMessages([...messages, newMessage]);
+      setMessage("");
+      console.log("Message Sent");
+    } catch (error) {
+      console.error("Error sending message:", error);
+    }
   };
 
-  const handleBold = () => {
-    console.log("Text is bold");
+  const getNameForUID = (uid) => {
+    const userData =
+      JSON.parse(localStorage.getItem("storedCurrentUsers")) || {};
+    const matchingData = userData.find((data) => data.uid === uid);
+    return matchingData ? matchingData.name : uid;
   };
 
-  const handleItalic = () => {
-    console.log("Text is italic");
-  };
+  const renderMessages = () => {
+    return Array.from(messages).map((msg, index) => {
+      const uid = msg.sender.uid;
+      const name = getNameForUID(uid);
 
-  const handleUnderline = () => {
-    console.log("Text is underlined");
-  };
+      console.log(`UID: ${uid}, Name: ${name}`);
 
-  const handleStrikethrough = () => {
-    console.log("Text is dashed?");
-  };
-
-  const handleOrderedList = () => {
-    console.log("New ordered list created");
-  };
-
-  const handleUnorderedList = () => {
-    console.log("New unordered list created");
+      return (
+        <li key={index}>
+          <div className={`bg-${index % 2 === 0 ? "blue" : "green"}-400`}>
+            <div className="flex flex-col text-xs">
+              <span>{name}</span>
+              <span>{msg.body}</span>
+              <span>{new Date(msg.created_at).toLocaleTimeString()}</span>
+            </div>
+            <span className="text-xs">React Button?</span>
+          </div>
+        </li>
+      );
+    });
   };
 
   useEffect(() => {
@@ -107,20 +133,7 @@ const ChannelMessages = () => {
   return (
     <>
       <div className="bg-white">
-        <ul className="flex flex-col justify-end">
-          {Array.from(messages).map((msg, index) => (
-            <li key={index}>
-              <div className="bg-blue-400">
-                <div className="text-xs">
-                  <span>{msg.sender.uid}</span>
-                  <span>{msg.body}</span>
-                  <span>{msg.created_at}</span>
-                </div>
-                <span className="text-xs">React Button?</span>
-              </div>
-            </li>
-          ))}
-        </ul>
+        <ul className="flex flex-col justify-end">{renderMessages()}</ul>
       </div>
       <div className="p-2 m-auto">
         <div className="bg-indigo-500 ml-1 mr-1 rounded-md content-center">

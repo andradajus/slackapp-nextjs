@@ -10,24 +10,53 @@ import Link from "next/link";
 const Home = () => {
   const [nominatedName, setNominatedName] = useState("");
   const [isNameModalOpen, setNameModalOpen] = useState(false);
+  const id = sessionStorage.getItem("id");
+  const headers = new Headers();
+  headers.append("Content-Type", "application/json");
+  headers.append("access-token", sessionStorage.getItem("access-token"));
+  headers.append("client", sessionStorage.getItem("client"));
+  headers.append("expiry", sessionStorage.getItem("expiry"));
+  headers.append("uid", sessionStorage.getItem("uid"));
+
+  useEffect(() => {
+    handleAddUser();
+    storeCurrentUsers();
+  }, []);
+
+  const handleAddUser = async () => {
+    try {
+      const requestBody = {
+        id: 5079,
+        member_id: id,
+      };
+
+      const response = await fetch(
+        `http://206.189.91.54/api/v1/channel/add_member`,
+        {
+          method: "POST",
+          headers: headers,
+          body: JSON.stringify(requestBody),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      const data = await response.json();
+      handleNominateName();
+      console.log("Member has been added to the channel", data);
+    } catch (error) {
+      console.error("Error adding member to the channel:", error);
+    }
+  };
 
   const handleNominateName = async () => {
     try {
       const uid = sessionStorage.getItem("uid");
-      const receiverId = 3907;
-      const receiverClass = "User";
+      const receiverId = 5079;
+      const receiverClass = "Channel";
 
       const url = `http://206.189.91.54/api/v1/messages?receiver_id=${receiverId}&receiver_class=${receiverClass}`;
-
-      const headers = new Headers();
-      headers.append("Content-Type", "application/json");
-      headers.append(
-        "access-token",
-        sessionStorage.getItem("access-token") || ""
-      );
-      headers.append("client", sessionStorage.getItem("client") || "");
-      headers.append("expiry", sessionStorage.getItem("expiry") || "");
-      headers.append("uid", sessionStorage.getItem("uid") || "");
 
       const response = await fetch(url, {
         method: "GET",
@@ -59,14 +88,49 @@ const Home = () => {
     }
   };
 
-  useEffect(() => {
-    handleNominateName();
-  }, []);
-
   const closeName = async () => {
     setNameModalOpen(false);
-    console.log("closeMemberModal");
     await handleNominateName();
+  };
+
+  const storeCurrentUsers = async () => {
+    try {
+      const uid = sessionStorage.getItem("uid");
+      const receiverId = 5079;
+      const receiverClass = "Channel";
+
+      const url = `http://206.189.91.54/api/v1/messages?receiver_id=${receiverId}&receiver_class=${receiverClass}`;
+
+      const response = await fetch(url, {
+        method: "GET",
+        headers: headers,
+      });
+
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+
+      const data = await response.json();
+      console.log("Raw Data", data);
+
+      const filteredBody = data.data.map((item) => item.body);
+      console.log("Body Array:", filteredBody);
+
+      const convertedFilteredBody = filteredBody.map((item) => {
+        const [uidKey, uidValue, nameKey, nameValue] = item.split(" ");
+        const uid = uidValue.substring(uidValue.indexOf(":") + 1);
+        const name = nameValue.substring(nameValue.indexOf(":") + 1);
+        return { uid, name };
+      });
+
+      console.log("Converted Filter Body:", convertedFilteredBody);
+      localStorage.setItem(
+        "storedCurrentUsers",
+        JSON.stringify(convertedFilteredBody)
+      );
+    } catch (error) {
+      console.error("Error retrieving messages:", error);
+    }
   };
 
   const shouldShowNominateName = !nominatedName;
