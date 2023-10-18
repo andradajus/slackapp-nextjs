@@ -5,6 +5,8 @@ const NominateName = ({ closeName }: { closeName: () => void }) => {
   const [nominatedName, setNominatedName] = useState("");
   const uid = sessionStorage.getItem("uid");
 
+  const shouldShowModal = !uid && !nominatedName;
+
   const handleNominateName = async () => {
     const requestBody = {
       receiver_id: 5079, //Names Channel
