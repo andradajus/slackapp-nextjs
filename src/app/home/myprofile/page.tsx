@@ -10,6 +10,7 @@ const MyProfile = ({
   uid: string;
 }) => {
   const [email, setEmail] = useState("");
+  const id = sessionStorage.getItem("id");
 
   useEffect(() => {
     const uid = sessionStorage.getItem("uid");
@@ -68,9 +69,40 @@ const MyProfile = ({
             <Image src={ownerImage} alt="Your Photo" width={150} height={150} />
           )} pwede pag maglalagay ng picture */}
 
-          <p>Active: {nominatedName} </p>
-          <p>Username: {uid}</p>
-          <p>Email: {email}</p>
+          <div>
+            <div>Email: {email}</div>
+            <div>{id}</div>
+
+            <div>
+              First Name
+              <input type="text" onChange={""} />
+            </div>
+
+            <div>
+              Middle Name
+              <input type="text" onChange={""} />
+            </div>
+
+            <div>
+              Last Name
+              <input type="text" onChange={""} />
+            </div>
+
+            <div>
+              First Name
+              <input type="text" onChange={""} />
+            </div>
+
+            <div>
+              First Name
+              <input type="text" onChange={""} />
+            </div>
+
+            <div>
+              First Name
+              <input type="text" onChange={""} />
+            </div>
+          </div>
         </main>
       </div>
     </>
