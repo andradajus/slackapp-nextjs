@@ -1,9 +1,8 @@
-"use client";
 import { useState, useRef } from "react";
 import Image from "next/image";
 import EmojiPicker from "emoji-picker-react";
 
-const MessageInput = ({}) => {
+const MessageInput = ({ receiverId }: { receiverId: number }) => {
   const [message, setMessage] = useState("");
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [error, setError] = useState("");
@@ -14,27 +13,38 @@ const MessageInput = ({}) => {
 
   const handleSendMessage = async () => {
     if (message.trim() === "") {
-      setError("Please enter a message");
+      setError("Please enter a message.");
+      return;
+    }
+
+    if (receiverId === 0) {
+      setError("Please input the email of your recipient.");
       return;
     }
 
     try {
+      const headers = new Headers();
+      headers.append("Content-Type", "application/json");
+      headers.append(
+        "access-token",
+        sessionStorage.getItem("access-token") || ""
+      );
+      headers.append("client", sessionStorage.getItem("client") || "");
+      headers.append("expiry", sessionStorage.getItem("expiry") || "");
+      headers.append("uid", sessionStorage.getItem("uid") || "");
+
       const response = await fetch("http://206.189.91.54/api/v1/messages", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "access-token": "access-token",
-          client: "client",
-          expiry: "expiry",
-          uid: "uid",
-        },
+        headers: headers,
         body: JSON.stringify({
-          message: message,
+          receiver_class: "User",
+          receiver_id: receiverId,
+          body: message,
         }),
       });
 
       if (response.ok) {
-        setSuccess("Message sent!");
+        alert("Message sent!");
         setMessage("");
       } else {
         setError("Failed to send the message. Please try again.");
@@ -52,35 +62,67 @@ const MessageInput = ({}) => {
 
     if (selectionStart !== undefined && selectionEnd !== undefined) {
       const selectedText = text.slice(selectionStart, selectionEnd);
-      const newText =
-        text.slice(0, selectionStart) +
-        format +
-        selectedText +
-        format +
-        text.slice(selectionEnd);
+      let newText = "";
+
+      if (selectedText.startsWith(format) && selectedText.endsWith(format)) {
+        newText =
+          text.slice(0, selectionStart) +
+          selectedText.slice(format.length, -format.length) +
+          text.slice(selectionEnd);
+      } else {
+        newText =
+          text.slice(0, selectionStart) +
+          format +
+          selectedText +
+          format +
+          text.slice(selectionEnd);
+      }
+
       setMessage(newText);
     }
   };
 
+  const handleDeleteOrderedList = () => {
+    const cursorPosition = messageRef.current?.selectionStart || 0;
+    const textBeforeCursor = message.slice(0, cursorPosition);
+    const textAfterCursor = message.slice(cursorPosition);
+
+    if (textBeforeCursor.endsWith("\n1. ")) {
+      setOrderedListCount(1);
+    }
+
+    setMessage(textBeforeCursor + textAfterCursor);
+  };
+
+  const handleKeyDown = (e: { key: string }) => {
+    if (e.key === "Backspace") {
+      handleDeleteOrderedList();
+    }
+  };
+
   const handleOrderedList = () => {
-    const formattedListItem = `${orderedListCount}. ${message}`;
+    const cursorPosition = messageRef.current?.selectionStart || 0;
+    const formattedListItem = `${orderedListCount}. `;
+    const updatedMessage =
+      message.slice(0, cursorPosition) +
+      formattedListItem +
+      message.slice(cursorPosition);
     setOrderedListCount(orderedListCount + 1);
-    const updatedMessage = `${message}\n${formattedListItem}`;
     setMessage(updatedMessage);
   };
 
   const handleUnorderedList = () => {
-    const updatedMessage = `${message}\n• \n• \n`;
+    const cursorPosition = messageRef.current?.selectionStart || 0;
+    const formattedListItem = `• `;
+    const updatedMessage =
+      message.slice(0, cursorPosition) +
+      formattedListItem +
+      message.slice(cursorPosition);
     setMessage(updatedMessage);
   };
 
   const handleInsertEmoji = () => {
     setShowEmojiPicker(true);
-  };
-
-  const handleEmojiSelect = (emoji: string) => {
-    const updatedMessage = message + emoji;
-    setMessage(updatedMessage);
   };
 
   return (
@@ -144,9 +186,10 @@ const MessageInput = ({}) => {
         <div className="mx-2">
           <textarea
             ref={messageRef}
-            className="w-full p-1 text-sm overflow-auto rounded-md bg-indigo-100"
+            className="w-full h-auto p-1 text-sm overflow-auto rounded-md bg-indigo-100"
             value={message}
             onChange={(e) => setMessage(e.target.value)}
+            onKeyDown={handleKeyDown}
           />
         </div>
         <div className="flex bg-indigo-500 justify-between rounded-md">
