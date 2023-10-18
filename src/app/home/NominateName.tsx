@@ -37,7 +37,7 @@ const NominateName = ({ closeName }: { closeName: () => void }) => {
       console.log(uid);
       console.log(nominatedName);
       console.log("Message sent successfully:", data);
-      window.location.reload();
+      closeName();
     } catch (error) {
       console.error("Error sending message:", error);
     }

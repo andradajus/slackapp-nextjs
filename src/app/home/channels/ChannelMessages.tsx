@@ -2,7 +2,7 @@
 import Image from "next/image";
 import { useState, useEffect } from "react";
 
-const ChannelMessages = () => {
+const ChannelMessages = ({}) => {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
   const currentChannelID = sessionStorage.getItem("currentChannelID");
@@ -91,13 +91,14 @@ const ChannelMessages = () => {
       const data = await response.json();
       setMessages([...messages, newMessage]);
       setMessage("");
+      retrieveMessages();
       console.log("Message Sent");
     } catch (error) {
       console.error("Error sending message:", error);
     }
   };
 
-  const getNameForUID = (uid) => {
+  const getNameForUID = (uid: string) => {
     const userData =
       JSON.parse(localStorage.getItem("storedCurrentUsers")) || {};
     const matchingData = userData.find((data) => data.uid === uid);
@@ -112,16 +113,21 @@ const ChannelMessages = () => {
       console.log(`UID: ${uid}, Name: ${name}`);
 
       return (
-        <li key={index}>
-          <div className={`bg-${index % 2 === 0 ? "blue" : "green"}-400`}>
-            <div className="flex flex-col text-xs">
-              <span>{name}</span>
-              <span>{msg.body}</span>
-              <span>{new Date(msg.created_at).toLocaleTimeString()}</span>
+        <ul>
+          <li className="border-t border-black" key={index}>
+            <div>
+              <div className="flex flex-col">
+                <div>
+                  <span className="text-md font-bold">{name}</span>{" "}
+                  <span className="text-xs pl-3">
+                    {new Date(msg.created_at).toLocaleTimeString()}
+                  </span>
+                </div>
+                <span className="pb-1">{msg.body}</span>
+              </div>
             </div>
-            <span className="text-xs">React Button?</span>
-          </div>
-        </li>
+          </li>
+        </ul>
       );
     });
   };
@@ -132,78 +138,88 @@ const ChannelMessages = () => {
 
   return (
     <>
-      <div className="bg-white">
-        <ul className="flex flex-col justify-end">{renderMessages()}</ul>
-      </div>
-      <div className="p-2 m-auto">
-        <div className="bg-indigo-500 ml-1 mr-1 rounded-md content-center">
-          <div className="flex gap-2 m-1 ml-2">
-            <Image
-              className="cursor-pointer hover:bg-indigo-700 hover:rounded-sm"
-              src="https://www.svgrepo.com/show/491501/text-bold.svg"
-              alt="Bold-icon"
-              width={15}
-              height={15}
-              onClick={handleBold}
-            />
+      <div className="flex flex-col h-full">
+        <div className="flex flex-col rounded-lg ml-1 mr-1 p-2 bg-white h-96 max-h-96 overflow-y-auto">
+          {renderMessages()}
+        </div>
 
-            <Image
-              className="cursor-pointer hover:bg-indigo-700 hover:rounded-sm"
-              src="https://www.svgrepo.com/show/491503/text-italic.svg"
-              alt="Italic-icon"
-              width={15}
-              height={15}
-              onClick={handleItalic}
-            />
+        <div className="p-1 w-full">
+          <div className="bg-indigo-500 ml-1 mr-1 rounded-md content-center p-2">
+            <div className="flex gap-2 m-1 ml-2">
+              <Image
+                className="cursor-pointer hover:bg-indigo-700 hover:rounded-sm"
+                src="https://www.svgrepo.com/show/491501/text-bold.svg"
+                alt="Bold-icon"
+                width={15}
+                height={15}
+                onClick={handleBold}
+              />
 
-            <Image
-              className="cursor-pointer hover:bg-indigo-700 hover:rounded-sm"
-              src="https://www.svgrepo.com/show/491504/text-underline.svg"
-              alt="Underline-icon"
-              width={15}
-              height={15}
-              onClick={handleUnderline}
-            />
+              <Image
+                className="cursor-pointer hover:bg-indigo-700 hover:rounded-sm"
+                src="https://www.svgrepo.com/show/491503/text-italic.svg"
+                alt="Italic-icon"
+                width={15}
+                height={15}
+                onClick={handleItalic}
+              />
 
-            <Image
-              className="cursor-pointer hover:bg-indigo-700 hover:rounded-sm"
-              src="https://www.svgrepo.com/show/376261/strikethrough.svg"
-              alt="Strikethrough-icon"
-              width={17}
-              height={17}
-              onClick={handleStrikethrough}
-            />
+              <Image
+                className="cursor-pointer hover:bg-indigo-700 hover:rounded-sm"
+                src="https://www.svgrepo.com/show/491504/text-underline.svg"
+                alt="Underline-icon"
+                width={15}
+                height={15}
+                onClick={handleUnderline}
+              />
 
-            <span className="cursor-pointer" onClick={handleOrderedList}>
-              OL
-            </span>
-            <span className="cursor-pointer" onClick={handleUnorderedList}>
-              UL
-            </span>
-          </div>
-          <textarea
-            className="w-full overflow-auto h-28 rounded-md p-2 bg-indigo-100"
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-          />
-          <div className="flex bg-indigo-500 justify-between rounded-md">
-            <Image
-              className="cursor-pointer hover:bg-yellow-500 ml-2"
-              src="https://www.svgrepo.com/show/447618/emoticon-smile.svg"
-              alt="Emoji-icon"
-              width={17}
-              height={17}
-              onClick={handleStrikethrough}
-            />
+              <Image
+                className="cursor-pointer hover:bg-indigo-700 hover:rounded-sm"
+                src="https://www.svgrepo.com/show/376261/strikethrough.svg"
+                alt="Strikethrough-icon"
+                width={17}
+                height={17}
+                onClick={handleStrikethrough}
+              />
 
-            <Image
-              className="cursor-pointer hover:bg-indigo-700 mr-2"
-              src="https://www.svgrepo.com/show/533310/send-alt-1.svg"
-              alt="SendMessage-icon"
-              width={20}
-              height={20}
-              onClick={handleSendMessage}
+              <span className="cursor-pointer" onClick={handleOrderedList}>
+                OL
+              </span>
+              <span className="cursor-pointer" onClick={handleUnorderedList}>
+                UL
+              </span>
+            </div>
+
+            <textarea
+              className="w-full h-20 overflow-auto rounded-md pl-1 pr-1 text-sm resize-none "
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
             />
+            <div className="flex bg-indigo-500 justify-between rounded-md ">
+              <Image
+                className="cursor-pointer hover:bg-yellow-500 ml-2"
+                src="https://www.svgrepo.com/show/447618/emoticon-smile.svg"
+                alt="Emoji-icon"
+                width={17}
+                height={17}
+                onClick={handleStrikethrough}
+              />
+              <div
+                className="flex flex-row cursor-pointer 
+              hover:bg-indigo-700
+              bg-yellow-200 rounded-md mt-1 pr-1 pl-1
+              font-bold"
+                onClick={handleSendMessage}
+              >
+                <span className="pt-1 pb-1 pr-1 text-sm ">Send Message</span>
+                <Image
+                  src="https://www.svgrepo.com/show/533310/send-alt-1.svg"
+                  alt="SendMessage-icon"
+                  width={20}
+                  height={20}
+                />
+              </div>
+            </div>
           </div>
         </div>
       </div>

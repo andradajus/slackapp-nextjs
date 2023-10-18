@@ -18,8 +18,8 @@ const SubSideBar = ({ channels, onChannelClick }) => {
 
   return (
     <>
-      <div className="bg-indigo-500 h-full">
-        <div className="bg-indigo-600 text-center block text-2xl font-bold mb-0 text-yellow-400 font-serif pb-5 pt-5">
+      <div className="bg-indigo-500 h-full w-48">
+        <div className="bg-indigo-600 text-center block text-2xl font-bold mb-0 text-yellow-400 font-serif pb-2 pt-2">
           <div>Conversa</div>
         </div>
         <div className="flex flex-col ml-4">

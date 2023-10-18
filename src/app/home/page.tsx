@@ -19,8 +19,8 @@ const Home = () => {
   headers.append("uid", sessionStorage.getItem("uid"));
 
   useEffect(() => {
-    handleAddUser();
     storeCurrentUsers();
+    handleAddUser();
   }, []);
 
   const handleAddUser = async () => {
@@ -44,6 +44,7 @@ const Home = () => {
       }
       const data = await response.json();
       handleNominateName();
+      storeCurrentUsers();
       console.log("Member has been added to the channel", data);
     } catch (error) {
       console.error("Error adding member to the channel:", error);
@@ -90,6 +91,7 @@ const Home = () => {
 
   const closeName = async () => {
     setNameModalOpen(false);
+    window.location.reload();
     await handleNominateName();
   };
 
@@ -117,9 +119,20 @@ const Home = () => {
       console.log("Body Array:", filteredBody);
 
       const convertedFilteredBody = filteredBody.map((item) => {
-        const [uidKey, uidValue, nameKey, nameValue] = item.split(" ");
-        const uid = uidValue.substring(uidValue.indexOf(":") + 1);
-        const name = nameValue.substring(nameValue.indexOf(":") + 1);
+        const parts = item.split(" ");
+
+        let uid = "";
+        let name = "";
+
+        parts.forEach((part, index) => {
+          if (part === "uid:") {
+            uid = parts[index + 1];
+          }
+          if (part === "name:") {
+            name = parts[index + 1];
+          }
+        });
+
         return { uid, name };
       });
 

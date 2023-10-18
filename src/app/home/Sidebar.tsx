@@ -12,51 +12,27 @@ const Sidebar = () => {
   const [isNameModalOpen, setNameModalOpen] = useState(false);
   const [open, setOpen] = useState(true);
 
-  const handleNominateName = async () => {
-    try {
-      const uid = sessionStorage.getItem("uid");
-      const receiverId = 3907; //name channel natin :D
-      const receiverClass = "User";
+  const handleNominateName = () => {
+    const storedUsers =
+      JSON.parse(localStorage.getItem("storedCurrentUsers")) || [];
+    const currentUID = sessionStorage.getItem("uid");
 
-      const url = `http://206.189.91.54/api/v1/messages?receiver_id=${receiverId}&receiver_class=${receiverClass}`;
+    console.log("Stored Users:", storedUsers);
 
-      const headers = new Headers();
-      headers.append("Content-Type", "application/json");
-      headers.append(
-        "access-token",
-        sessionStorage.getItem("access-token") || ""
-      );
-      headers.append("client", sessionStorage.getItem("client") || "");
-      headers.append("expiry", sessionStorage.getItem("expiry") || "");
-      headers.append("uid", sessionStorage.getItem("uid") || "");
+    if (Array.isArray(storedUsers) && storedUsers.length > 0) {
+      const matchedUser = storedUsers.find((user) => user.uid === currentUID);
 
-      const response = await fetch(url, {
-        method: "GET",
-        headers: headers,
-      });
+      console.log("matchedUser:", matchedUser);
 
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
+      if (matchedUser) {
+        const nominatedName = matchedUser.name;
+        setNominatedName(nominatedName);
+        closeName();
+      } else {
+        console.error("User not found in storedCurrentUsers");
       }
-
-      const data = await response.json();
-
-      const messageWithMatchingUid = data.data.find(
-        (message: { body: string | string[] }) => {
-          const uidIndex = message.body.indexOf(`uid: ${uid}`);
-          return uidIndex !== -1;
-        }
-      );
-
-      if (messageWithMatchingUid) {
-        const bodyParts = messageWithMatchingUid.body.split(" ");
-        const nameIndex = bodyParts.indexOf("name:");
-        if (nameIndex !== -1 && nameIndex + 1 < bodyParts.length) {
-          setNominatedName(bodyParts[nameIndex + 1]);
-        }
-      }
-    } catch (error) {
-      console.error("Error retrieving messages:", error);
+    } else {
+      console.error("Invalid or empty storedCurrentUsers");
     }
   };
 
@@ -71,12 +47,11 @@ const Sidebar = () => {
 
   useEffect(() => {
     handleNominateName();
-  }, []);
+  }, [nominatedName]);
 
   const closeName = async () => {
     setNameModalOpen(false);
     console.log("closeMemberModal");
-    await handleNominateName();
   };
 
   const Menus = [

@@ -124,26 +124,36 @@ const Channels = ({ setMessages }) => {
         <ChannelDetailsModal closeChannelDetails={closeChannelDetails} />
       )}
 
-      <div className="grid grid-cols-12 grid-rows-5 h-screen">
-        <div className="col-span-2 row-span-5 h-full w-full">
+      <div className="flex flex-row">
+        <div className="flex h-screen">
           <SubSideBar channels={channels} onChannelClick={handleChannelClick} />
         </div>
-        <div className="col-span-10 row-span-5 bg-amber-200 col-start-3 h-full w-full">
-          <div className="flex flex-col justify-between bg-green-200 h-full">
-            <div className="bg-amber-200 flex justify-between col-span-9 row-span-5 col-start-4">
+
+        <div className="flex flex-col bg-amber-200 w-full">
+          <div className="flex flex-row bg-red-200 justify-between">
+            <div className="flex flex-row">
               <div className="bg-slate-200 ml-2 p-2 hover:bg-indigo-700 text-lg">
                 <span className="ml-2 p-2">{channelDetails.id}</span>
               </div>
 
-              <div>
-                <span
-                  className="cursor-pointer font-bold ml-2 p-2 hover:bg-indigo-700 text-2xl"
-                  onClick={openChannelDetails}
-                >
-                  {channelDetails.name}
-                </span>
-              </div>
+              <Image
+                className="cursor-pointer hover:bg-indigo-700 hover:rounded-sm click:rotate-360 ml-2"
+                src="https://www.svgrepo.com/show/99276/refresh-button.svg"
+                alt="Handle Refresh"
+                width={40}
+                height={40}
+                onClick={""}
+              />
+            </div>
 
+            <span
+              className="cursor-pointer font-bold ml-2 p-2 hover:bg-indigo-700 text-2xl"
+              onClick={openChannelDetails}
+            >
+              {channelDetails.name}
+            </span>
+
+            <div>
               <div className="flex flex-row gap-2 mr-2">
                 <div className="cursor-pointer">
                   <Image
@@ -179,10 +189,9 @@ const Channels = ({ setMessages }) => {
                 </div>
               </div>
             </div>
-
-            <div>
-              <ChannelMessages />
-            </div>
+          </div>
+          <div className="bg-green-200 h-full">
+            <ChannelMessages />
           </div>
         </div>
       </div>
