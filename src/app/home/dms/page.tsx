@@ -1,37 +1,15 @@
 "use client";
+import React, { useState, useEffect } from "react";
 import MessageInput from "@/app/components/MessageInput";
-import { useState, useEffect, useRef } from "react";
 import MessageList from "@/app/components/MessageList";
 
 export default function DirectMessage() {
   const [messages, setMessages] = useState([]);
-  const [uid, setUid] = useState("");
-  const [text, setText] = useState("");
-  const [receiverId, setReceiverId] = useState("");
+  const [receiverEmail, setReceiverEmail] = useState("");
+  const [receiverId, setReceiverId] = useState(0);
+  const [users, setUsers] = useState([]);
 
   const fetchMessages = async () => {
-    try {
-      const response = await fetch("http://206.189.91.54/api/v1/messages");
-      if (response.ok) {
-        const data = await response.json();
-        setMessages(data);
-      } else {
-        throw new Error("Error retrieving messages");
-      }
-    } catch (error) {
-      console.error("Error retrieving messages:", error);
-    }
-  };
-
-  useEffect(() => {
-    fetchMessages();
-  }, []);
-
-  const sendMessage = async () => {
-    if (uid.trim() === "" || text.trim() === "" || receiverId.trim() === "") {
-      return;
-    }
-
     try {
       const headers = new Headers();
       headers.append("Content-Type", "application/json");
@@ -43,27 +21,81 @@ export default function DirectMessage() {
       headers.append("expiry", sessionStorage.getItem("expiry") || "");
       headers.append("uid", sessionStorage.getItem("uid") || "");
 
-      const requestBody = {
-        receiver_id: receiverId,
-        receiver_class: "User",
-        message: text,
-      };
+      const response = await fetch(
+        "http://206.189.91.54/api/v1/messages?receiver_id=1&receiver_class=User",
+        {
+          method: "GET",
+          headers: headers,
+        }
+      );
 
-      const response = await fetch("http://206.189.91.54/api/v1/messages", {
-        method: "POST",
+      if (response.ok) {
+        const data = await response.json();
+        setMessages(data);
+      } else {
+        throw new Error("Error retrieving messages");
+      }
+    } catch (error) {
+      console.error("Error retrieving messages:", error);
+    }
+  };
+
+  const fetchUsers = async () => {
+    try {
+      const headers = new Headers();
+      headers.append("Content-Type", "application/json");
+      headers.append(
+        "access-token",
+        sessionStorage.getItem("access-token") || ""
+      );
+      headers.append("client", sessionStorage.getItem("client") || "");
+      headers.append("expiry", sessionStorage.getItem("expiry") || "");
+      headers.append("uid", sessionStorage.getItem("uid") || "");
+
+      const response = await fetch(`http://206.189.91.54/api/v1/users`, {
+        method: "GET",
         headers: headers,
-        // {"Content-Type": "application/json"},
-        body: JSON.stringify(requestBody),
       });
 
       if (response.ok) {
-        setText("");
-        fetchMessages();
+        const data = await response.json();
+
+        setUsers(data.data);
+      } else {
+        throw new Error("User not found.");
       }
     } catch (error) {
-      console.error("Error sending message:", error);
+      console.error("Error searching for user:", error);
     }
   };
+
+  const chooseReceiver = (targetUid: string) => {
+    const recipient = users.find(
+      (user: { uid: string }) => user.uid === targetUid
+    );
+
+    if (recipient) {
+      return recipient;
+    }
+    return null;
+  };
+
+  const handleSearchUserClick = () => {
+    const targetUid = receiverEmail;
+    const recipient = chooseReceiver(targetUid);
+
+    if (recipient) {
+      setReceiverId(recipient.id);
+      alert("Message will be sent to: " + targetUid);
+    } else {
+      alert("User not found!");
+    }
+  };
+
+  useEffect(() => {
+    fetchMessages();
+    fetchUsers();
+  }, []);
 
   return (
     <div className="h-screen border-solid border-2 border-white">
@@ -74,21 +106,28 @@ export default function DirectMessage() {
           </p>
           <MessageList messages={messages} />
         </div>
-        <form className="flex mt-5">
+
+        <form className="flex mt-5 flex-col">
+          <label className="font-sans text-base text-white">Send to:</label>
           <input
             type="text"
-            placeholder="Send to:"
-            value={receiverId}
-            onChange={(e) => setReceiverId(e.target.value)}
-            className="bg-indigo-100 p-2 mb-4 text-sm font-mono text-black rounded"
+            placeholder="Enter email address"
+            value={receiverEmail}
+            onChange={(e) => setReceiverEmail(e.target.value)}
+            className="bg-indigo-100 p-1 mb-2 m-auto text-sm font-mono text-black rounded"
           />
 
-          <button className="m-auto px-2 flex justify-center align-center content-center border-solid border-2 rounded bg-indigo-500">
-            Confirm
+          <button
+            className="m-auto p-1 font-semibold border-solid border-2 rounded bg-indigo-500 text-xs  hover:bg-indigo-700"
+            type="button"
+            onClick={handleSearchUserClick}
+          >
+            Search User
           </button>
         </form>
+
         <div>
-          <MessageInput />
+          <MessageInput receiverId={receiverId} />
         </div>
       </div>
     </div>
