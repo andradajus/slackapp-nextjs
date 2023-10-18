@@ -1,14 +1,16 @@
 "use client";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import Image from "next/image";
-import Picker from "emoji-picker-react";
+import EmojiPicker from "emoji-picker-react";
 
 const MessageInput = ({}) => {
   const [message, setMessage] = useState("");
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
-  const [selectedEmoji, setSelectedEmoji] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [orderedListCount, setOrderedListCount] = useState(1);
+
+  const messageRef = useRef<HTMLTextAreaElement | null>(null);
 
   const handleSendMessage = async () => {
     if (message.trim() === "") {
@@ -43,26 +45,37 @@ const MessageInput = ({}) => {
     }
   };
 
-  /*aayusin pa tong mga handle buttons*/
   const handleFormatText = (format: string) => {
     const text = message;
-    const selectedText = text.slice(0, 5);
-    const newText = format + selectedText + format + text.slice(5);
-    setMessage(newText);
+    const selectionStart = messageRef.current?.selectionStart;
+    const selectionEnd = messageRef.current?.selectionEnd;
+
+    if (selectionStart !== undefined && selectionEnd !== undefined) {
+      const selectedText = text.slice(selectionStart, selectionEnd);
+      const newText =
+        text.slice(0, selectionStart) +
+        format +
+        selectedText +
+        format +
+        text.slice(selectionEnd);
+      setMessage(newText);
+    }
   };
 
   const handleOrderedList = () => {
-    const updatedMessage = `1. ` + `${message}\n2. ` + `${message}\n`;
+    const formattedListItem = `${orderedListCount}. ${message}`;
+    setOrderedListCount(orderedListCount + 1);
+    const updatedMessage = `${message}\n${formattedListItem}`;
     setMessage(updatedMessage);
   };
 
   const handleUnorderedList = () => {
-    const updatedMessage = `${message}\n. \n. \n`;
+    const updatedMessage = `${message}\n• \n• \n`;
     setMessage(updatedMessage);
   };
 
   const handleInsertEmoji = () => {
-    setShowEmojiPicker((prev) => !prev);
+    setShowEmojiPicker(true);
   };
 
   const handleEmojiSelect = (emoji: string) => {
@@ -73,7 +86,7 @@ const MessageInput = ({}) => {
   return (
     <div className="p-2 m-auto">
       <div className="bg-indigo-500 ml-1 mr-1 rounded-md content-center">
-        <div className="flex gap-2 m-1 ml-2">
+        <div className="flex gap-2 m-1 py-2 ml-2">
           <Image
             className="cursor-pointer hover:bg-indigo-700 hover:rounded-sm"
             src="https://www.svgrepo.com/show/491501/text-bold.svg"
@@ -130,6 +143,7 @@ const MessageInput = ({}) => {
         </div>
         <div className="mx-2">
           <textarea
+            ref={messageRef}
             className="w-full p-1 text-sm overflow-auto rounded-md bg-indigo-100"
             value={message}
             onChange={(e) => setMessage(e.target.value)}
@@ -155,10 +169,11 @@ const MessageInput = ({}) => {
           />
         </div>
         {showEmojiPicker && (
-          <Picker
-            onEmojiClick={(emoji: { emoji: string }) =>
-              handleEmojiSelect(emoji.emoji)
-            }
+          <EmojiPicker
+            onEmojiClick={(emojiObject) => {
+              const updatedMessage = message + emojiObject.emoji;
+              setMessage(updatedMessage);
+            }}
           />
         )}
       </div>
