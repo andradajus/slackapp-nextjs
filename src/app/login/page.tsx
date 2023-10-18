@@ -4,9 +4,8 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 
-const LoginPage = ({}) => {
+const LoginPage = () => {
   const router = useRouter();
-  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [email, setEmail] = useState("");
@@ -36,21 +35,8 @@ const LoginPage = ({}) => {
         const client = response.headers.get("client");
         const expiry = response.headers.get("expiry");
         const uid = response.headers.get("uid");
-        const nickname = response.headers.get("nickname");
-        const name = response.headers.get("name");
-
         const responseData = await response.json();
         const id = responseData.data.id;
-
-        console.log("Login successful");
-        console.log("Access Token:", accessToken);
-        console.log("Client:", client);
-        console.log("Expiry:", expiry);
-        console.log("UID:", uid);
-        console.log("Nickname:", nickname);
-        console.log("Name:", name);
-        console.log("ID:", id);
-
         sessionStorage.setItem("access-token", accessToken!);
         sessionStorage.setItem("client", client!);
         sessionStorage.setItem("expiry", expiry!);

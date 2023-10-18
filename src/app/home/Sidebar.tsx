@@ -3,38 +3,13 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import NominateName from "./NominateName";
 import React, { useState, useEffect } from "react";
 
 const Sidebar = () => {
   const router = useRouter();
-  const [nominatedName, setNominatedName] = useState("");
-  const [isNameModalOpen, setNameModalOpen] = useState(false);
   const [open, setOpen] = useState(true);
-
-  const handleNominateName = () => {
-    const storedUsers =
-      JSON.parse(localStorage.getItem("storedCurrentUsers")) || [];
-    const currentUID = sessionStorage.getItem("uid");
-
-    console.log("Stored Users:", storedUsers);
-
-    if (Array.isArray(storedUsers) && storedUsers.length > 0) {
-      const matchedUser = storedUsers.find((user) => user.uid === currentUID);
-
-      console.log("matchedUser:", matchedUser);
-
-      if (matchedUser) {
-        const nominatedName = matchedUser.name;
-        setNominatedName(nominatedName);
-        closeName();
-      } else {
-        console.error("User not found in storedCurrentUsers");
-      }
-    } else {
-      console.error("Invalid or empty storedCurrentUsers");
-    }
-  };
+  const [name, setName] = useState();
+  const id = sessionStorage.getItem("id");
 
   const handleLogout = () => {
     sessionStorage.removeItem("access-token");
@@ -42,16 +17,8 @@ const Sidebar = () => {
     sessionStorage.removeItem("expiry");
     sessionStorage.removeItem("uid");
     sessionStorage.removeItem("id");
+    sessionStorage.removeItem("currentChannelID");
     router.push("/login");
-  };
-
-  useEffect(() => {
-    handleNominateName();
-  }, [nominatedName]);
-
-  const closeName = async () => {
-    setNameModalOpen(false);
-    console.log("closeMemberModal");
   };
 
   const Menus = [
@@ -84,11 +51,8 @@ const Sidebar = () => {
     },
   ];
 
-  const shouldShowNominateName = !nominatedName;
-
   return (
     <>
-      {shouldShowNominateName && <NominateName closeName={closeName} />}
       <div className="flex">
         <div
           className={` ${
@@ -133,7 +97,8 @@ const Sidebar = () => {
           >
             <div className="flex justify-left content-center pl-2 pt-4">
               <p className="text-base font-sans font-bold">
-                <span>Hi,</span> <span>{" " + nominatedName + "!"}</span>
+                <span>Hi,</span>
+                <span>{" " + (name ? name : "User") + "!"}</span>
               </p>
             </div>
           </section>
