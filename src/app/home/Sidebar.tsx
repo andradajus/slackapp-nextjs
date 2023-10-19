@@ -9,13 +9,17 @@ const Sidebar = () => {
   const router = useRouter();
   const [open, setOpen] = useState(true);
   const uid = sessionStorage.getItem("uid");
-  const [keyValueArray, setKeyValueArray] = useState([]);
-  const headers = new Headers();
-  headers.append("Content-Type", "application/json");
-  headers.append("access-token", sessionStorage.getItem("access-token") || "");
-  headers.append("client", sessionStorage.getItem("client") || "");
-  headers.append("expiry", sessionStorage.getItem("expiry") || "");
-  headers.append("uid", sessionStorage.getItem("uid") || "");
+  const [keyValueArray, setKeyValueArray] = useState<
+    {
+      uid: string | null;
+      email: string | null;
+      username?: string;
+      firstname?: string;
+      middlename?: string;
+      lastname?: string;
+      aboutme?: string;
+    }[]
+  >([]);
 
   useEffect(() => {
     retrieveUserDetails();
