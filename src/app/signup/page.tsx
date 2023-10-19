@@ -14,6 +14,7 @@ const SignUpPage = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
+  const [uid, setUid] = useState("");
   const router = useRouter();
 
   const onSurnameChange = (e: {
@@ -74,23 +75,8 @@ const SignUpPage = () => {
       });
 
       if (response.ok) {
-        const data = await response.json();
-        const id = data.data.id;
-        const userDetails = {
-          id: id,
-          username: username,
-          surname: surname,
-          firstName: firstName,
-          middleName: middleName,
-        };
-
-        const storedUserData =
-          JSON.parse(localStorage.getItem("storedUserData")) || [];
-        storedUserData.push(userDetails);
-        localStorage.setItem("storedUserData", JSON.stringify(storedUserData));
         router.push("/login");
-
-
+        handleAddUserDetails();
         console.log("Registration successful:", data);
       } else {
         const errorData = await response.json();
@@ -102,6 +88,8 @@ const SignUpPage = () => {
       setError("An error occurred. Please try again later.");
     }
   };
+
+  //
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center text-center bg-indigo-900 text-white">

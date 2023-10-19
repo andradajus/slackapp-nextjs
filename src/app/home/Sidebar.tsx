@@ -3,36 +3,65 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import NominateName from "./NominateName";
 import React, { useState, useEffect } from "react";
 
 const Sidebar = () => {
   const router = useRouter();
-  const [nominatedName, setNominatedName] = useState("");
-  const [isNameModalOpen, setNameModalOpen] = useState(false);
   const [open, setOpen] = useState(true);
+  const uid = sessionStorage.getItem("uid");
+  const [keyValueArray, setKeyValueArray] = useState([]);
 
-  const handleNominateName = () => {
-    const storedUsers =
-      JSON.parse(localStorage.getItem("storedCurrentUsers")) || [];
-    const currentUID = sessionStorage.getItem("uid");
+  useEffect(() => {
+    retrieveUserDetails();
+  }, []);
 
-    console.log("Stored Users:", storedUsers);
+  const retrieveUserDetails = async () => {
+    const url = `http://206.189.91.54/api/v1/messages?receiver_id=${5108}&receiver_class=Channel`;
 
-    if (Array.isArray(storedUsers) && storedUsers.length > 0) {
-      const matchedUser = storedUsers.find((user) => user.uid === currentUID);
+    try {
+      const response = await fetch(url, {
+        method: "GET",
+        headers: headers,
+      });
 
-      console.log("matchedUser:", matchedUser);
-
-      if (matchedUser) {
-        const nominatedName = matchedUser.name;
-        setNominatedName(nominatedName);
-        closeName();
-      } else {
-        console.error("User not found in storedCurrentUsers");
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
       }
-    } else {
-      console.error("Invalid or empty storedCurrentUsers");
+
+      const data = await response.json();
+      console.log("Data:", data);
+
+      const uidToMatch = uid;
+      const matchingMessage = data.data.find((message) => {
+        try {
+          const bodyContent = JSON.parse(message.body);
+          return bodyContent.uid === uidToMatch;
+        } catch (error) {
+          return false;
+        }
+      });
+
+      if (matchingMessage) {
+        const bodyContent = JSON.parse(matchingMessage.body);
+        console.log("Formatted response data (body content):", bodyContent);
+        const keyValueData = [
+          {
+            uid: uidToMatch,
+            email: uidToMatch,
+            username: bodyContent.username,
+            firstname: bodyContent.firstname,
+            middlename: bodyContent.middlename,
+            lastname: bodyContent.lastname,
+            aboutme: bodyContent.aboutme,
+          },
+        ];
+        console.log("Key Value Data", keyValueData);
+        setKeyValueArray(keyValueData);
+      } else {
+        console.log("No user with matching UID found.");
+      }
+    } catch (error) {
+      console.error("Error retrieving message:", error);
     }
   };
 
@@ -42,16 +71,8 @@ const Sidebar = () => {
     sessionStorage.removeItem("expiry");
     sessionStorage.removeItem("uid");
     sessionStorage.removeItem("id");
+    sessionStorage.removeItem("currentChannelID");
     router.push("/login");
-  };
-
-  useEffect(() => {
-    handleNominateName();
-  }, [nominatedName]);
-
-  const closeName = async () => {
-    setNameModalOpen(false);
-    console.log("closeMemberModal");
   };
 
   const Menus = [
@@ -83,12 +104,9 @@ const Sidebar = () => {
       onclick: handleLogout,
     },
   ];
-
-  const shouldShowNominateName = !nominatedName;
-
+  console.log("keyValueArray:", keyValueArray);
   return (
     <>
-      {shouldShowNominateName && <NominateName closeName={closeName} />}
       <div className="flex">
         <div
           className={` ${
@@ -133,7 +151,15 @@ const Sidebar = () => {
           >
             <div className="flex justify-left content-center pl-2 pt-4">
               <p className="text-base font-sans font-bold">
-                <span>Hi,</span> <span>{" " + nominatedName + "!"}</span>
+                {keyValueArray.map((item, index) => (
+                  <div key={index}>
+                    <span>
+                      <span>
+                        Hi, {item.firstname ? item.firstname : "User"}!
+                      </span>
+                    </span>
+                  </div>
+                ))}
               </p>
             </div>
           </section>

@@ -4,9 +4,8 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 
-const LoginPage = ({}) => {
+const LoginPage = () => {
   const router = useRouter();
-  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [email, setEmail] = useState("");
@@ -36,21 +35,8 @@ const LoginPage = ({}) => {
         const client = response.headers.get("client");
         const expiry = response.headers.get("expiry");
         const uid = response.headers.get("uid");
-        const nickname = response.headers.get("nickname");
-        const name = response.headers.get("name");
-
         const responseData = await response.json();
         const id = responseData.data.id;
-
-        console.log("Login successful");
-        console.log("Access Token:", accessToken);
-        console.log("Client:", client);
-        console.log("Expiry:", expiry);
-        console.log("UID:", uid);
-        console.log("Nickname:", nickname);
-        console.log("Name:", name);
-        console.log("ID:", id);
-
         sessionStorage.setItem("access-token", accessToken!);
         sessionStorage.setItem("client", client!);
         sessionStorage.setItem("expiry", expiry!);
@@ -59,13 +45,96 @@ const LoginPage = ({}) => {
           uid!
         ); /* <!> - an assertion to Typescript that the values are not null */
         sessionStorage.setItem("id", id);
-
+        accountsLogin();
         router.push("/home");
       } else {
         console.error("Login failed:", response.statusText);
       }
     } catch (error) {
       console.error("Error:", error);
+    }
+  };
+
+  const accountsLogin = async () => {
+    try {
+      const requestBody = {
+        email: "accounts@conversa.com",
+        password: "conversa",
+      };
+
+      const response = await fetch("http://206.189.91.54/api/v1/auth/sign_in", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(requestBody),
+      });
+
+      if (response.ok) {
+        const accessToken = response.headers.get("access-token");
+        const client = response.headers.get("client");
+        const expiry = response.headers.get("expiry");
+        const uid = response.headers.get("uid");
+        const responseData = await response.json();
+        const id = responseData.data.id;
+        sessionStorage.setItem("admin-access-token", accessToken!);
+        sessionStorage.setItem("admin-client", client!);
+        sessionStorage.setItem("admin-expiry", expiry!);
+        sessionStorage.setItem(
+          "admin-uid",
+          uid!
+        ); /* <!> - an assertion to Typescript that the values are not null */
+        sessionStorage.setItem("admin-id", id);
+        addUserToChannel();
+        router.push("/home");
+      } else {
+        console.error("Login failed:", response.statusText);
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  const addUserToChannel = async () => {
+    try {
+      const memberID = sessionStorage.getItem("id");
+      const requestBody = {
+        id: 5108,
+        member_id: memberID,
+      };
+
+      const headers = new Headers();
+      headers.append("Content-Type", "application/json");
+      headers.append(
+        "access-token",
+        sessionStorage.getItem("admin-access-token")
+      );
+      headers.append("client", sessionStorage.getItem("admin-client"));
+      headers.append("expiry", sessionStorage.getItem("admin-expiry"));
+      headers.append("uid", sessionStorage.getItem("admin-uid"));
+
+      const response = await fetch(
+        `http://206.189.91.54/api/v1/channel/add_member`,
+        {
+          method: "POST",
+          headers: headers,
+          body: JSON.stringify(requestBody),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+
+      const data = await response.json();
+      sessionStorage.removeItem("admin-access-token");
+      sessionStorage.removeItem("admin-client");
+      sessionStorage.removeItem("admin-expiry");
+      sessionStorage.removeItem("admin-uid");
+      sessionStorage.removeItem("admin-id");
+      console.log("Member has been added to the channel", data);
+    } catch (error) {
+      console.error("Error adding member to the channel:", error);
     }
   };
 

@@ -5,7 +5,7 @@ const SubSideBar = ({ channels, onChannelClick }) => {
   const [isChannelListOpen, setChannelListOpen] = useState(true);
   const [selectedChannel, setSelectedChannel] = useState(null);
 
-  useEffect(() => {}, [channels]);
+  useEffect(() => {}, []);
 
   const toggleChannelList = () => {
     setChannelListOpen(!isChannelListOpen);
