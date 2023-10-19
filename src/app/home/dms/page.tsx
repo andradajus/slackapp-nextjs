@@ -8,6 +8,7 @@ export default function DirectMessage() {
   const [receiverEmail, setReceiverEmail] = useState("");
   const [receiverId, setReceiverId] = useState(0);
   const [users, setUsers] = useState([]);
+  const [chosenRecipient, setChosenRecipient] = useState("");
 
   const fetchMessages = async () => {
     try {
@@ -86,10 +87,17 @@ export default function DirectMessage() {
 
     if (recipient) {
       setReceiverId(recipient.id);
+      setChosenRecipient(recipient);
       alert("Message will be sent to: " + targetUid);
+      setReceiverEmail("");
     } else {
       alert("User not found!");
     }
+  };
+
+  const handleChangeRecipientClick = () => {
+    setChosenRecipient("");
+    setReceiverEmail("");
   };
 
   useEffect(() => {
@@ -108,7 +116,25 @@ export default function DirectMessage() {
         </div>
 
         <form className="flex mt-5 flex-col">
-          <label className="font-sans text-base text-white">Send to:</label>
+          <label className="font-sans text-sm text-white font-bold">
+            Send to:
+            <p className="ml-3 text-base mb-2 text-yellow-300">
+              {chosenRecipient.uid}
+            </p>
+          </label>
+
+          <div className="w-1/2">
+            {chosenRecipient && (
+              <button
+                className="m-auto ml-3 p-1 font-semibold border-solid border-2 rounded bg-indigo-500 text-xs hover:bg-indigo-700"
+                type="button"
+                onClick={handleChangeRecipientClick}
+              >
+                Change
+              </button>
+            )}
+          </div>
+
           <input
             type="text"
             placeholder="Enter email address"
