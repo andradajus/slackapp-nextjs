@@ -16,6 +16,12 @@ const LoginPage = () => {
 
   const handleLogin = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
+
+    if (!email.trim() || !password.trim()) {
+      setError("Please enter your email address and password.");
+      return;
+    }
+
     try {
       const requestBody = {
         email,
@@ -35,8 +41,10 @@ const LoginPage = () => {
         const client = response.headers.get("client");
         const expiry = response.headers.get("expiry");
         const uid = response.headers.get("uid");
+
         const responseData = await response.json();
         const id = responseData.data.id;
+
         sessionStorage.setItem("access-token", accessToken!);
         sessionStorage.setItem("client", client!);
         sessionStorage.setItem("expiry", expiry!);
@@ -47,11 +55,15 @@ const LoginPage = () => {
         sessionStorage.setItem("id", id);
         accountsLogin();
         router.push("/home");
+      } else if (response.status === 401) {
+        setError("Login failed. Please check your email and password.");
       } else {
         console.error("Login failed:", response.statusText);
+        setError("An error occurred while logging in. Please try again.");
       }
     } catch (error) {
       console.error("Error:", error);
+      setError("An error occurred while logging in. Please try again.");
     }
   };
 
@@ -89,6 +101,7 @@ const LoginPage = () => {
         router.push("/home");
       } else {
         console.error("Login failed:", response.statusText);
+        setError("Login failed. Please check your email and password.");
       }
     } catch (error) {
       console.error("Error:", error);
@@ -107,11 +120,17 @@ const LoginPage = () => {
       headers.append("Content-Type", "application/json");
       headers.append(
         "access-token",
-        sessionStorage.getItem("admin-access-token")
+        sessionStorage.getItem("admin-access-token") as string
       );
-      headers.append("client", sessionStorage.getItem("admin-client"));
-      headers.append("expiry", sessionStorage.getItem("admin-expiry"));
-      headers.append("uid", sessionStorage.getItem("admin-uid"));
+      headers.append(
+        "client",
+        sessionStorage.getItem("admin-client") as string
+      );
+      headers.append(
+        "expiry",
+        sessionStorage.getItem("admin-expiry") as string
+      );
+      headers.append("uid", sessionStorage.getItem("admin-uid") as string);
 
       const response = await fetch(
         `http://206.189.91.54/api/v1/channel/add_member`,
@@ -151,6 +170,7 @@ const LoginPage = () => {
             className="px-5 mx-auto"
           />
         </h1>
+
         <p className="text-sm mb-4 italic">Your Communication Friend Online</p>
       </header>
 
@@ -159,7 +179,7 @@ const LoginPage = () => {
       </p>
 
       <form
-        className="flex flex-col text-base font-medium font-sans"
+        className="w-1/4 flex flex-col text-base font-medium font-sans"
         onSubmit={handleLogin}
       >
         <label htmlFor="email" className="m-1">
@@ -181,7 +201,7 @@ const LoginPage = () => {
           Password
         </label>
         <input
-          className="text-black font-sans text-sm mb-2 px-1 rounded-lg"
+          className="text-black font-sans text-sm mb-5 px-1 rounded-lg"
           key="password"
           id="password"
           type="password"
