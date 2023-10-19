@@ -25,6 +25,16 @@ const Sidebar = () => {
     const url = `http://206.189.91.54/api/v1/messages?receiver_id=${5133}&receiver_class=Channel`;
 
     try {
+      const headers = new Headers();
+      headers.append("Content-Type", "application/json");
+      headers.append(
+        "access-token",
+        sessionStorage.getItem("access-token") || ""
+      );
+      headers.append("client", sessionStorage.getItem("client") || "");
+      headers.append("expiry", sessionStorage.getItem("expiry") || "");
+      headers.append("uid", sessionStorage.getItem("uid") || "");
+
       const response = await fetch(url, {
         method: "GET",
         headers: headers,
@@ -38,7 +48,7 @@ const Sidebar = () => {
       console.log("Data:", data);
 
       const uidToMatch = uid;
-      const matchingMessage = data.data.find((message) => {
+      const matchingMessage = data.data.find((message: { body: string }) => {
         try {
           const bodyContent = JSON.parse(message.body);
           return bodyContent.uid === uidToMatch;
@@ -78,7 +88,7 @@ const Sidebar = () => {
     sessionStorage.removeItem("uid");
     sessionStorage.removeItem("id");
     sessionStorage.removeItem("currentChannelID");
-    router.push("/login");
+    router.push("/");
   };
 
   const Menus = [
@@ -105,7 +115,7 @@ const Sidebar = () => {
       title: "Logout",
       src: "/logout-icon.png",
       alt: "Logout",
-      href: "/login",
+      href: "/",
       gap: true,
       onclick: handleLogout,
     },
@@ -124,6 +134,7 @@ const Sidebar = () => {
             alt="Menu"
             width={25}
             height={25}
+            style={{ height: "auto" }}
             className={`absolute cursor-pointer -right-3 top-20 w-6 border-dark-purple bg-white
          hover:bg-orange-200 rounded-full ${!open && "rotate-90"}`}
             onClick={() => setOpen(!open)}
@@ -136,6 +147,7 @@ const Sidebar = () => {
                 alt="ConversaImage"
                 width={75}
                 height={75}
+                style={{ width: "auto" }}
                 className={`cursor-pointer duration-500 ${
                   open && "rotate-[360deg]"
                 }`}
@@ -161,7 +173,8 @@ const Sidebar = () => {
                   <div key={index}>
                     <span>
                       <span>
-                        Hi, {item.firstname ? item.firstname : "User"}!
+                        {/* Hi, {item.firstname ? item.firstname : "User"}! */}
+                        Hi, {item.firstname ?? "User"}!
                       </span>
                     </span>
                   </div>
@@ -187,6 +200,7 @@ const Sidebar = () => {
                       src={Menu.src}
                       width={30}
                       height={30}
+                      style={{ width: "auto" }}
                     />
 
                     <span
