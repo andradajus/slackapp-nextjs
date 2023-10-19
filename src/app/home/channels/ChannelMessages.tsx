@@ -5,8 +5,9 @@ import { useState, useEffect } from "react";
 const ChannelMessages = ({}) => {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
+  const [channelMembers, setChannelMembers] = useState([]);
   const currentChannelID = sessionStorage.getItem("currentChannelID");
-  const [filteredNames, setFilteredNames] = useState([]);
+  const [filteredData, setFilteredData] = useState([]);
   const senderUID = sessionStorage.getItem("uid");
   const headers = new Headers();
   headers.append("Content-Type", "application/json");
@@ -56,8 +57,9 @@ const ChannelMessages = ({}) => {
 
       const data = await response.json();
       if (data?.data) {
+        getMemberList();
         setMessages(Array.from(data.data));
-        console.log("Messages retrieved:", data.data);
+        renderMessages();
       }
     } catch (error) {
       console.error("Error retrieving messages:", error);
@@ -92,29 +94,83 @@ const ChannelMessages = ({}) => {
       setMessages([...messages, newMessage]);
       setMessage("");
       retrieveMessages();
-      console.log("Message Sent");
     } catch (error) {
       console.error("Error sending message:", error);
     }
   };
 
-  const getNameForUID = (uid: string) => {
-    const userData =
-      JSON.parse(localStorage.getItem("storedCurrentUsers")) || {};
-    const matchingData = userData.find((data) => data.uid === uid);
-    return matchingData ? matchingData.name : uid;
+  const retrieveUserDetails = async () => {
+    const url = `http://206.189.91.54/api/v1/messages?receiver_id=${5133}&receiver_class=Channel`;
+    try {
+      const response = await fetch(url, {
+        method: "GET",
+        headers: headers,
+      });
+
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+
+      const data = await response.json();
+
+      const filteredData = data.data.map((item) => {
+        const bodyContent = JSON.parse(item.body);
+        return {
+          firstname: bodyContent.firstname,
+          lastname: bodyContent.lastname,
+          id: bodyContent.id,
+        };
+      });
+      setFilteredData(filteredData);
+    } catch (error) {
+      console.error("Error retrieving message:", error);
+      return null;
+    }
+  };
+
+  const getMemberList = async () => {
+    const currentChannelID = sessionStorage.getItem("currentChannelID");
+
+    if (!currentChannelID) {
+      console.error("No currentChannelID found in sessionStorage.");
+      return;
+    }
+
+    const url = `http://206.189.91.54/api/v1/channels/${currentChannelID}`;
+
+    try {
+      const response = await fetch(url, {
+        method: "GET",
+        headers: headers,
+      });
+
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+
+      const data = await response.json();
+
+      const channelMembers = data.data.channel_members.map(
+        (member) => member.user_id
+      );
+
+      setChannelMembers(channelMembers);
+    } catch (error) {
+      console.error("Error showing list of members:", error);
+    }
   };
 
   const renderMessages = () => {
-    return Array.from(messages).map((msg, index) => {
-      const uid = msg.sender.uid;
-      const name = getNameForUID(uid);
-
-      console.log(`UID: ${uid}, Name: ${name}`);
+    return messages.map((msg, index) => {
+      const senderId = msg.sender.id;
+      const userData = filteredData.find((data) => data.id == senderId);
+      const name = userData
+        ? `${userData.firstname} ${userData.lastname}`
+        : "Unknown User";
 
       return (
-        <ul>
-          <li className="border-t border-black" key={index}>
+        <ul key={index}>
+          <li className="border-t border-black">
             <div>
               <div className="flex flex-col">
                 <div>
@@ -133,6 +189,7 @@ const ChannelMessages = ({}) => {
   };
 
   useEffect(() => {
+    retrieveUserDetails();
     retrieveMessages();
   }, [currentChannelID]);
 

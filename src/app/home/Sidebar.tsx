@@ -9,24 +9,20 @@ const Sidebar = () => {
   const router = useRouter();
   const [open, setOpen] = useState(true);
   const uid = sessionStorage.getItem("uid");
-  const [keyValueArray, setKeyValueArray] = useState<
-    {
-      uid: string | null;
-      email: string | null;
-      username?: string;
-      firstname?: string;
-      middlename?: string;
-      lastname?: string;
-      aboutme?: string;
-    }[]
-  >([]);
+  const [keyValueArray, setKeyValueArray] = useState([]);
+  const headers = new Headers();
+  headers.append("Content-Type", "application/json");
+  headers.append("access-token", sessionStorage.getItem("access-token") || "");
+  headers.append("client", sessionStorage.getItem("client") || "");
+  headers.append("expiry", sessionStorage.getItem("expiry") || "");
+  headers.append("uid", sessionStorage.getItem("uid") || "");
 
   useEffect(() => {
     retrieveUserDetails();
   }, []);
 
   const retrieveUserDetails = async () => {
-    const url = `http://206.189.91.54/api/v1/messages?receiver_id=${5108}&receiver_class=Channel`;
+    const url = `http://206.189.91.54/api/v1/messages?receiver_id=${5133}&receiver_class=Channel`;
 
     try {
       const headers = new Headers();
@@ -172,7 +168,7 @@ const Sidebar = () => {
             }`}
           >
             <div className="flex justify-left content-center pl-2 pt-4">
-              <p className="text-base font-sans font-bold">
+              <div className="text-base font-sans font-bold">
                 {keyValueArray.map((item, index) => (
                   <div key={index}>
                     <span>
@@ -183,7 +179,7 @@ const Sidebar = () => {
                     </span>
                   </div>
                 ))}
-              </p>
+              </div>
             </div>
           </section>
 

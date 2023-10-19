@@ -142,7 +142,6 @@ const Channels = ({ setMessages }) => {
                 alt="Handle Refresh"
                 width={40}
                 height={40}
-                onClick={""}
               />
             </div>
 

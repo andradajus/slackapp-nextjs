@@ -27,9 +27,9 @@ const MyProfile = () => {
     setEmail(currentEmail);
   }, []);
 
-  //Pwedeng gamitin kung need mo access info :D / 5108 User Details Channels
+  //Pwedeng gamitin kung need mo access info :D / 5133 User Details Channels
   const retrieveUserDetails = async () => {
-    const url = `http://206.189.91.54/api/v1/messages?receiver_id=${5108}&receiver_class=Channel`;
+    const url = `http://206.189.91.54/api/v1/messages?receiver_id=${5133}&receiver_class=Channel`;
 
     try {
       const response = await fetch(url, {
@@ -82,6 +82,7 @@ const MyProfile = () => {
 
   const handleAddUserDetails = async () => {
     const userDetails = {
+      id: id,
       uid: uid,
       email: uid,
       username: username,
@@ -92,7 +93,7 @@ const MyProfile = () => {
     };
 
     const requestBody = {
-      receiver_id: 5108, //Details Channel
+      receiver_id: 5133, //Details Channel
       receiver_class: "Channel",
       body: JSON.stringify(userDetails),
     };
@@ -118,6 +119,7 @@ const MyProfile = () => {
       console.log("Formatted response data (body content):", bodyContent);
       const keyValueArray = [
         {
+          id: id,
           uid: uid,
           email: uid,
           username: bodyContent.username,
