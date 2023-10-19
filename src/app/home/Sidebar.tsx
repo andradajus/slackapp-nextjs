@@ -8,8 +8,62 @@ import React, { useState, useEffect } from "react";
 const Sidebar = () => {
   const router = useRouter();
   const [open, setOpen] = useState(true);
-  const [name, setName] = useState();
-  const id = sessionStorage.getItem("id");
+  const uid = sessionStorage.getItem("uid");
+  const [keyValueArray, setKeyValueArray] = useState([]);
+
+  useEffect(() => {
+    retrieveUserDetails();
+  }, []);
+
+  const retrieveUserDetails = async () => {
+    const url = `http://206.189.91.54/api/v1/messages?receiver_id=${5108}&receiver_class=Channel`;
+
+    try {
+      const response = await fetch(url, {
+        method: "GET",
+        headers: headers,
+      });
+
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+
+      const data = await response.json();
+      console.log("Data:", data);
+
+      const uidToMatch = uid;
+      const matchingMessage = data.data.find((message) => {
+        try {
+          const bodyContent = JSON.parse(message.body);
+          return bodyContent.uid === uidToMatch;
+        } catch (error) {
+          return false;
+        }
+      });
+
+      if (matchingMessage) {
+        const bodyContent = JSON.parse(matchingMessage.body);
+        console.log("Formatted response data (body content):", bodyContent);
+        const keyValueData = [
+          {
+            uid: uidToMatch,
+            email: uidToMatch,
+            username: bodyContent.username,
+            firstname: bodyContent.firstname,
+            middlename: bodyContent.middlename,
+            lastname: bodyContent.lastname,
+            aboutme: bodyContent.aboutme,
+          },
+        ];
+        console.log("Key Value Data", keyValueData);
+        setKeyValueArray(keyValueData);
+      } else {
+        console.log("No user with matching UID found.");
+      }
+    } catch (error) {
+      console.error("Error retrieving message:", error);
+    }
+  };
 
   const handleLogout = () => {
     sessionStorage.removeItem("access-token");
@@ -50,7 +104,7 @@ const Sidebar = () => {
       onclick: handleLogout,
     },
   ];
-
+  console.log("keyValueArray:", keyValueArray);
   return (
     <>
       <div className="flex">
@@ -97,8 +151,15 @@ const Sidebar = () => {
           >
             <div className="flex justify-left content-center pl-2 pt-4">
               <p className="text-base font-sans font-bold">
-                <span>Hi,</span>
-                <span>{" " + (name ? name : "User") + "!"}</span>
+                {keyValueArray.map((item, index) => (
+                  <div key={index}>
+                    <span>
+                      <span>
+                        Hi, {item.firstname ? item.firstname : "User"}!
+                      </span>
+                    </span>
+                  </div>
+                ))}
               </p>
             </div>
           </section>
