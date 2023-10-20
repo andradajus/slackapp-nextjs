@@ -43,6 +43,7 @@ const Channels = () => {
     headers.append("client", sessionStorage.getItem("client"));
     headers.append("expiry", sessionStorage.getItem("expiry"));
     headers.append("uid", sessionStorage.getItem("uid"));
+    const excludedChannelIds = [5129, 5130, 5133, 5108, 5079];
 
     try {
       const response = await fetch(url, {
@@ -52,8 +53,11 @@ const Channels = () => {
       const data = await response.json();
 
       if (data?.data?.length > 0) {
-        const [firstChannel] = data.data;
-        setChannels(data.data);
+        const filteredChannels = data.data.filter(
+          (channel) => !excludedChannelIds.includes(channel.id)
+        );
+        const [firstChannel] = filteredChannels;
+        setChannels(filteredChannels);
         setChannelDetails({
           id: firstChannel.id,
           name: firstChannel.name,
@@ -74,9 +78,6 @@ const Channels = () => {
     sessionStorage.setItem("currentChannelID", channel.id);
   };
 
-  const updateChannels = (newChannels) => {
-    setChannels(newChannels);
-  };
   const openMember = () => {
     setMemberModalOpen(true);
     console.log("openMemberModal");
@@ -127,8 +128,7 @@ const Channels = () => {
       {isChannelModalOpen && (
         <CreateChannelModal
           closeChannel={closeChannel}
-          channels={channels}
-          updateChannels={updateChannels}
+          showChannelDetails={showChannelDetails}
         />
       )}
       {isChannelDetailsModalOpen && (

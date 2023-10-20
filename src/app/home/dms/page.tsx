@@ -13,9 +13,9 @@ export default function DirectMessage() {
   // const [messages, setMessages] = useState([]);
   const [messages, setMessages] = useState<Message[]>([]);
   const [receiverEmail, setReceiverEmail] = useState("");
-  const [receiverId, setReceiverId] = useState<number>(0);
   const [users, setUsers] = useState([]);
   const [chosenRecipient, setChosenRecipient] = useState<User | null>(null);
+  const receiverId = localStorage.getItem("storedReceiverId");
 
   const fetchMessages = async () => {
     try {
@@ -30,8 +30,7 @@ export default function DirectMessage() {
       headers.append("uid", sessionStorage.getItem("uid") || "");
 
       const response = await fetch(
-
-        "http://206.189.91.54/api/v1/messages?receiver_id=${receiver_id}&receiver_class=User",
+        `http://206.189.91.54/api/v1/messages?receiver_id=${receiverId}&receiver_class=User`,
 
         {
           method: "GET",
@@ -43,7 +42,7 @@ export default function DirectMessage() {
         const data = await response.json();
 
         setMessages(data.data);
-
+        console.log("Messages Data", data);
       } else {
         throw new Error("Error retrieving messages");
       }
@@ -88,6 +87,7 @@ export default function DirectMessage() {
     );
 
     if (recipient) {
+      localStorage.setItem("storedReceiverId", recipient.id);
       return recipient;
     }
     return null;
@@ -98,10 +98,12 @@ export default function DirectMessage() {
     const recipient = chooseReceiver(targetUid);
 
     if (recipient) {
-      setReceiverId(recipient.id);
       setChosenRecipient(recipient);
       alert("Message will be sent to: " + targetUid);
       setReceiverEmail("");
+
+      console.log("Receiver Id:", receiverId);
+      fetchMessages();
     } else {
       alert("User not found!");
     }
@@ -179,14 +181,12 @@ export default function DirectMessage() {
         </form>
 
         <div>
-
           <MessageInput
             receiverId={receiverId}
             loggedInUser={loggedInUser}
             messages={messages}
             setMessages={setMessages}
           />
-
         </div>
       </div>
     </div>
