@@ -16,7 +16,6 @@ const MessageInput: React.FC<MessageInputProps> = ({
   setMessages,
   loggedInUser,
   messages,
-
 }) => {
   const [message, setMessage] = useState("");
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
@@ -78,7 +77,6 @@ const MessageInput: React.FC<MessageInputProps> = ({
         setMessages([...messages, sentMessage]);
 
         setMessage("");
-
       } else {
         setError("Failed to send the message. Please try again.");
       }
@@ -219,7 +217,7 @@ const MessageInput: React.FC<MessageInputProps> = ({
         <div className="mx-2">
           <textarea
             ref={messageRef}
-            className="w-full h-auto p-1 text-sm overflow-auto rounded-md bg-indigo-100"
+            className="w-full h-1/2 p-1 text-sm overflow-auto rounded-md bg-indigo-100"
             value={message}
             onChange={(e) => {
               setMessage(e.target.value);

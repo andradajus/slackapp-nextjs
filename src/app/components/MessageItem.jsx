@@ -5,7 +5,7 @@ function MessageItem({ message }) {
 
   return (
     <li className={`overflow-y-auto max-h-52 ${isSent ? "text-blue-500" : ""}`}>
-      <strong>{message.uid}:</strong> {message.text}
+      <strong>{message.sender.email}:</strong> {message.body}
     </li>
   );
 }
