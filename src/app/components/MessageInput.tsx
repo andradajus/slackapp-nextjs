@@ -1,15 +1,32 @@
 import { useState, useRef } from "react";
 import Image from "next/image";
 import EmojiPicker from "emoji-picker-react";
+import { MessageInputProps, User } from "./types";
 
-const MessageInput = ({ receiverId }: { receiverId: number }) => {
+type SentMessage = {
+  id: number;
+  uid: string;
+  text: string;
+  sent: boolean;
+  sender: User;
+};
+
+const MessageInput: React.FC<MessageInputProps> = ({
+  receiverId,
+  setMessages,
+  loggedInUser,
+  messages,
+}) => {
   const [message, setMessage] = useState("");
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
   const [orderedListCount, setOrderedListCount] = useState(1);
 
   const messageRef = useRef<HTMLTextAreaElement | null>(null);
+
+  const clearError = () => {
+    setError("");
+  };
 
   const handleSendMessage = async () => {
     if (message.trim() === "") {
@@ -46,6 +63,17 @@ const MessageInput = ({ receiverId }: { receiverId: number }) => {
       if (response.ok) {
         console.log("Data Sent:", response);
         alert("Message sent!");
+
+        const sentMessage: SentMessage = {
+          id: 10002,
+          uid: loggedInUser.uid,
+          text: message,
+          sent: true,
+          sender: loggedInUser,
+        };
+
+        setMessages([...messages, sentMessage]);
+
         setMessage("");
       } else {
         setError("Failed to send the message. Please try again.");
@@ -189,7 +217,10 @@ const MessageInput = ({ receiverId }: { receiverId: number }) => {
             ref={messageRef}
             className="w-full h-auto p-1 text-sm overflow-auto rounded-md bg-indigo-100"
             value={message}
-            onChange={(e) => setMessage(e.target.value)}
+            onChange={(e) => {
+              setMessage(e.target.value);
+              clearError();
+            }}
             onKeyDown={handleKeyDown}
           />
         </div>
@@ -221,6 +252,12 @@ const MessageInput = ({ receiverId }: { receiverId: number }) => {
           />
         )}
       </div>
+
+      {error && (
+        <p className="flex items-center justify-center m-auto mt-4 py-1 px-3 text-black bg-yellow-300 text-sm font-bold rounded">
+          {error}
+        </p>
+      )}
     </div>
   );
 };
