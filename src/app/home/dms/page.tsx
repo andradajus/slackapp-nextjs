@@ -13,9 +13,14 @@ export default function DirectMessage() {
   // const [messages, setMessages] = useState([]);
   const [messages, setMessages] = useState<Message[]>([]);
   const [receiverEmail, setReceiverEmail] = useState("");
-  const [receiverId, setReceiverId] = useState<number>(0);
+  // const [receiverId, setReceiverId] = useState<number>(0);
   const [users, setUsers] = useState([]);
   const [chosenRecipient, setChosenRecipient] = useState<User | null>(null);
+  const receiverId = localStorage.getItem("storedReceiverId");
+  // const receiverId = parseInt(
+  //   localStorage.getItem("storedReceiverId") || "0",
+  //   10
+  // );
 
   const fetchMessages = async () => {
     try {
@@ -30,9 +35,7 @@ export default function DirectMessage() {
       headers.append("uid", sessionStorage.getItem("uid") || "");
 
       const response = await fetch(
-
-        "http://206.189.91.54/api/v1/messages?receiver_id=${receiver_id}&receiver_class=User",
-
+        `http://206.189.91.54/api/v1/messages?receiver_id=${receiverId}&receiver_class=User`,
         {
           method: "GET",
           headers: headers,
@@ -41,9 +44,7 @@ export default function DirectMessage() {
 
       if (response.ok) {
         const data = await response.json();
-
         setMessages(data.data);
-
       } else {
         throw new Error("Error retrieving messages");
       }
@@ -88,20 +89,44 @@ export default function DirectMessage() {
     );
 
     if (recipient) {
+      localStorage.setItem("storedReceiverId", recipient.id);
       return recipient;
     }
+
+    // if (recipient) {
+    //   localStorage.setItem(
+    //     "storedReceiverId",
+    //     (recipient as User).id.toString()
+    //   );
+    //   return recipient as User;
+    // }
+
     return null;
   };
+
+  // const handleSearchUserClick = () => {
+  //   const targetUid = receiverEmail;
+  //   const recipient = chooseReceiver(targetUid);
+
+  //   if (recipient) {
+  //     // setReceiverId(recipient.id);
+  //     setChosenRecipient(recipient);
+  //     alert("Message will be sent to: " + targetUid);
+  //     setReceiverEmail("");
+  //   } else {
+  //     alert("User not found!");
+  //   }
+  // };
 
   const handleSearchUserClick = () => {
     const targetUid = receiverEmail;
     const recipient = chooseReceiver(targetUid);
 
     if (recipient) {
-      setReceiverId(recipient.id);
       setChosenRecipient(recipient);
       alert("Message will be sent to: " + targetUid);
       setReceiverEmail("");
+      fetchMessages();
     } else {
       alert("User not found!");
     }
@@ -179,14 +204,12 @@ export default function DirectMessage() {
         </form>
 
         <div>
-
           <MessageInput
             receiverId={receiverId}
             loggedInUser={loggedInUser}
             messages={messages}
             setMessages={setMessages}
           />
-
         </div>
       </div>
     </div>
