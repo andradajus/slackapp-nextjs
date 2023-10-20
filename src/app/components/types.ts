@@ -1,4 +1,3 @@
-
 export interface User {
   id: number;
   uid: string;
@@ -6,7 +5,7 @@ export interface User {
 
 export interface Message {
   id: number;
-  uid: string,
+  uid: string;
   sender: User;
   text: string;
 }
@@ -16,4 +15,5 @@ export interface MessageInputProps {
   setMessages: (messages: Message[]) => void;
   loggedInUser: User;
   messages: Message[];
+  fetchMessages: () => void;
 }

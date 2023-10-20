@@ -10,12 +10,12 @@ type SentMessage = {
   sent: boolean;
   sender: User;
 };
-
 const MessageInput: React.FC<MessageInputProps> = ({
   receiverId,
   setMessages,
   loggedInUser,
   messages,
+  fetchMessages,
 }) => {
   const [message, setMessage] = useState("");
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
@@ -77,6 +77,7 @@ const MessageInput: React.FC<MessageInputProps> = ({
         setMessages([...messages, sentMessage]);
 
         setMessage("");
+        fetchMessages();
       } else {
         setError("Failed to send the message. Please try again.");
       }
