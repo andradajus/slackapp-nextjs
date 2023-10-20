@@ -1,6 +1,7 @@
 import Home from "./page";
 import Sidebar from "./Sidebar";
 import Footer from "./Footer";
+import Alert from "../AlertBox";
 
 const Layout = ({ children }) => {
   return (

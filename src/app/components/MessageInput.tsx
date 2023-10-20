@@ -44,6 +44,7 @@ const MessageInput = ({ receiverId }: { receiverId: number }) => {
       });
 
       if (response.ok) {
+        console.log("Data Sent:", response);
         alert("Message sent!");
         setMessage("");
       } else {
