@@ -7,6 +7,7 @@ import ChannelDetailsModal from "./ChannelDetailsModal";
 import SubSideBar from "./SubSideBar";
 import Image from "next/image";
 import AddMemberModal from "./AddMemberModal";
+import Alert from "@/app/AlertBox";
 import Link from "next/link";
 
 const Channels = ({ setMessages }) => {
@@ -20,8 +21,16 @@ const Channels = ({ setMessages }) => {
     name: "None",
   });
   const [channels, setChannels] = useState([]);
+  const [alert, setAlert] = useState([]);
 
   const headers = new Headers();
+
+  const showAlert = (message: any, type: any) => {
+    setAlert({ message, type });
+    setTimeout(() => {
+      setAlert(false);
+    }, 3000);
+  };
 
   useEffect(() => {
     showChannelDetails();
@@ -61,6 +70,7 @@ const Channels = ({ setMessages }) => {
       id: channel.id,
       name: channel.name,
     });
+    showAlert(`Change Channel to:${channel.id}`, "success");
     sessionStorage.setItem("currentChannelID", channel.id);
   };
 
@@ -109,6 +119,7 @@ const Channels = ({ setMessages }) => {
 
   return (
     <>
+      <Alert message={alert.message} type={alert.type} />
       {isAddMemberModalOpen && (
         <AddMemberModal closeAddMember={closeAddMember} />
       )}
