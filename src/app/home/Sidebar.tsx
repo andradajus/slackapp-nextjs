@@ -127,7 +127,7 @@ const Sidebar = () => {
   console.log("keyValueArray:", keyValueArray);
   return (
     <>
-      <div className="flex">
+      <div className="flex border-r border-solid border-indigo-600">
         <div
           className={` ${
             open ? "w-72" : "w-20"
@@ -176,10 +176,7 @@ const Sidebar = () => {
                 {keyValueArray.map((item, index) => (
                   <div key={index}>
                     <span>
-                      <span>
-                        {/* Hi, {item.firstname ? item.firstname : "User"}! */}
-                        Hi, {item.firstname ?? "User"}!
-                      </span>
+                      <span>Hi, {item.firstname ?? "User"}!</span>
                     </span>
                   </div>
                 ))}

@@ -23,7 +23,7 @@ export default function DirectMessage() {
       headers.append("uid", sessionStorage.getItem("uid") || "");
 
       const response = await fetch(
-        "http://206.189.91.54/api/v1/messages?receiver_id=1&receiver_class=User",
+        `http://206.189.91.54/api/v1/messages?receiver_id=${receiverId}&receiver_class=User`,
         {
           method: "GET",
           headers: headers,
@@ -32,6 +32,7 @@ export default function DirectMessage() {
 
       if (response.ok) {
         const data = await response.json();
+        console.log("Fetch Messages", data);
         setMessages(data);
       } else {
         throw new Error("Error retrieving messages");
@@ -153,7 +154,7 @@ export default function DirectMessage() {
         </form>
 
         <div>
-          <MessageInput receiverId={receiverId} />
+          <MessageInput receiverId={receiverId} fetchMessages={fetchMessages} />
         </div>
       </div>
     </div>

@@ -1,9 +1,7 @@
-import Home from "./page";
 import Sidebar from "./Sidebar";
 import Footer from "./Footer";
-import Alert from "../AlertBox";
 
-const Layout = ({ children }) => {
+const Layout = ({ children }: any) => {
   return (
     <>
       <div className="flex flex-row bg-indigo-900">
