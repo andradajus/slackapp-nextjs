@@ -16,6 +16,7 @@ const MessageInput: React.FC<MessageInputProps> = ({
   setMessages,
   loggedInUser,
   messages,
+
 }) => {
   const [message, setMessage] = useState("");
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
@@ -61,7 +62,9 @@ const MessageInput: React.FC<MessageInputProps> = ({
       });
 
       if (response.ok) {
-        console.log("Data Sent:", response);
+        const data = await response.json();
+        console.log("Data Sent:", data);
+        console.log("Receiver ID:", receiverId);
         alert("Message sent!");
 
         const sentMessage: SentMessage = {
@@ -75,6 +78,7 @@ const MessageInput: React.FC<MessageInputProps> = ({
         setMessages([...messages, sentMessage]);
 
         setMessage("");
+
       } else {
         setError("Failed to send the message. Please try again.");
       }

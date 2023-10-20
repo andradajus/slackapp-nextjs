@@ -30,7 +30,9 @@ export default function DirectMessage() {
       headers.append("uid", sessionStorage.getItem("uid") || "");
 
       const response = await fetch(
+
         "http://206.189.91.54/api/v1/messages?receiver_id=${receiver_id}&receiver_class=User",
+
         {
           method: "GET",
           headers: headers,
@@ -39,7 +41,9 @@ export default function DirectMessage() {
 
       if (response.ok) {
         const data = await response.json();
+
         setMessages(data.data);
+
       } else {
         throw new Error("Error retrieving messages");
       }
@@ -175,12 +179,14 @@ export default function DirectMessage() {
         </form>
 
         <div>
+
           <MessageInput
             receiverId={receiverId}
             loggedInUser={loggedInUser}
             messages={messages}
             setMessages={setMessages}
           />
+
         </div>
       </div>
     </div>

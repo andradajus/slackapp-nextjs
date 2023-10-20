@@ -17,27 +17,6 @@ const SignUpPage = () => {
   const [uid, setUid] = useState("");
   const router = useRouter();
 
-  const onSurnameChange = (e: {
-    target: { value: React.SetStateAction<string> };
-  }) => setSurname(e.target.value);
-  const onFirstNameChange = (e: {
-    target: { value: React.SetStateAction<string> };
-  }) => setFirstName(e.target.value);
-  const onMiddleNameChange = (e: {
-    target: { value: React.SetStateAction<string> };
-  }) => setMiddleName(e.target.value);
-  const onUsernameChange = (e: {
-    target: { value: React.SetStateAction<string> };
-  }) => setUsername(e.target.value);
-  const onPasswordChange = (e: {
-    target: { value: React.SetStateAction<string> };
-  }) => setPassword(e.target.value);
-  const onConfirmPasswordChange = (e: {
-    target: { value: React.SetStateAction<string> };
-  }) => setConfirmPassword(e.target.value);
-  const onEmailChange = (e: {
-    target: { value: React.SetStateAction<string> };
-  }) => setEmail(e.target.value);
   const clearError = () => {
     setError("");
   };
@@ -77,8 +56,7 @@ const SignUpPage = () => {
       if (response.ok) {
         const data = await response.json();
         router.push("/login");
-        handleAddUserDetails();
-        console.log("Registration successful:", data);
+        console.log("Registration successful:", response);
       } else {
         const errorData = await response.json();
         console.error("Registration failed:", errorData.errors);

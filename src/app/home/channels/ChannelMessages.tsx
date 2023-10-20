@@ -179,7 +179,9 @@ const ChannelMessages = ({}) => {
                     {new Date(msg.created_at).toLocaleTimeString()}
                   </span>
                 </div>
-                <span className="pb-1">{msg.body}</span>
+                <div className="pb-1">
+                  <span className="max-w-sm break-all">{msg.body}</span>
+                </div>
               </div>
             </div>
           </li>
