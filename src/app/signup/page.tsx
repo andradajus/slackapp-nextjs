@@ -54,6 +54,7 @@ const SignUpPage = () => {
       });
 
       if (response.ok) {
+        const data = await response.json();
         router.push("/login");
         console.log("Registration successful:", response);
       } else {
@@ -241,3 +242,7 @@ const SignUpPage = () => {
 };
 
 export default SignUpPage;
+
+function handleAddUserDetails() {
+  throw new Error("Function not implemented.");
+}

@@ -2,13 +2,20 @@
 import React, { useState, useEffect } from "react";
 import MessageInput from "@/app/components/MessageInput";
 import MessageList from "@/app/components/MessageList";
+import { Message, User } from "@/app/components/types";
 
 export default function DirectMessage() {
-  const [messages, setMessages] = useState([]);
+  const loggedInUser = {
+    id: parseInt(sessionStorage.getItem("id") || "0"),
+    uid: sessionStorage.getItem("uid") || "",
+  };
+
+  // const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [receiverEmail, setReceiverEmail] = useState("");
-  const [receiverId, setReceiverId] = useState(0);
+  const [receiverId, setReceiverId] = useState<number>(0);
   const [users, setUsers] = useState([]);
-  const [chosenRecipient, setChosenRecipient] = useState("");
+  const [chosenRecipient, setChosenRecipient] = useState<User | null>(null);
 
   const fetchMessages = async () => {
     try {
@@ -23,7 +30,9 @@ export default function DirectMessage() {
       headers.append("uid", sessionStorage.getItem("uid") || "");
 
       const response = await fetch(
-        `http://206.189.91.54/api/v1/messages?receiver_id=${receiverId}&receiver_class=User`,
+
+        "http://206.189.91.54/api/v1/messages?receiver_id=${receiver_id}&receiver_class=User",
+
         {
           method: "GET",
           headers: headers,
@@ -32,8 +41,9 @@ export default function DirectMessage() {
 
       if (response.ok) {
         const data = await response.json();
-        console.log("Fetch Messages", data);
-        setMessages(data);
+
+        setMessages(data.data);
+
       } else {
         throw new Error("Error retrieving messages");
       }
@@ -71,9 +81,10 @@ export default function DirectMessage() {
     }
   };
 
-  const chooseReceiver = (targetUid: string) => {
+  const chooseReceiver = (targetUid: string): User | null => {
     const recipient = users.find(
-      (user: { uid: string }) => user.uid === targetUid
+      (user: User) => user.uid === targetUid
+      // (user: { uid: string; id: number }) => user.uid === targetUid
     );
 
     if (recipient) {
@@ -97,9 +108,17 @@ export default function DirectMessage() {
   };
 
   const handleChangeRecipientClick = () => {
-    setChosenRecipient("");
+    setChosenRecipient(null);
     setReceiverEmail("");
   };
+
+  // useEffect(() => {
+  //   fetchMessages();
+  // }, [receiverId]);
+
+  // useEffect(() => {
+  //   fetchUsers();
+  // }, [loggedInUser]);
 
   useEffect(() => {
     fetchMessages();
@@ -119,9 +138,15 @@ export default function DirectMessage() {
         <form className="flex mt-5 flex-col">
           <label className="font-sans text-sm text-white font-bold">
             Send to:
-            <p className="ml-3 text-base mb-2 text-yellow-300">
-              {chosenRecipient.uid}
-            </p>
+            {chosenRecipient ? (
+              <p className="ml-3 text-base mb-2 text-yellow-300">
+                {chosenRecipient.uid}
+              </p>
+            ) : (
+              <p className="ml-3 text-base mb-2 text-yellow-300">
+                No recipient selected.
+              </p>
+            )}
           </label>
 
           <div className="w-1/2">
@@ -154,7 +179,14 @@ export default function DirectMessage() {
         </form>
 
         <div>
-          <MessageInput receiverId={receiverId} fetchMessages={fetchMessages} />
+
+          <MessageInput
+            receiverId={receiverId}
+            loggedInUser={loggedInUser}
+            messages={messages}
+            setMessages={setMessages}
+          />
+
         </div>
       </div>
     </div>
