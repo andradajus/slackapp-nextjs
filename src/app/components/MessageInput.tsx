@@ -2,7 +2,13 @@ import { useState, useRef } from "react";
 import Image from "next/image";
 import EmojiPicker from "emoji-picker-react";
 
-const MessageInput = ({ receiverId }: { receiverId: number }) => {
+const MessageInput = ({
+  receiverId,
+  fetchMessages,
+}: {
+  receiverId: number;
+  fetchMessages: string;
+}) => {
   const [message, setMessage] = useState("");
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [error, setError] = useState("");
@@ -44,9 +50,11 @@ const MessageInput = ({ receiverId }: { receiverId: number }) => {
       });
 
       if (response.ok) {
-        console.log("Data Sent:", response);
+        const data = await response.json();
+        console.log("Data Sent:", data);
+        console.log("Receiver ID:", receiverId);
         alert("Message sent!");
-        setMessage("");
+        fetchMessages(), setMessage("");
       } else {
         setError("Failed to send the message. Please try again.");
       }

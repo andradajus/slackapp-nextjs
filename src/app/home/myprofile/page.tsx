@@ -130,10 +130,6 @@ const MyProfile = () => {
         },
       ];
 
-      localStorage.setItem(
-        "conversaUserDetails",
-        JSON.stringify(keyValueArray)
-      );
       console.log("Data sent successfully:", data);
     } catch (error) {
       console.error("Error sending message:", error);
@@ -142,93 +138,186 @@ const MyProfile = () => {
 
   return (
     <>
-      <div className="min-h-screen flex flex-col text-left bg-indigo-800 text-white border-2 border-solid border-white">
-        <main className="m-auto flex flex-col items-center justify-center text-center font-san text-sm">
+      <div className="min-h-screen flex flex-col text-left  text-white">
+        <div className="ml-2 mt-2 text-2xl block font-bold mb-0 text-yellow-400 font-serif text-center">
+          <span>Profile Information</span>
+          <span className="text-sm italic block font-bold mb-0 text-yellow-400 font-serif">
+            Personal Details
+          </span>
+        </div>
+        <main className="flex flex-col font-san text-sm">
           {/* {ownerImage && (
           <Image src={ownerImage} alt="Your Photo" width={150} height={150} />
         )} pwede pag maglalagay ng picture */}
 
-          <div>
-            {keyValueArray.length > 0 ? (
-              keyValueArray.map((item, index) => (
-                <div key={index}>
-                  <p>UID: {item.uid}</p>
+          {keyValueArray.length > 0 ? (
+            keyValueArray.map((item, index) => (
+              <div
+                className="bg-indigo-800 shadow-md rounded-md m-3"
+                key={index}
+              >
+                <div className="flex justify-center">
+                  <Image
+                    src="https://www.svgrepo.com/show/497407/profile-circle.svg"
+                    alt="ConversaImage"
+                    width={150}
+                    height={150}
+                    className="mt-2 object-contain bg-indigo-100 rounded-full"
+                  />
+                </div>
+
+                <div className="ml-2 border-gray-100">
+                  <dl className="divide-y divide-gray-100">
+                    <div className="px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                      <dt className="text-sm font-semibold leading-6 mb-0 text-yellow-500 font-serif">
+                        First Name
+                      </dt>
+                      <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+                        <span className="text-yellow-400">
+                          {item.firstname}
+                        </span>
+                      </dd>
+                    </div>
+
+                    <div className="px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                      <dt className="text-sm font-semibold leading-6 text-yellow-400 font-serif">
+                        Middle Name
+                      </dt>
+                      <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+                        <span className="text-yellow-400">
+                          {item.middlename}
+                        </span>
+                      </dd>
+                    </div>
+
+                    <div className="px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                      <dt className="text-sm font-semibold leading-6 text-yellow-400 font-serif">
+                        Last Name
+                      </dt>
+                      <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+                        <span className="text-yellow-400">{item.lastname}</span>
+                      </dd>
+                    </div>
+
+                    <div className="px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                      <dt className="font-semibold text-sm font-semiboldleading-6 text-yellow-400 font-serif">
+                        Username
+                      </dt>
+                      <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+                        <span className="text-yellow-400">{item.username}</span>
+                      </dd>
+                    </div>
+                    <div className="px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                      <dt className="text-sm font-semibold leading-6 text-yellow-400 font-serif">
+                        <span className="text-yellow-400">Email address</span>
+                      </dt>
+                      <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+                        <span className="text-yellow-400">{item.email}</span>
+                      </dd>
+                    </div>
+                    <div className="px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                      <dt className="font-semibold text-sm leading-6 text-yellow-400 font-serif">
+                        About me
+                      </dt>
+                      <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+                        <span className="text-yellow-400 italic">
+                          {item.aboutme}
+                        </span>
+                      </dd>
+                    </div>
+                  </dl>
+                </div>
+
+                {/* <p>UID: {item.uid}</p>
                   <p>Email: {item.email}</p>
                   <p>Username: {item.username}</p>
                   <p>First Name: {item.firstname}</p>
                   <p>Middle Name: {item.middlename}</p>
                   <p>Last Name: {item.lastname}</p>
-                  <p>About Me: {item.aboutme}</p>
-                </div>
-              ))
-            ) : (
-              <div>
-                <div>Email: {email}</div>
-                <div>{id}</div>
-                <div>
-                  Username
-                  <input
-                    className="text-black"
-                    type="text"
-                    value={username}
-                    onChange={(e) => {
-                      setUsername(e.target.value);
-                    }}
-                  />
-                </div>
-                <div>
-                  First Name
-                  <input
-                    className="text-black"
-                    type="text"
-                    value={firstName}
-                    onChange={(e) => {
-                      setFirstName(e.target.value);
-                    }}
-                  />
-                </div>
-                <div>
-                  Middle Name
-                  <input
-                    className="text-black"
-                    type="text"
-                    value={middleName}
-                    onChange={(e) => {
-                      setMiddleName(e.target.value);
-                    }}
-                  />
-                </div>
-                <div>
-                  Last Name
-                  <input
-                    className="text-black"
-                    type="text"
-                    value={lastName}
-                    onChange={(e) => {
-                      setLastName(e.target.value);
-                    }}
-                  />
-                </div>
-                <div>
-                  About Me
-                  <input
-                    className="text-black"
-                    type="text"
-                    value={aboutMe}
-                    onChange={(e) => {
-                      setAboutMe(e.target.value);
-                    }}
-                  />
-                </div>
-                <div
-                  className="cursor-pointer text-sm font-bold font-sans w-14 h-6 rounded bg-yellow-100  text-black hover:text-orange-300 hover:underline"
-                  onClick={handleAddUserDetails}
-                >
-                  Submit
-                </div>
+                  <p>About Me: {item.aboutme}</p> */}
               </div>
-            )}
-          </div>
+            ))
+          ) : (
+            <div className="self-center text-center m-3 gap-1">
+              <div>Hi we've detected that your not yet registered</div>
+              <div>Please fill out the form below</div>
+
+              <div className="relative mb-2">
+                <input
+                  type="text"
+                  className="block rounded-sm shadow-md px-2.5 pb-2 pt-5 w-full text-md text-gray-900 bg-gray-50 dark:bg-gray-700 border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                  value={username}
+                  onChange={(e) => {
+                    setUsername(e.target.value);
+                  }}
+                  placeholder=""
+                />
+                <label className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] left-2.5 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4">
+                  Username
+                </label>
+              </div>
+
+              <div className="relative mb-2">
+                <input
+                  type="text"
+                  className="block rounded-sm shadow-md px-2.5 pb-2 pt-5 w-full text-md text-gray-900 bg-gray-50 dark:bg-gray-700 border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                  value={firstName}
+                  onChange={(e) => {
+                    setFirstName(e.target.value);
+                  }}
+                  placeholder=""
+                />
+                <label className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] left-2.5 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4">
+                  First Name
+                </label>
+              </div>
+              <div className="relative mb-2">
+                <input
+                  type="text"
+                  className="block rounded-sm shadow-md px-2.5 pb-2 pt-5 w-full text-md text-gray-900 bg-gray-50 dark:bg-gray-700 border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                  value={middleName}
+                  onChange={(e) => {
+                    setMiddleName(e.target.value);
+                  }}
+                  placeholder=""
+                />
+                <label className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] left-2.5 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4">
+                  Middle Name
+                </label>
+              </div>
+
+              <div className="relative mb-2">
+                <input
+                  type="text"
+                  className="block rounded-sm shadow-md px-2.5 pb-2 pt-5  text-md w-full text-gray-900 bg-gray-50 dark:bg-gray-700 border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                  placeholder=" "
+                  value={lastName}
+                  onChange={(e) => {
+                    setLastName(e.target.value);
+                  }}
+                />
+                <label className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] left-2.5 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4">
+                  Last Name
+                </label>
+              </div>
+              <div className="relative mb-2">
+                <input
+                  className="block rounded-sm shadow-md px-2.5 pb-2 pt-5  text-md w-full text-gray-900 bg-gray-50 dark:bg-gray-700 border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                  placeholder=" "
+                />
+                <label className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] left-2.5 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4">
+                  Motto, Message, Quotes
+                </label>
+              </div>
+
+              <div
+                className="cursor-pointer text-sm font-bold font-sans w-14 h-6 rounded bg-yellow-100  text-black hover:text-orange-300 hover:underline"
+                onClick={handleAddUserDetails}
+              >
+                Submit
+              </div>
+            </div>
+          )}
         </main>
       </div>
     </>

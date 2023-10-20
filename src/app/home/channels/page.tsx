@@ -10,7 +10,7 @@ import AddMemberModal from "./AddMemberModal";
 import Alert from "@/app/AlertBox";
 import Link from "next/link";
 
-const Channels = ({ setMessages }) => {
+const Channels = () => {
   const [isAddMemberModalOpen, setAddMemberModalOpen] = useState(false);
   const [isMemberModalOpen, setMemberModalOpen] = useState(false);
   const [isChannelModalOpen, setChannelModalOpen] = useState(false);
