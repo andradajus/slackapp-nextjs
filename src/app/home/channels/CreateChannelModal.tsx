@@ -1,12 +1,7 @@
 import { useState } from "react";
 
-const CreateChannelModal = ({ closeChannel, updateChannels, channels }) => {
+const CreateChannelModal = ({ closeChannel, showChannelDetails }) => {
   const [name, setName] = useState("");
-
-  const updateChannelsHandler = () => {
-    let newChannels = [];
-    updateChannels(newChannels);
-  };
 
   const handleCreateChannel = async () => {
     try {
@@ -35,8 +30,8 @@ const CreateChannelModal = ({ closeChannel, updateChannels, channels }) => {
 
       const data = await response.json();
       console.log("Channel has been created", data);
-      updateChannelsHandler();
       closeChannel();
+      showChannelDetails();
     } catch (error) {
       console.error("Error creating channel:", error);
     }

@@ -10,17 +10,19 @@ export default function DirectMessage() {
     uid: sessionStorage.getItem("uid") || "",
   };
 
-  // const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState([]);
   const [messages, setMessages] = useState<Message[]>([]);
   const [receiverEmail, setReceiverEmail] = useState("");
-  // const [receiverId, setReceiverId] = useState<number>(0);
+
+   const [receiverId, setReceiverId] = useState<number>(0);
   const [users, setUsers] = useState([]);
   const [chosenRecipient, setChosenRecipient] = useState<User | null>(null);
   const receiverId = localStorage.getItem("storedReceiverId");
-  // const receiverId = parseInt(
-  //   localStorage.getItem("storedReceiverId") || "0",
-  //   10
-  // );
+   const receiverId = parseInt(
+     localStorage.getItem("storedReceiverId") || "0",
+     10
+   );
+
 
   const fetchMessages = async () => {
     try {

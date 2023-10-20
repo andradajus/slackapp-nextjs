@@ -49,8 +49,6 @@ const Sidebar = () => {
       }
 
       const data = await response.json();
-      console.log("Data:", data);
-
       const uidToMatch = uid;
       const matchingMessage = data.data.find((message: { body: string }) => {
         try {
@@ -63,7 +61,6 @@ const Sidebar = () => {
 
       if (matchingMessage) {
         const bodyContent = JSON.parse(matchingMessage.body);
-        console.log("Formatted response data (body content):", bodyContent);
         const keyValueData = [
           {
             uid: uidToMatch,
@@ -75,7 +72,6 @@ const Sidebar = () => {
             aboutme: bodyContent.aboutme,
           },
         ];
-        console.log("Key Value Data", keyValueData);
         setKeyValueArray(keyValueData);
       } else {
         console.log("No user with matching UID found.");
@@ -92,14 +88,21 @@ const Sidebar = () => {
     sessionStorage.removeItem("uid");
     sessionStorage.removeItem("id");
     sessionStorage.removeItem("currentChannelID");
+    localStorage.removeItem("storedReceiverId");
     router.push("/");
   };
 
   const Menus = [
     {
-      title: "My Profile",
+      title: "Home",
       src: "/Home-icon.png",
       alt: "My Account",
+      href: "/home",
+    },
+    {
+      title: "My Profile",
+      src: "",
+      alt: "My Profile",
       href: "/home/myprofile",
     },
     {
