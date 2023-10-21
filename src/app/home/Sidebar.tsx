@@ -88,7 +88,7 @@ const Sidebar = () => {
     sessionStorage.removeItem("uid");
     sessionStorage.removeItem("id");
     sessionStorage.removeItem("currentChannelID");
-    localStorage.removeItem("storedReceiverId");
+    sessionStorage.removeItem("storedReceiverId");
     router.push("/");
   };
 

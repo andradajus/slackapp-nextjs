@@ -67,6 +67,7 @@ const LoginPage = () => {
     }
   };
 
+  /*admin task - not client-related*/
   const accountsLogin = async () => {
     try {
       const requestBody = {
@@ -108,6 +109,7 @@ const LoginPage = () => {
     }
   };
 
+  /*admin task - not client-related*/
   const addUserToChannel = async () => {
     try {
       const memberID = sessionStorage.getItem("id");
