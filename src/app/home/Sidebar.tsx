@@ -101,7 +101,7 @@ const Sidebar = () => {
     },
     {
       title: "My Profile",
-      src: "",
+      src: "/Profile-icon.png",
       alt: "My Profile",
       href: "/home/myprofile",
     },

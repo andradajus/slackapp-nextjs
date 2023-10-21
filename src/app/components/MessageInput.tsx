@@ -67,7 +67,7 @@ const MessageInput: React.FC<MessageInputProps> = ({
         alert("Message sent!");
 
         const sentMessage: SentMessage = {
-          id: 10002,
+          id: 0,
           uid: loggedInUser.uid,
           text: message,
           sent: true,

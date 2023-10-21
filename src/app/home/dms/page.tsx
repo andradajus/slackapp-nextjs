@@ -209,7 +209,6 @@ export default function DirectMessage() {
             loggedInUser={loggedInUser}
             messages={messages}
             setMessages={setMessages}
-            fetchMessages={fetchMessages}
           />
         </div>
       </div>
