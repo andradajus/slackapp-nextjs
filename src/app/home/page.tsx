@@ -29,7 +29,7 @@ const Home = () => {
               className="px-5 mx-auto"
             />
           </h1>
-          <p className="text-sm mb-2 italic">
+          <p className="text-sm mb-2 italic text-white">
             Your Communication Friend Online
           </p>
         </header>
