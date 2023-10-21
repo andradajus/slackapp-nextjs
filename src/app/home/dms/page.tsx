@@ -16,9 +16,9 @@ export default function DirectMessage() {
   // const [receiverId, setReceiverId] = useState<number>(0);
   const [users, setUsers] = useState([]);
   const [chosenRecipient, setChosenRecipient] = useState<User | null>(null);
-  const receiverId = localStorage.getItem("storedReceiverId");
+  const receiverId = sessionStorage.getItem("storedReceiverId");
   // const receiverId = parseInt(
-  //   localStorage.getItem("storedReceiverId") || "0",
+  //   sessionStorage.getItem("storedReceiverId") || "0",
   //   10
   // );
 
@@ -89,12 +89,12 @@ export default function DirectMessage() {
     );
 
     if (recipient) {
-      localStorage.setItem("storedReceiverId", recipient.id);
+      sessionStorage.setItem("storedReceiverId", recipient.id);
       return recipient;
     }
 
     // if (recipient) {
-    //   localStorage.setItem(
+    //   sessionStorage.setItem(
     //     "storedReceiverId",
     //     (recipient as User).id.toString()
     //   );
@@ -137,16 +137,16 @@ export default function DirectMessage() {
     setReceiverEmail("");
   };
 
-  // useEffect(() => {
-  //   fetchMessages();
-  // }, [receiverId]);
+  useEffect(() => {
+    fetchMessages();
+  }, [receiverId]);
 
   // useEffect(() => {
   //   fetchUsers();
   // }, [loggedInUser]);
 
   useEffect(() => {
-    fetchMessages();
+    // fetchMessages();
     fetchUsers();
   }, []);
 

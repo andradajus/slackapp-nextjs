@@ -67,7 +67,7 @@ const MessageInput: React.FC<MessageInputProps> = ({
         alert("Message sent!");
 
         const sentMessage: SentMessage = {
-          id: 0,
+          id: loggedInUser.id,
           uid: loggedInUser.uid,
           text: message,
           sent: true,
@@ -218,7 +218,7 @@ const MessageInput: React.FC<MessageInputProps> = ({
         <div className="mx-2">
           <textarea
             ref={messageRef}
-            className="w-full h-1/2 p-1 text-sm overflow-auto rounded-md bg-indigo-100"
+            className="w-full p-1 text-sm overflow-auto rounded-md bg-indigo-100"
             value={message}
             onChange={(e) => {
               setMessage(e.target.value);
