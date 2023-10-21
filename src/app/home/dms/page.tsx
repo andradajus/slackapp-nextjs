@@ -53,6 +53,12 @@ export default function DirectMessage() {
     }
   };
 
+  const fetchMessageInterval = () => {
+    setTimeout(() => {
+      fetchMessages();
+    }, 1000);
+  };
+
   const fetchUsers = async () => {
     try {
       const headers = new Headers();
@@ -137,17 +143,18 @@ export default function DirectMessage() {
     setReceiverEmail("");
   };
 
-  useEffect(() => {
-    fetchMessages();
-  }, [receiverId]);
+  // useEffect(() => {
+  //   fetchMessages();
+  // }, [receiverId]);
 
   // useEffect(() => {
   //   fetchUsers();
   // }, [loggedInUser]);
 
   useEffect(() => {
-    // fetchMessages();
+    fetchMessages();
     fetchUsers();
+    fetchMessageInterval();
   }, []);
 
   return (
