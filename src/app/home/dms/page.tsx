@@ -10,17 +10,19 @@ export default function DirectMessage() {
     uid: sessionStorage.getItem("uid") || "",
   };
 
-  // const [messages, setMessages] = useState([]);
+  const firstname = sessionStorage.getItem("firstname") || "Unknown";
+  const lastname = sessionStorage.getItem("lastname") || "User";
+
   const [messages, setMessages] = useState<Message[]>([]);
   const [receiverEmail, setReceiverEmail] = useState("");
-  // const [receiverId, setReceiverId] = useState<number>(0);
   const [users, setUsers] = useState([]);
   const [chosenRecipient, setChosenRecipient] = useState<User | null>(null);
-  const receiverId = sessionStorage.getItem("storedReceiverId");
-  // const receiverId = parseInt(
-  //   sessionStorage.getItem("storedReceiverId") || "0",
-  //   10
-  // );
+  // const receiverId = sessionStorage.getItem("storedReceiverId");
+
+  const receiverId = parseInt(
+    sessionStorage.getItem("storedReceiverId") || "0",
+    10
+  );
 
   const fetchMessages = async () => {
     try {
@@ -55,6 +57,7 @@ export default function DirectMessage() {
 
   const fetchMessageInterval = () => {
     setTimeout(() => {
+      console.log("Insert interval here");
       fetchMessages();
     }, 1000);
   };
@@ -78,7 +81,6 @@ export default function DirectMessage() {
 
       if (response.ok) {
         const data = await response.json();
-
         setUsers(data.data);
       } else {
         throw new Error("User not found.");
@@ -92,37 +94,15 @@ export default function DirectMessage() {
     const recipient = users.find(
       (user: User) => user.uid === targetUid
       // (user: { uid: string; id: number }) => user.uid === targetUid
-    );
+    ) as User | undefined;
 
     if (recipient) {
-      sessionStorage.setItem("storedReceiverId", recipient.id);
+      sessionStorage.setItem("storedReceiverId", recipient.id.toString());
       return recipient;
     }
 
-    // if (recipient) {
-    //   sessionStorage.setItem(
-    //     "storedReceiverId",
-    //     (recipient as User).id.toString()
-    //   );
-    //   return recipient as User;
-    // }
-
     return null;
   };
-
-  // const handleSearchUserClick = () => {
-  //   const targetUid = receiverEmail;
-  //   const recipient = chooseReceiver(targetUid);
-
-  //   if (recipient) {
-  //     // setReceiverId(recipient.id);
-  //     setChosenRecipient(recipient);
-  //     alert("Message will be sent to: " + targetUid);
-  //     setReceiverEmail("");
-  //   } else {
-  //     alert("User not found!");
-  //   }
-  // };
 
   const handleSearchUserClick = () => {
     const targetUid = receiverEmail;
@@ -143,14 +123,6 @@ export default function DirectMessage() {
     setReceiverEmail("");
   };
 
-  // useEffect(() => {
-  //   fetchMessages();
-  // }, [receiverId]);
-
-  // useEffect(() => {
-  //   fetchUsers();
-  // }, [loggedInUser]);
-
   useEffect(() => {
     fetchMessages();
     fetchUsers();
@@ -158,64 +130,69 @@ export default function DirectMessage() {
   }, []);
 
   return (
-    <div className="h-screen border-solid border-2 border-white">
-      <div className="m-3 p-3 flex flex-col justify-center content-center bg-indigo-800 rounded">
-        <div className="flex flex-col">
-          <p className="font-sans text-lg font-bold text-white  border-b-2 border-white">
-            Inbox
-          </p>
-          <MessageList messages={messages} />
+    <div className="h-screen overflow-hidden border-solid border-2 bg-indigo-800 border-white">
+      <div className="h-full m-2 p-1 flex flex-col justify-center content-center">
+        <p className=" font-sans text-lg font-bold text-white border-b-2 border-white">
+          Inbox
+        </p>
+        <div className="h-1/2 overflow-y-auto flex flex-col">
+          <MessageList
+            messages={messages}
+            userData={`${firstname} ${lastname}`}
+          />
         </div>
 
-        <form className="flex mt-5 flex-col">
-          <label className="font-sans text-sm text-white font-bold">
-            Send to:
-            {chosenRecipient ? (
-              <p className="ml-3 text-base mb-2 text-yellow-300">
-                {chosenRecipient.uid}
-              </p>
-            ) : (
-              <p className="ml-3 text-base mb-2 text-yellow-300">
-                No recipient selected.
-              </p>
-            )}
-          </label>
+        <div className="bg-indigo-300 mt-4 rounded">
+          <form className="flex m-1 flex-col">
+            <label className="h-1/2 font-sans text-sm text-white font-semibold">
+              Send to:
+              {chosenRecipient ? (
+                <p className="ml-3 text-base mb-2 text-yellow-300">
+                  {chosenRecipient.uid}
+                </p>
+              ) : (
+                <p className="ml-3 text-base mb-2 text-yellow-300">
+                  No recipient selected.
+                </p>
+              )}
+            </label>
 
-          <div className="w-1/2">
-            {chosenRecipient && (
-              <button
-                className="m-auto ml-3 p-1 font-semibold border-solid border-2 rounded bg-indigo-500 text-xs hover:bg-indigo-700"
-                type="button"
-                onClick={handleChangeRecipientClick}
-              >
-                Change
-              </button>
-            )}
-          </div>
+            <div className="w-1/2">
+              {chosenRecipient && (
+                <button
+                  className="m-auto ml-3 p-1 font-semibold border-solid border-2 rounded bg-indigo-500 text-xs hover:bg-indigo-700"
+                  type="button"
+                  onClick={handleChangeRecipientClick}
+                >
+                  Change
+                </button>
+              )}
+            </div>
 
-          <input
-            type="text"
-            placeholder="Enter email address"
-            value={receiverEmail}
-            onChange={(e) => setReceiverEmail(e.target.value)}
-            className="bg-indigo-100 p-1 mb-2 m-auto text-sm font-mono text-black rounded"
-          />
+            <input
+              type="text"
+              placeholder="Enter email address"
+              value={receiverEmail}
+              onChange={(e) => setReceiverEmail(e.target.value)}
+              className="w-[90%] bg-indigo-100 p-1 mb-2 m-auto text-sm font-mono text-black rounded"
+            />
 
-          <button
-            className="m-auto p-1 font-semibold border-solid border-2 rounded bg-indigo-500 text-xs  hover:bg-indigo-700"
-            type="button"
-            onClick={handleSearchUserClick}
-          >
-            Search User
-          </button>
-        </form>
-
-        <div>
+            <button
+              className="m-auto p-1 font-semibold border-solid border-2 rounded bg-indigo-500 text-xs  hover:bg-indigo-700"
+              type="button"
+              onClick={handleSearchUserClick}
+            >
+              Search User
+            </button>
+          </form>
+        </div>
+        <div className="px-0 py-1 mt-2">
           <MessageInput
             receiverId={receiverId}
             loggedInUser={loggedInUser}
             messages={messages}
             setMessages={setMessages}
+            fetchMessages={function (): void {}}
           />
         </div>
       </div>

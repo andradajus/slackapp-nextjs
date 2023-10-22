@@ -148,7 +148,7 @@ const Sidebar = () => {
           />
 
           <Link href="/home" passHref>
-            <div className="flex gap-x-4 items-center mb-4">
+            <div className="flex gap-x-4 items-center mb-4 hover:scale-110">
               <Image
                 src="/ConversaImage.png"
                 alt="ConversaImage"
@@ -160,7 +160,7 @@ const Sidebar = () => {
                 }`}
               />
               <h1
-                className={`block text-lg font-bold mb-0 text-yellow-400 font-serif origin-left duration-200 ${
+                className={`block text-lg font-bold mb-0 text-yellow-400 font-serif origin-left duration-200  hover:text-orange-300 hover:underline hover:scale-110 ${
                   !open && "scale-0"
                 }`}
               >
