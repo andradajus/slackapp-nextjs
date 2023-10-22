@@ -158,8 +158,8 @@ const MessageInput: React.FC<MessageInputProps> = ({
   };
 
   return (
-    <div className="p-2 m-auto">
-      <div className="bg-indigo-500 ml-1 mr-1 rounded-md content-center">
+    <div>
+      <div className="bg-indigo-500 rounded-md content-center">
         <div className="flex gap-2 m-1 py-2 ml-2">
           <Image
             className="cursor-pointer hover:bg-indigo-700 hover:rounded-sm"

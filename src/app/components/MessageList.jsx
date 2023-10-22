@@ -1,7 +1,10 @@
 import React from "react";
-import MessageItem from "./MessageItem";
 
-function MessageList({ messages }) {
+function MessageList({ messages, userData }) {
+  const userFullName = `${sessionStorage.getItem("firstname") || "Unknown"} ${
+    sessionStorage.getItem("lastname") || "User"
+  }`;
+
   if (!Array.isArray(messages)) {
     return (
       <div className="mt-4 px-1 font-sans text-base font-semibold bg-indigo-200">
@@ -11,12 +14,20 @@ function MessageList({ messages }) {
   }
 
   return (
-    <div className="h-1/2 overflow-y-auto mt-4 bg-indigo-200">
-      <ul className="border-solid border-y-2 px-1 text-sm border-white">
-        {messages.map((message, index) => (
-          <MessageItem key={index} message={message} />
-        ))}
-      </ul>
+    <div className="mt-4 bg-indigo-200">
+      {messages.map((message, index) => (
+        <div key={index}>
+          <span className="text-base font-bold font-sans">{userData}</span>{" "}
+          <span className="text-xs pl-5">
+            {new Date(message.created_at).toLocaleTimeString()}
+          </span>
+          <div className="pb-1">
+            <span className="max-w-sm break-all font-sans text-sm">
+              {message.body}
+            </span>
+          </div>
+        </div>
+      ))}
     </div>
   );
 }
