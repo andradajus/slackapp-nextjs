@@ -13,8 +13,6 @@ const Alert = ({ message, type }) => {
     alertColor += "blue";
   }
 
-  console.log("Alert Color:", alertColor);
-
   return (
     <div className="flex w-full flex-col">
       <ul>

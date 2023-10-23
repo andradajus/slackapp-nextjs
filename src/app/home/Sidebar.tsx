@@ -127,7 +127,7 @@ const Sidebar = () => {
       onclick: handleLogout,
     },
   ];
-  console.log("keyValueArray:", keyValueArray);
+
   return (
     <>
       <div className="flex border-r border-solid border-indigo-600">
