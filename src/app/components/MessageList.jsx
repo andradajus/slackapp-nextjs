@@ -2,7 +2,7 @@ import React from "react";
 import MessageItem from "./MessageItem";
 
 function MessageList({ messages }) {
-  if (!Array.isArray(messages)) {
+  if (!Array.isArray(messages) || messages.length === 0) {
     return (
       <div className="mt-4 px-1 font-sans text-base bg-indigo-200">
         <p>No messages available</p>

@@ -1,13 +1,11 @@
 "use client";
-import React, { useState, useEffect } from "react";
-import MessageInput from "../components/MessageInput";
-import MessageBox from "../components/MessageBox";
+import React, { useState } from "react";
 import Image from "next/image";
 
 const Home = () => {
   const [open, setOpen] = useState(null);
 
-  const handleOpen = (index) => {
+  const handleOpen = (index: React.SetStateAction<null>) => {
     if (open === index) {
       setOpen(null);
     } else {
@@ -16,7 +14,7 @@ const Home = () => {
   };
 
   return (
-    <>
+    <div className="h-screen overflow-y-auto">
       <div className="ml-4">
         <header className="m-0 p-5">
           <h1 className="inline-flex text-5xl font-bold content-center mb-0 text-yellow-400 font-serif">
@@ -158,7 +156,7 @@ const Home = () => {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

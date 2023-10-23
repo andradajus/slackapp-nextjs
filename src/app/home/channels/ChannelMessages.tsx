@@ -158,26 +158,26 @@ const ChannelMessages = ({}) => {
     }
   };
 
-  const retrieveMessageInterval = () => {
-    const retrieveAndSetMessages = async () => {
-      await retrieveMessages();
-      setupNextInterval();
-    };
+  // const retrieveMessageInterval = () => {
+  //   const retrieveAndSetMessages = async () => {
+  //     await retrieveMessages();
+  //     setupNextInterval();
+  //   };
 
-    const setupNextInterval = () => {
-      const intervalTime = 3000;
-      if (!intervalId) {
-        const id = setInterval(retrieveAndSetMessages, intervalTime);
-        setIntervalId(id);
-      }
-    };
+  //   const setupNextInterval = () => {
+  //     const intervalTime = 3000;
+  //     if (!intervalId) {
+  //       const id = setInterval(retrieveAndSetMessages, intervalTime);
+  //       setIntervalId(id);
+  //     }
+  //   };
 
-    setupNextInterval();
+  //   setupNextInterval();
 
-    return () => {
-      clearInterval(intervalId);
-    };
-  };
+  //   return () => {
+  //     clearInterval(intervalId);
+  //   };
+  // };
 
   const renderMessages = () => {
     return messages.map((msg, index) => {
@@ -213,13 +213,13 @@ const ChannelMessages = ({}) => {
     const retrieveAndSetup = async () => {
       retrieveUserDetails();
       retrieveMessages();
-      retrieveMessageInterval();
+      // retrieveMessageInterval();
     };
 
     retrieveAndSetup();
 
     return () => {
-      retrieveMessageInterval();
+      // retrieveMessageInterval();
     };
   }, [currentChannelID]);
 
