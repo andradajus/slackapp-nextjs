@@ -1,6 +1,6 @@
 "useClient";
 import Image from "next/image";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 
 const ChannelMessages = ({}) => {
   const [message, setMessage] = useState("");
@@ -10,7 +10,6 @@ const ChannelMessages = ({}) => {
   const [intervalId, setIntervalId] = useState<number | null>(null);
   const [filteredData, setFilteredData] = useState([]);
   const senderUID = sessionStorage.getItem("uid");
-  const messagesContainerRef = useRef();
   const headers = new Headers();
   headers.append("Content-Type", "application/json");
   headers.append("access-token", sessionStorage.getItem("access-token") || "");
@@ -174,6 +173,10 @@ const ChannelMessages = ({}) => {
     };
 
     setupNextInterval();
+
+    return () => {
+      clearInterval(intervalId);
+    };
   };
 
   const renderMessages = () => {
@@ -206,37 +209,24 @@ const ChannelMessages = ({}) => {
     });
   };
 
-  const scrollToBottom = () => {
-    if (messagesContainerRef.current) {
-      messagesContainerRef.current.scrollTop =
-        messagesContainerRef.current.scrollHeight;
-    }
-  };
-
   useEffect(() => {
     const retrieveAndSetup = async () => {
       retrieveUserDetails();
       retrieveMessages();
-      scrollToBottom();
       retrieveMessageInterval();
     };
 
     retrieveAndSetup();
 
     return () => {
-      if (intervalId) {
-        clearInterval(intervalId);
-      }
+      retrieveMessageInterval();
     };
   }, [currentChannelID]);
 
   return (
     <>
       <div className="flex flex-col h-full">
-        <div
-          ref={messagesContainerRef}
-          className="flex flex-col rounded-lg ml-1 mr-1 p-2 bg-white h-96 max-h-96 overflow-y-auto"
-        >
+        <div className="flex flex-col rounded-lg ml-1 mr-1 p-2 bg-white h-96 max-h-96 overflow-y-auto">
           {renderMessages()}
         </div>
 

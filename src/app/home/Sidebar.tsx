@@ -81,6 +81,11 @@ const Sidebar = () => {
     }
   };
 
+  const clearSavedIds = () => {
+    sessionStorage.removeItem("currentChannelID");
+    sessionStorage.removeItem("storedReceiverId");
+  };
+
   const handleLogout = () => {
     sessionStorage.removeItem("access-token");
     sessionStorage.removeItem("client");
