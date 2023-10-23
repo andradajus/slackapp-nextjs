@@ -10,6 +10,9 @@ function MessageItem({ message }) {
       }`}
     >
       <strong>{message.sender.email}:</strong> {message.body}
+      <span className="text-xs pl-5">
+        {new Date(message.created_at).toLocaleTimeString()}
+      </span>
     </li>
   );
 }

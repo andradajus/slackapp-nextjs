@@ -73,9 +73,6 @@ const MessageInput: React.FC<MessageInputProps> = ({
           sent: true,
           sender: loggedInUser,
         };
-
-        setMessages([...messages, sentMessage]);
-
         setMessage("");
         fetchMessages();
       } else {
