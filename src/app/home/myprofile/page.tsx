@@ -3,6 +3,16 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
+type KeyValueData = {
+  uid: string | null;
+  email: string | null;
+  username: any;
+  firstname: any;
+  middlename: any;
+  lastname: any;
+  aboutme: any;
+};
+
 const MyProfile = () => {
   const router = useRouter();
   const [email, setEmail] = useState("");
@@ -11,10 +21,12 @@ const MyProfile = () => {
   const [middleName, setMiddleName] = useState("");
   const [lastName, setLastName] = useState("");
   const [aboutMe, setAboutMe] = useState("");
-  const [keyValueArray, setKeyValueArray] = useState([]);
+  // const [keyValueArray, setKeyValueArray] = useState([]);
+  const [keyValueArray, setKeyValueArray] = useState<KeyValueData[]>([]);
+
   const id = sessionStorage.getItem("id");
   const uid = sessionStorage.getItem("uid");
-  const currentEmail = sessionStorage.getItem("uid");
+  const currentEmail = sessionStorage.getItem("uid") ?? "";
   const headers = new Headers();
   headers.append("Content-Type", "application/json");
   headers.append("access-token", sessionStorage.getItem("access-token") || "");
@@ -45,7 +57,7 @@ const MyProfile = () => {
       console.log("Data:", data);
 
       const uidToMatch = uid;
-      const matchingMessage = data.data.find((message) => {
+      const matchingMessage = data.data.find((message: { body: string }) => {
         try {
           const bodyContent = JSON.parse(message.body);
           return bodyContent.uid === uidToMatch;
@@ -117,6 +129,19 @@ const MyProfile = () => {
 
       const bodyContent = JSON.parse(data.data.body);
       console.log("Formatted response data (body content):", bodyContent);
+      // const keyValueArray = [
+      //   {
+      //     id: id,
+      //     uid: uid,
+      //     email: uid,
+      //     username: bodyContent.username,
+      //     firstname: bodyContent.firstname,
+      //     middlename: bodyContent.middlename,
+      //     lastname: bodyContent.lastname,
+      //     aboutme: bodyContent.aboutme,
+      //   },
+      // ];
+
       const keyValueArray = [
         {
           id: id,
@@ -128,7 +153,7 @@ const MyProfile = () => {
           lastname: bodyContent.lastname,
           aboutme: bodyContent.aboutme,
         },
-      ];
+      ] as unknown as KeyValueData[];
 
       console.log("Data sent successfully:", data);
     } catch (error) {
@@ -137,13 +162,10 @@ const MyProfile = () => {
   };
 
   return (
-    <>
+    <div className="h-screen overflow-y-auto">
       <div className="min-h-screen flex flex-col text-left  text-white">
-        <div className="ml-2 mt-2 text-2xl block font-bold mb-0 text-yellow-400 font-serif text-center">
+        <div className="m-4 text-2xl block font-bold text-yellow-400 font-serif text-center">
           <span>Profile Information</span>
-          <span className="text-sm italic block font-bold mb-0 text-yellow-400 font-serif">
-            Personal Details
-          </span>
         </div>
         <main className="flex flex-col font-san text-sm">
           {/* {ownerImage && (
@@ -169,58 +191,64 @@ const MyProfile = () => {
                 <div className="ml-2 border-gray-100">
                   <dl className="divide-y divide-gray-100">
                     <div className="px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-                      <dt className="text-sm font-semibold leading-6 mb-0 text-yellow-500 font-serif">
+                      <dt className="text-sm font-semibold leading-6 mb-0 text-yellow-300 font-serif">
                         First Name
                       </dt>
                       <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
-                        <span className="text-yellow-400">
+                        <span className="font-semibold text-white">
                           {item.firstname}
                         </span>
                       </dd>
                     </div>
 
                     <div className="px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-                      <dt className="text-sm font-semibold leading-6 text-yellow-400 font-serif">
+                      <dt className="text-sm font-semibold leading-6 text-yellow-300 font-serif">
                         Middle Name
                       </dt>
-                      <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
-                        <span className="text-yellow-400">
+                      <dd className="mt-1 text-sm font-semibold leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+                        <span className="font-semibold text-white">
                           {item.middlename}
                         </span>
                       </dd>
                     </div>
 
                     <div className="px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-                      <dt className="text-sm font-semibold leading-6 text-yellow-400 font-serif">
+                      <dt className="text-sm font-semibold leading-6 text-yellow-300 font-serif">
                         Last Name
                       </dt>
                       <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
-                        <span className="text-yellow-400">{item.lastname}</span>
+                        <span className="font-semibold text-white">
+                          {item.lastname}
+                        </span>
                       </dd>
                     </div>
 
                     <div className="px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-                      <dt className="font-semibold text-sm font-semiboldleading-6 text-yellow-400 font-serif">
+                      <dt className="font-semibold text-sm font-semiboldleading-6 text-yellow-300 font-serif">
                         Username
                       </dt>
                       <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
-                        <span className="text-yellow-400">{item.username}</span>
+                        <span className="font-semibold text-white">
+                          {item.username}
+                        </span>
                       </dd>
                     </div>
                     <div className="px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-                      <dt className="text-sm font-semibold leading-6 text-yellow-400 font-serif">
+                      <dt className="text-sm font-semibold leading-6 text-yellow-300 font-serif">
                         <span className="text-yellow-400">Email address</span>
                       </dt>
                       <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
-                        <span className="text-yellow-400">{item.email}</span>
+                        <span className="font-semibold text-white">
+                          {item.email}
+                        </span>
                       </dd>
                     </div>
                     <div className="px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-                      <dt className="font-semibold text-sm leading-6 text-yellow-400 font-serif">
+                      <dt className="font-semibold text-sm leading-6 text-yellow-300 font-serif">
                         About me
                       </dt>
                       <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
-                        <span className="text-yellow-400 italic">
+                        <span className="font-semibold text-white italic">
                           {item.aboutme}
                         </span>
                       </dd>
@@ -239,8 +267,8 @@ const MyProfile = () => {
             ))
           ) : (
             <div className="self-center text-center m-3 gap-1">
-              <div>Hi we've detected that your not yet registered</div>
-              <div>Please fill out the form below</div>
+              <div>To complete setting-up your account,</div>
+              <div>please fill out the form below</div>
 
               <div className="relative mb-2">
                 <input
@@ -303,10 +331,10 @@ const MyProfile = () => {
               <div className="relative mb-2">
                 <input
                   className="block rounded-sm shadow-md px-2.5 pb-2 pt-5  text-md w-full text-gray-900 bg-gray-50 dark:bg-gray-700 border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                  placeholder=" "
+                  placeholder="You may type in your motto, favorite quotes, hobbies, etc."
                 />
                 <label className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] left-2.5 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4">
-                  Motto, Message, Quotes
+                  About Me
                 </label>
               </div>
 
@@ -320,7 +348,7 @@ const MyProfile = () => {
           )}
         </main>
       </div>
-    </>
+    </div>
   );
 };
 
