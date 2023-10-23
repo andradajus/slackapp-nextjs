@@ -1,14 +1,16 @@
 "useClient";
 import Image from "next/image";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 const ChannelMessages = ({}) => {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
   const [channelMembers, setChannelMembers] = useState([]);
   const currentChannelID = sessionStorage.getItem("currentChannelID");
+  const [intervalId, setIntervalId] = useState<number | null>(null);
   const [filteredData, setFilteredData] = useState([]);
   const senderUID = sessionStorage.getItem("uid");
+  const messagesContainerRef = useRef();
   const headers = new Headers();
   headers.append("Content-Type", "application/json");
   headers.append("access-token", sessionStorage.getItem("access-token") || "");
@@ -89,9 +91,6 @@ const ChannelMessages = ({}) => {
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
-
-      const data = await response.json();
-      setMessages([...messages, newMessage]);
       setMessage("");
       retrieveMessages();
     } catch (error) {
@@ -160,6 +159,23 @@ const ChannelMessages = ({}) => {
     }
   };
 
+  const retrieveMessageInterval = () => {
+    const retrieveAndSetMessages = async () => {
+      await retrieveMessages();
+      setupNextInterval();
+    };
+
+    const setupNextInterval = () => {
+      const intervalTime = 3000;
+      if (!intervalId) {
+        const id = setInterval(retrieveAndSetMessages, intervalTime);
+        setIntervalId(id);
+      }
+    };
+
+    setupNextInterval();
+  };
+
   const renderMessages = () => {
     return messages.map((msg, index) => {
       const senderId = msg.sender.id;
@@ -190,15 +206,37 @@ const ChannelMessages = ({}) => {
     });
   };
 
+  const scrollToBottom = () => {
+    if (messagesContainerRef.current) {
+      messagesContainerRef.current.scrollTop =
+        messagesContainerRef.current.scrollHeight;
+    }
+  };
+
   useEffect(() => {
-    retrieveUserDetails();
-    retrieveMessages();
+    const retrieveAndSetup = async () => {
+      retrieveUserDetails();
+      retrieveMessages();
+      scrollToBottom();
+      retrieveMessageInterval();
+    };
+
+    retrieveAndSetup();
+
+    return () => {
+      if (intervalId) {
+        clearInterval(intervalId);
+      }
+    };
   }, [currentChannelID]);
 
   return (
     <>
       <div className="flex flex-col h-full">
-        <div className="flex flex-col rounded-lg ml-1 mr-1 p-2 bg-white h-96 max-h-96 overflow-y-auto">
+        <div
+          ref={messagesContainerRef}
+          className="flex flex-col rounded-lg ml-1 mr-1 p-2 bg-white h-96 max-h-96 overflow-y-auto"
+        >
           {renderMessages()}
         </div>
 
