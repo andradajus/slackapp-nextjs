@@ -1,5 +1,14 @@
 "use client";
-import { useState } from "react";
+import {
+  SetStateAction,
+  JSXElementConstructor,
+  Key,
+  PromiseLikeOfReactNode,
+  ReactElement,
+  ReactNode,
+  ReactPortal,
+  useState,
+} from "react";
 
 const AddMemberModal = ({ closeAddMember }) => {
   const [addMember, setAddMember] = useState("");
@@ -9,10 +18,10 @@ const AddMemberModal = ({ closeAddMember }) => {
   const resultsPerPage = 7;
   const headers = new Headers();
   headers.append("Content-Type", "application/json");
-  headers.append("access-token", sessionStorage.getItem("access-token"));
-  headers.append("client", sessionStorage.getItem("client"));
-  headers.append("expiry", sessionStorage.getItem("expiry"));
-  headers.append("uid", sessionStorage.getItem("uid"));
+  headers.append("access-token", sessionStorage.getItem("access-token") || "");
+  headers.append("client", sessionStorage.getItem("client") || "");
+  headers.append("expiry", sessionStorage.getItem("expiry") || "");
+  headers.append("uid", sessionStorage.getItem("uid") || "");
 
   const handleAddMember = async () => {
     try {
@@ -62,7 +71,7 @@ const AddMemberModal = ({ closeAddMember }) => {
     }
   };
 
-  const handleUserClick = (uid) => {
+  const handleUserClick = (uid: SetStateAction<string>) => {
     setAddMember(uid);
   };
 
@@ -79,7 +88,7 @@ const AddMemberModal = ({ closeAddMember }) => {
         <div className="relative w-auto my-6 mx-auto max-w-3xl">
           <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
             <div className="flex items-start justify-between p-5 border-b border-solid border-blueGray-200 rounded-t">
-              <h5 className="text-3xl font-semibold">Add Member</h5>
+              <h5 className="text-2xl font-semibold font-sans">Add Member</h5>
             </div>
 
             <div className="relative p-6 flex-auto">
@@ -94,7 +103,7 @@ const AddMemberModal = ({ closeAddMember }) => {
                 }}
               />
               <button
-                className="text-blue-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                className="text-blue-500 background-transparent font-semibold font-sans uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150 hover:underline"
                 type="button"
                 onClick={handleAddMember}
               >
@@ -104,7 +113,7 @@ const AddMemberModal = ({ closeAddMember }) => {
 
             <div className="ml-6">
               <input
-                className="border-2"
+                className="border-2 rounded"
                 key="findUserUID"
                 type="text"
                 id="findUserUID"
@@ -114,43 +123,79 @@ const AddMemberModal = ({ closeAddMember }) => {
                 }}
               />
               <button
-                className="text-blue-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                className="text-blue-500 background-transparent font-semibold font-sans hover:underline uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                 type="button"
                 onClick={handleFindUser}
               >
                 Find User
               </button>
-              <table className="w-full">
-                <thead>
+              <table className="w-full mt-2">
+                <thead className="font-sans text-base font-bold">
+                  Found Users:
                   <tr>
-                    <th>ID</th>
-                    <th>UID</th>
+                    <th className="font-sans text-sm">ID</th>
+                    <th className="font-sans text-sm">UID</th>
                   </tr>
                 </thead>
                 <tbody>
                   {searchResult &&
                     searchResult.data
-                      .filter((user) => user.uid.includes(findUserUID))
+                      .filter((user: { uid: string | string[] }) =>
+                        user.uid.includes(findUserUID)
+                      )
                       .slice(startIndex, endIndex)
-                      .map((user, index) => (
-                        <tr
-                          className="hover:bg-orange-500 gap-2"
-                          key={index}
-                          onClick={() => handleUserClick(user.id)}
-                          style={{ cursor: "pointer" }}
-                        >
-                          <td>{user.id}</td>
-                          <td>{user.uid}</td>
-                        </tr>
-                      ))}
+
+                      .map(
+                        (
+                          user: {
+                            uid:
+                              | string
+                              | number
+                              | boolean
+                              | ReactElement<
+                                  any,
+                                  string | JSXElementConstructor<any>
+                                >
+                              | Iterable<ReactNode>
+                              | ReactPortal
+                              | PromiseLikeOfReactNode
+                              | null
+                              | undefined;
+                            id:
+                              | string
+                              | number
+                              | boolean
+                              | ReactElement<
+                                  any,
+                                  string | JSXElementConstructor<any>
+                                >
+                              | Iterable<ReactNode>
+                              | ReactPortal
+                              | PromiseLikeOfReactNode
+                              | null
+                              | undefined;
+                          },
+                          index: Key | null | undefined
+                        ) => (
+                          <tr
+                            className="hover:bg-orange-500 gap-2"
+                            key={index}
+                            onClick={() => handleUserClick(user.uid)}
+                            style={{ cursor: "pointer" }}
+                          >
+                            <td className="font-sans text-sm">{user.id}</td>
+                            <td className="font-sans text-sm">{user.uid}</td>
+                          </tr>
+                        )
+                      )}
                 </tbody>
               </table>
               {searchResult &&
-                searchResult.data.filter((user) =>
+                searchResult.data.filter((user: { uid: string | string[] }) =>
                   user.uid.includes(findUserUID)
                 ).length > endIndex && (
                   <button
-                    className="text-blue-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                    className="text-blue-500 font-sans hover:underline background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                     type="button"
                     onClick={loadNextPage}
                   >
@@ -161,7 +206,7 @@ const AddMemberModal = ({ closeAddMember }) => {
 
             <div className="flex items-center justify-end p-6 border-t border-solid border-blueGray-200 rounded-b">
               <button
-                className="text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                className="text-red-500 font-sans hover:underline background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                 type="button"
                 onClick={closeAddMember}
               >

@@ -6,10 +6,10 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 
 const SignUpPage = () => {
-  const [surname, setSurname] = useState("");
-  const [firstName, setFirstName] = useState("");
-  const [middleName, setMiddleName] = useState("");
-  const [username, setUsername] = useState("");
+  // const [surname, setSurname] = useState("");
+  // const [firstName, setFirstName] = useState("");
+  // const [middleName, setMiddleName] = useState("");
+  // const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [email, setEmail] = useState("");
@@ -271,7 +271,7 @@ const SignUpPage = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center text-center bg-indigo-900 text-white">
+    <div className="h-screen overflow-hidden flex flex-col items-center justify-center text-center bg-indigo-900 text-white">
       <header className="m-0 p-5">
         <h1 className="inline-flex text-5xl font-bold content-center mb-0 text-yellow-400 font-serif">
           Conversa
@@ -286,7 +286,7 @@ const SignUpPage = () => {
         <p className="text-sm mb-4 italic">Your Communication Friend Online</p>
       </header>
 
-      <h2 className="inline-flex text-lg font-bold mb-0 text-yellow-300">
+      <h2 className="inline-flex text-lg font-sans font-semibold mt-4 mb-0 text-yellow-300">
         Account Registration
       </h2>
       <h5 className="text-base mb-6 font-sans">
@@ -294,7 +294,7 @@ const SignUpPage = () => {
       </h5>
 
       <form className="flex flex-col text-sm font-medium font-sans">
-        <div className="flex items-center mb-5">
+        {/* <div className="flex items-center mb-5">
           <div className="w-1/3">
             <label htmlFor="Surname" className="m-1 block">
               Surname
@@ -345,7 +345,7 @@ const SignUpPage = () => {
               }}
             />
           </div>
-        </div>
+        </div> */}
 
         <label htmlFor="Email Address" className="m-1">
           Email Address
@@ -362,7 +362,7 @@ const SignUpPage = () => {
           }}
         />
 
-        <label htmlFor="Username" className="m-1">
+        {/* <label htmlFor="Username" className="m-1">
           Username
         </label>
         <input
@@ -375,7 +375,7 @@ const SignUpPage = () => {
             setUsername(e.target.value);
             clearError();
           }}
-        />
+        /> */}
 
         <label htmlFor="Password" className="m-1">
           Password
@@ -412,7 +412,7 @@ const SignUpPage = () => {
             {error}
           </p>
         )}
-        <h5 className="mt-3 p-1 text-sm">
+        <h5 className="mt-5 p-1 text-sm">
           Before clicking 'Register', please review and ensure correct
           information in the registration details. <br />
           <br />
@@ -425,8 +425,8 @@ const SignUpPage = () => {
           </button>
         </h5>
       </form>
-      <h6 className="mt-3 p-4 text-base font-sans">
-        Already have an account? <br />{" "}
+      <h6 className="mt-5 p-4 text-base font-sans">
+        Already have an account? <br />
         <Link
           href="/login"
           className="block font-sans hover:text-orange-300 hover:underline"
@@ -443,6 +443,6 @@ const SignUpPage = () => {
 
 export default SignUpPage;
 
-function handleAddUserDetails() {
-  throw new Error("Function not implemented.");
-}
+// function handleAddUserDetails() {
+//   throw new Error("Function not implemented.");
+// }
