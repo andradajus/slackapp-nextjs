@@ -4,6 +4,7 @@ export interface User {
 }
 
 export interface Message {
+  receiverId: number;
   id: number;
   uid: string;
   sender: User;
@@ -17,3 +18,15 @@ export interface MessageInputProps {
   messages: Message[];
   fetchMessages: () => void;
 }
+
+
+export interface ForMessageInput {
+  id: number;
+  sender: User; 
+  receiver: User;
+  uid: string;
+  body: string;
+  created_at: string;
+  sent: boolean;
+}
+
