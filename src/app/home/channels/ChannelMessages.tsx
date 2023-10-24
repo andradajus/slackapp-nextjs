@@ -1,6 +1,6 @@
 "useClient";
 import Image from "next/image";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 
 const ChannelMessages = ({}) => {
   const [message, setMessage] = useState("");
@@ -159,10 +159,9 @@ const ChannelMessages = ({}) => {
   };
 
   const retrieveMessageInterval = () => {
-    const retrieveAndSetMessages = async () => {
+    const retrieveAndSetMessages = useMemo(async () => {
       await retrieveMessages();
-      setupNextInterval();
-    };
+    }, [messages]);
 
     const setupNextInterval = () => {
       const intervalTime = 3000;
@@ -211,9 +210,9 @@ const ChannelMessages = ({}) => {
 
   useEffect(() => {
     const retrieveAndSetup = async () => {
+      retrieveMessageInterval();
       retrieveUserDetails();
       retrieveMessages();
-      retrieveMessageInterval();
     };
 
     retrieveAndSetup();
