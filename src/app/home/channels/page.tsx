@@ -39,10 +39,13 @@ const Channels = () => {
   const showChannelDetails = async () => {
     const url = "http://206.189.91.54/api/v1/channels/";
     headers.append("Content-Type", "application/json");
-    headers.append("access-token", sessionStorage.getItem("access-token"));
-    headers.append("client", sessionStorage.getItem("client"));
-    headers.append("expiry", sessionStorage.getItem("expiry"));
-    headers.append("uid", sessionStorage.getItem("uid"));
+    headers.append(
+      "access-token",
+      sessionStorage.getItem("access-token") || ""
+    );
+    headers.append("client", sessionStorage.getItem("client") || "");
+    headers.append("expiry", sessionStorage.getItem("expiry") || "");
+    headers.append("uid", sessionStorage.getItem("uid") || "");
     const excludedChannelIds = [5129, 5130, 5133, 5108, 5079];
 
     try {
@@ -54,7 +57,7 @@ const Channels = () => {
 
       if (data?.data?.length > 0) {
         const filteredChannels = data.data.filter(
-          (channel) => !excludedChannelIds.includes(channel.id)
+          (channel: { id: number }) => !excludedChannelIds.includes(channel.id)
         );
         const [firstChannel] = filteredChannels;
         setChannels(filteredChannels);
@@ -69,7 +72,7 @@ const Channels = () => {
     }
   };
 
-  const handleChannelClick = (channel) => {
+  const handleChannelClick = (channel: { id: string; name: any }) => {
     setChannelDetails({
       id: channel.id,
       name: channel.name,
@@ -140,7 +143,7 @@ const Channels = () => {
           <SubSideBar channels={channels} onChannelClick={handleChannelClick} />
         </div>
 
-        <div className="flex flex-col  w-full">
+        <div className="flex flex-col w-full h-screen overflow-y-hidden">
           <div className="bg-indigo-300 flex flex-row justify-between">
             <div className="flex flex-row">
               <Image
@@ -153,7 +156,7 @@ const Channels = () => {
             </div>
 
             <span
-              className="cursor-pointer font-black ml-2 p-2 hover:bg-indigo-700 hover:rounded-lg text-2xl text-white"
+              className="cursor-pointer font-black m-2 p-2 hover:bg-indigo-700 hover:rounded-lg text-2xl text-white"
               onClick={openChannelDetails}
             >
               {channelDetails.name}
@@ -196,7 +199,7 @@ const Channels = () => {
               </div>
             </div>
           </div>
-          <div className=" mt-1 h-full">
+          <div className="mt-1 h-full">
             <ChannelMessages />
           </div>
         </div>

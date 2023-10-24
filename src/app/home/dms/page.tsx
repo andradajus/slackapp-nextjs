@@ -8,6 +8,8 @@ export default function DirectMessage() {
   const loggedInUser = {
     id: parseInt(sessionStorage.getItem("id") || "0"),
     uid: sessionStorage.getItem("uid") || "",
+    firstname: sessionStorage.getItem("firstname") || "",
+    lastname: sessionStorage.getItem("lastname") || "",
   };
 
   const [messages, setMessages] = useState<Message[]>([]);
@@ -39,7 +41,7 @@ export default function DirectMessage() {
       headers.append("uid", sessionStorage.getItem("uid") || "");
 
       const response = await fetch(
-        `http://206.189.91.54/api/v1/messages?receiver_id=${receiverId}&receiver_class=User`,
+        `http://206.189.91.54/api/v1/messages?receiver_id=${loggedInUser.id}&receiver_class=User`,
         {
           method: "GET",
           headers: headers,
@@ -86,17 +88,13 @@ export default function DirectMessage() {
   };
 
   const chooseReceiver = (targetUid: string): User | null => {
-    const recipient = users.find(
-      (user: User) => user.uid === targetUid
-      // (user: { uid: string; id: number }) => user.uid === targetUid
-    );
+    const recipient = users.find((user: User) => user.uid === targetUid);
 
     if (recipient) {
       sessionStorage.setItem("storedReceiverId", recipient.id.toString());
       fetchMessages();
       return recipient;
     }
-    // sessionStorage.removeItem("storedReceiverId");
     return null;
   };
 
@@ -123,11 +121,7 @@ export default function DirectMessage() {
   const fetchMessageInterval = () => {
     const fetchAndSetMessages = async () => {
       await fetchMessages();
-      // setupNextInterval();
 
-      // const setupNextInterval = () => {
-      //   const intervalTime = 2000;
-      //   if (!intervalId) {
       const timerId = setInterval(fetchAndSetMessages, 1000);
       setIntervalId(timerId as unknown as number);
     };
@@ -143,7 +137,7 @@ export default function DirectMessage() {
   };
 
   return (
-    <div className="h-screen overflow-hidden border-solid border-2 border-white  bg-indigo-800">
+    <div className="h-screen overflow-hidden border-solid border-3 border-white  bg-indigo-800">
       <div className="m-2 p-1 flex flex-col justify-center content-center">
         <p className="font-sans text-lg font-bold text-white border-b-2 border-white">
           Inbox
@@ -151,7 +145,6 @@ export default function DirectMessage() {
       </div>
       <div className="h-2/5 p-3 overflow-y-auto flex flex-col">
         <MessageList messages={messages} />
-        {/* userData={`${firstname}} ${lastname}`} */}
       </div>
 
       <div className="h-3/5 m-2 p-2">

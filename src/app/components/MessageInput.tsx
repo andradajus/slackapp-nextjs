@@ -155,7 +155,7 @@ const MessageInput: React.FC<MessageInputProps> = ({
   };
 
   return (
-    <div className=" bg-indigo-500 rounded-md content-center">
+    <div className="bg-indigo-500 rounded-md content-center">
       <div className="flex gap-2 m-1 py-1 ml-2">
         <Image
           className="cursor-pointer hover:bg-indigo-700 hover:rounded-sm"
@@ -225,23 +225,27 @@ const MessageInput: React.FC<MessageInputProps> = ({
       </div>
       <div className="flex bg-indigo-500 justify-between rounded-md">
         <Image
-          className="cursor-pointer hover:bg-yellow-500 ml-2"
+          className="cursor-pointer hover:bg-yellow-500 ml-2 rounded"
           src="https://www.svgrepo.com/show/447618/emoticon-smile.svg"
           alt="Emoji-icon"
-          width={17}
-          height={17}
+          width={20}
+          height={20}
           onClick={handleInsertEmoji}
         />
 
-        <Image
-          className="cursor-pointer hover:bg-indigo-700 mr-2"
-          src="https://www.svgrepo.com/show/533310/send-alt-1.svg"
-          alt="SendMessage-icon"
-          width={20}
-          height={20}
-          onClick={handleSendMessage}
-        />
+        <div className="flex bg-indigo-500 hover:bg-yellow-200 justify-between rounded-md cursor-pointer">
+          <span className="pt-1 pb-1 pr-1 font-semibold text-sm">Send</span>
+          <Image
+            className="cursor-pointer mr-2"
+            src="https://www.svgrepo.com/show/533310/send-alt-1.svg"
+            alt="SendMessage-icon"
+            width={20}
+            height={20}
+            onClick={handleSendMessage}
+          />
+        </div>
       </div>
+
       {showEmojiPicker && (
         <EmojiPicker
           onEmojiClick={(emojiObject) => {

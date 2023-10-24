@@ -1,6 +1,7 @@
 "useClient";
 import Image from "next/image";
-import { useState, useEffect } from "react";
+import EmojiPicker from "emoji-picker-react";
+import { useState, useEffect, useRef } from "react";
 
 const ChannelMessages = ({}) => {
   const [message, setMessage] = useState("");
@@ -10,6 +11,12 @@ const ChannelMessages = ({}) => {
   const [intervalId, setIntervalId] = useState<number | null>(null);
   const [filteredData, setFilteredData] = useState([]);
   const senderUID = sessionStorage.getItem("uid");
+
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+  const [error, setError] = useState("");
+  const [orderedListCount, setOrderedListCount] = useState(1);
+  const messageRef = useRef<HTMLTextAreaElement | null>(null);
+
   const headers = new Headers();
   headers.append("Content-Type", "application/json");
   headers.append("access-token", sessionStorage.getItem("access-token") || "");
@@ -17,27 +24,78 @@ const ChannelMessages = ({}) => {
   headers.append("expiry", sessionStorage.getItem("expiry") || "");
   headers.append("uid", sessionStorage.getItem("uid") || "");
 
-  const handleBold = () => {
-    console.log("Text is bold");
+  const clearError = () => {
+    setError("");
   };
 
-  const handleItalic = () => {
-    console.log("Text is italic");
+  const handleFormatText = (format: string) => {
+    const text = message;
+    const selectionStart = messageRef.current?.selectionStart;
+    const selectionEnd = messageRef.current?.selectionEnd;
+
+    if (selectionStart !== undefined && selectionEnd !== undefined) {
+      const selectedText = text.slice(selectionStart, selectionEnd);
+      let newText = "";
+
+      if (selectedText.startsWith(format) && selectedText.endsWith(format)) {
+        newText =
+          text.slice(0, selectionStart) +
+          selectedText.slice(format.length, -format.length) +
+          text.slice(selectionEnd);
+      } else {
+        newText =
+          text.slice(0, selectionStart) +
+          format +
+          selectedText +
+          format +
+          text.slice(selectionEnd);
+      }
+
+      setMessage(newText);
+    }
   };
 
-  const handleUnderline = () => {
-    console.log("Text is underlined");
+  const handleDeleteOrderedList = () => {
+    const cursorPosition = messageRef.current?.selectionStart || 0;
+    const textBeforeCursor = message.slice(0, cursorPosition);
+    const textAfterCursor = message.slice(cursorPosition);
+
+    if (textBeforeCursor.endsWith("\n1. ")) {
+      setOrderedListCount(1);
+    }
+
+    setMessage(textBeforeCursor + textAfterCursor);
   };
-  const handleStrikethrough = () => {
-    console.log("Text is dashed?");
+
+  const handleKeyDown = (e: { key: string }) => {
+    if (e.key === "Backspace") {
+      handleDeleteOrderedList();
+    }
   };
 
   const handleOrderedList = () => {
-    console.log("New ordered list created");
+    const cursorPosition = messageRef.current?.selectionStart || 0;
+    const formattedListItem = `${orderedListCount}. `;
+    const updatedMessage =
+      message.slice(0, cursorPosition) +
+      formattedListItem +
+      message.slice(cursorPosition);
+    setOrderedListCount(orderedListCount + 1);
+    setMessage(updatedMessage);
   };
 
   const handleUnorderedList = () => {
-    console.log("New unordered list created");
+    const cursorPosition = messageRef.current?.selectionStart || 0;
+    const formattedListItem = `• `;
+    const updatedMessage =
+      message.slice(0, cursorPosition) +
+      formattedListItem +
+      message.slice(cursorPosition);
+    setMessage(updatedMessage);
+  };
+
+  const handleInsertEmoji = () => {
+    setShowEmojiPicker(true);
   };
 
   const retrieveMessages = async () => {
@@ -111,7 +169,7 @@ const ChannelMessages = ({}) => {
 
       const data = await response.json();
 
-      const filteredData = data.data.map((item) => {
+      const filteredData = data.data.map((item: { body: string }) => {
         const bodyContent = JSON.parse(item.body);
         return {
           firstname: bodyContent.firstname,
@@ -149,7 +207,7 @@ const ChannelMessages = ({}) => {
       const data = await response.json();
 
       const channelMembers = data.data.channel_members.map(
-        (member) => member.user_id
+        (member: { user_id: any }) => member.user_id
       );
 
       setChannelMembers(channelMembers);
@@ -193,7 +251,7 @@ const ChannelMessages = ({}) => {
             <div>
               <div className="flex flex-col">
                 <div>
-                  <span className="text-md font-bold">
+                  <span className="text-sm font-bold">
                     {name ? name : "Unknown User"}
                   </span>{" "}
                   <span className="text-xs pl-3">
@@ -201,7 +259,7 @@ const ChannelMessages = ({}) => {
                   </span>
                 </div>
                 <div className="pb-1">
-                  <span className="max-w-sm break-all">{msg.body}</span>
+                  <span className="max-w-sm break-all text-sm">{msg.body}</span>
                 </div>
               </div>
             </div>
@@ -227,93 +285,123 @@ const ChannelMessages = ({}) => {
   }, [currentChannelID]);
 
   return (
-    <>
-      <div className="flex flex-col h-full">
-        <div className="flex flex-col rounded-lg ml-1 mr-1 p-2 bg-white h-96 max-h-96 overflow-y-auto">
-          {renderMessages()}
-        </div>
+    <div className="h-screen p-2 bg-indigo-800">
+      <div className="flex flex-col rounded-lg ml-1 mr-1 p-2 bg-white h-96 max-h-96 overflow-y-auto">
+        {renderMessages()}
+      </div>
 
-        <div className="p-1 w-full">
-          <div className="bg-indigo-500 ml-1 mr-1 rounded-md content-center p-2">
-            <div className="flex gap-2 m-1 ml-2">
-              <Image
-                className="cursor-pointer hover:bg-indigo-700 hover:rounded-sm"
-                src="https://www.svgrepo.com/show/491501/text-bold.svg"
-                alt="Bold-icon"
-                width={15}
-                height={15}
-                onClick={handleBold}
-              />
-
-              <Image
-                className="cursor-pointer hover:bg-indigo-700 hover:rounded-sm"
-                src="https://www.svgrepo.com/show/491503/text-italic.svg"
-                alt="Italic-icon"
-                width={15}
-                height={15}
-                onClick={handleItalic}
-              />
-
-              <Image
-                className="cursor-pointer hover:bg-indigo-700 hover:rounded-sm"
-                src="https://www.svgrepo.com/show/491504/text-underline.svg"
-                alt="Underline-icon"
-                width={15}
-                height={15}
-                onClick={handleUnderline}
-              />
-
-              <Image
-                className="cursor-pointer hover:bg-indigo-700 hover:rounded-sm"
-                src="https://www.svgrepo.com/show/376261/strikethrough.svg"
-                alt="Strikethrough-icon"
-                width={17}
-                height={17}
-                onClick={handleStrikethrough}
-              />
-
-              <span className="cursor-pointer" onClick={handleOrderedList}>
-                OL
-              </span>
-              <span className="cursor-pointer" onClick={handleUnorderedList}>
-                UL
-              </span>
-            </div>
-
-            <textarea
-              className="w-full h-20 overflow-auto rounded-md pl-1 pr-1 text-sm resize-none "
-              value={message}
-              onChange={(e) => setMessage(e.target.value)}
+      <div className="p-1 py-2 w-full">
+        <div className="bg-indigo-500 rounded-md content-center">
+          <div className="flex gap-2 m-1 py-1 ml-2">
+            <Image
+              className="cursor-pointer hover:bg-indigo-700 hover:rounded-sm"
+              src="https://www.svgrepo.com/show/491501/text-bold.svg"
+              alt="Bold-icon"
+              width={15}
+              height={15}
+              onClick={() => handleFormatText("**")}
             />
-            <div className="flex bg-indigo-500 justify-between rounded-md ">
+
+            <Image
+              className="cursor-pointer hover:bg-indigo-700 hover:rounded-sm"
+              src="https://www.svgrepo.com/show/491503/text-italic.svg"
+              alt="Italic-icon"
+              width={15}
+              height={15}
+              onClick={() => handleFormatText("*")}
+            />
+
+            <Image
+              className="cursor-pointer hover:bg-indigo-700 hover:rounded-sm"
+              src="https://www.svgrepo.com/show/491504/text-underline.svg"
+              alt="Underline-icon"
+              width={15}
+              height={15}
+              onClick={() => handleFormatText("__")}
+            />
+
+            <Image
+              className="cursor-pointer hover:bg-indigo-700 hover:rounded-sm"
+              src="https://www.svgrepo.com/show/376261/strikethrough.svg"
+              alt="Strikethrough-icon"
+              width={17}
+              height={17}
+              onClick={() => handleFormatText("~~")}
+            />
+
+            <Image
+              className="cursor-pointer hover:bg-indigo-700 hover:rounded-sm"
+              src="https://www.svgrepo.com/show/532192/list.svg"
+              alt="BulletsList-icon"
+              width={17}
+              height={17}
+              onClick={handleUnorderedList}
+            />
+
+            <Image
+              className="cursor-pointer hover:bg-indigo-700 hover:rounded-sm"
+              src="https://www.svgrepo.com/show/532190/list-ol.svg"
+              alt="NumberedList-icon"
+              width={17}
+              height={17}
+              onClick={handleOrderedList}
+            />
+          </div>
+          <div className="mx-2">
+            <textarea
+              ref={messageRef}
+              className="w-full h-28 p-1 text-sm overflow-auto rounded-md bg-indigo-100"
+              value={message}
+              onChange={(e) => {
+                setMessage(e.target.value);
+                clearError();
+              }}
+              onKeyDown={handleKeyDown}
+            />
+          </div>
+
+          <div className="flex flex-row bg-indigo-500 justify-between rounded-md">
+            <Image
+              className="cursor-pointer hover:bg-yellow-500 ml-2 rounded"
+              src="https://www.svgrepo.com/show/447618/emoticon-smile.svg"
+              alt="Emoji-icon"
+              width={20}
+              height={20}
+              onClick={handleInsertEmoji}
+            />
+
+            <div className="flex bg-indigo-500 hover:bg-yellow-200 rounded-md cursor-pointer">
+              <span className="pt-1 pb-1 pr-1 ml-1 font-semibold text-sm">
+                Send
+              </span>
               <Image
-                className="cursor-pointer hover:bg-yellow-500 ml-2"
-                src="https://www.svgrepo.com/show/447618/emoticon-smile.svg"
-                alt="Emoji-icon"
-                width={17}
-                height={17}
-                onClick={handleStrikethrough}
-              />
-              <div
-                className="flex flex-row cursor-pointer 
-              hover:bg-indigo-700
-              bg-yellow-200 rounded-md mt-1 pr-1 pl-1
-              font-bold"
+                className="cursor-pointer mr-1"
+                src="https://www.svgrepo.com/show/533310/send-alt-1.svg"
+                alt="SendMessage-icon"
+                width={20}
+                height={20}
                 onClick={handleSendMessage}
-              >
-                <span className="pt-1 pb-1 pr-1 text-sm ">Send Message</span>
-                <Image
-                  src="https://www.svgrepo.com/show/533310/send-alt-1.svg"
-                  alt="SendMessage-icon"
-                  width={20}
-                  height={20}
-                />
-              </div>
+              />
             </div>
           </div>
+
+          {showEmojiPicker && (
+            <EmojiPicker
+              onEmojiClick={(emojiObject) => {
+                const updatedMessage = message + emojiObject.emoji;
+                setMessage(updatedMessage);
+              }}
+            />
+          )}
+
+          {error && (
+            <p className="flex items-center justify-center m-auto mt-4 py-1 px-3 text-black bg-yellow-300 text-sm font-bold rounded">
+              {error}
+            </p>
+          )}
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

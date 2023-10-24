@@ -161,7 +161,7 @@ const LoginPage = () => {
 
   return (
     <>
-      <div className="min-h-screen flex flex-col items-center justify-center text-center bg-indigo-900 text-white">
+      <div className="h-screen overflow-hidden flex flex-col items-center justify-center text-center bg-indigo-900 text-white">
         <header className="m-0 p-10">
           <h1 className="inline-flex text-5xl content-center font-bold mb-0 text-yellow-400 font-serif">
             Conversa
