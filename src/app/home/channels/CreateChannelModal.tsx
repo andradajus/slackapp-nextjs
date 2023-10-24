@@ -1,6 +1,14 @@
 import { useState } from "react";
 
-const CreateChannelModal = ({ closeChannel, showChannelDetails }) => {
+interface CreateChannelModalProps {
+  closeChannel: () => void;
+  showChannelDetails: () => void;
+}
+
+const CreateChannelModal: React.FC<CreateChannelModalProps> = ({
+  closeChannel,
+  showChannelDetails,
+}) => {
   const [name, setName] = useState("");
 
   const handleCreateChannel = async () => {
@@ -13,10 +21,13 @@ const CreateChannelModal = ({ closeChannel, showChannelDetails }) => {
 
       const headers = new Headers();
       headers.append("Content-Type", "application/json");
-      headers.append("access-token", sessionStorage.getItem("access-token"));
-      headers.append("client", sessionStorage.getItem("client"));
-      headers.append("expiry", sessionStorage.getItem("expiry"));
-      headers.append("uid", sessionStorage.getItem("uid"));
+      headers.append(
+        "access-token",
+        sessionStorage.getItem("access-token") || ""
+      );
+      headers.append("client", sessionStorage.getItem("client") || "");
+      headers.append("expiry", sessionStorage.getItem("expiry") || "");
+      headers.append("uid", sessionStorage.getItem("uid") || "");
 
       const response = await fetch("http://206.189.91.54/api/v1/channels", {
         method: "POST",
@@ -42,14 +53,16 @@ const CreateChannelModal = ({ closeChannel, showChannelDetails }) => {
       <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
         <div className="relative w-auto my-6 mx-auto max-w-3xl">
           <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
-            <div className="flex items-start justify-between p-5">
-              <h5 className="text-3xl font-semibold">Create Channel</h5>
+            <div className="flex items-start justify-between p-5 mt-5">
+              <h5 className="text-2xl font-semibold font-sans">
+                Create Channel
+              </h5>
             </div>
 
-            <div className="relative p-6 flex-auto">
+            <div className="relative p-6 flex-auto font-semibold font-sans">
               Name:
               <input
-                className="border-2 ml-2"
+                className="border-2 ml-2 p-1"
                 key="name"
                 type="text"
                 id="name"
@@ -62,14 +75,14 @@ const CreateChannelModal = ({ closeChannel, showChannelDetails }) => {
 
             <div className="flex items-center justify-end p-6">
               <button
-                className="text-blue-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                className="text-blue-500 background-transparent font-sans font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150 hover:underline"
                 type="button"
                 onClick={handleCreateChannel}
               >
                 Submit
               </button>
               <button
-                className="text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                className="text-red-500 background-transparent font-sans font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150 hover:underline"
                 type="button"
                 onClick={closeChannel}
               >

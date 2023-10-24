@@ -18,18 +18,16 @@ const SubSideBar = ({ channels, onChannelClick }) => {
 
   return (
     <>
-      <div className="bg-indigo-500 h-full w-48">
-        <div className="bg-indigo-600 text-center block text-2xl font-bold mb-0 text-yellow-400 font-serif pb-2 pt-2">
-          <div>Conversa</div>
+      <div className="bg-indigo-500 h-screen border-2 border-y-0 border-white overflow-hidden w-48">
+        <div className="bg-indigo-600 text-center block text-xl font-semibold mb-0 text-yellow-300 font-serif pb-2 pt-2">
+          <div>Channel List</div>
         </div>
-        <div className="flex flex-col ml-4">
+        <div className="flex flex-col mt-7 ml-4">
           <div className="text-white font-sans font-semibold">
             <span
               className="cursor-pointer text-lg font-black"
               onClick={toggleChannelList}
-            >
-              Channel List
-            </span>
+            ></span>
             <div className={`gap-4 ${isChannelListOpen ? "block" : "hidden"}`}>
               <ul className="gap-2">
                 {channels.map((channel) => (
@@ -44,7 +42,7 @@ const SubSideBar = ({ channels, onChannelClick }) => {
               </ul>
             </div>
           </div>
-          <div className="hover:bg-indigo-700 cursor-pointer">Sent Message</div>
+          {/* <div className="hover:bg-indigo-700 cursor-pointer">Sent Message</div> */}
         </div>
       </div>
     </>

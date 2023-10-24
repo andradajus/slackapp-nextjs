@@ -94,19 +94,23 @@ const MemberModal = ({ closeMember }) => {
         <div className="relative w-auto my-6 mx-auto max-w-3xl">
           <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
             <div className="flex items-start justify-between p-5 border-b border-solid border-blueGray-200 rounded-t">
-              <h5 className="text-3xl font-semibold">Channel Members</h5>
+              <h5 className="text-2xl font-semibold font-sans">
+                Channel Members
+              </h5>
             </div>
 
-            <div className="relative p-6 flex-auto">
+            <div className="relative p-6 flex-auto font-sans text-sm">
               {channelMembers?.length > 0 && <ul>{renderChannelMembers()}</ul>}
               {channelMembers?.length === 0 && (
-                <p>Loading channel members...</p>
+                <p className="font-sans italic text-base">
+                  Loading channel members...
+                </p>
               )}
             </div>
 
             <div className="flex items-center justify-end p-6 border-t border-solid border-blueGray-200 rounded-b">
               <button
-                className="text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                className="text-red-500 font-sans hover:underline background-transparent font-semibold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                 type="button"
                 onClick={closeMember}
               >
