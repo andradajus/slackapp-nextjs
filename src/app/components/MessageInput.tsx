@@ -155,103 +155,101 @@ const MessageInput: React.FC<MessageInputProps> = ({
   };
 
   return (
-    <div>
-      <div className="bg-indigo-500 rounded-md content-center">
-        <div className="flex gap-2 m-1 py-2 ml-2">
-          <Image
-            className="cursor-pointer hover:bg-indigo-700 hover:rounded-sm"
-            src="https://www.svgrepo.com/show/491501/text-bold.svg"
-            alt="Bold-icon"
-            width={15}
-            height={15}
-            onClick={() => handleFormatText("**")}
-          />
+    <div className=" bg-indigo-500 rounded-md content-center">
+      <div className="flex gap-2 m-1 py-1 ml-2">
+        <Image
+          className="cursor-pointer hover:bg-indigo-700 hover:rounded-sm"
+          src="https://www.svgrepo.com/show/491501/text-bold.svg"
+          alt="Bold-icon"
+          width={15}
+          height={15}
+          onClick={() => handleFormatText("**")}
+        />
 
-          <Image
-            className="cursor-pointer hover:bg-indigo-700 hover:rounded-sm"
-            src="https://www.svgrepo.com/show/491503/text-italic.svg"
-            alt="Italic-icon"
-            width={15}
-            height={15}
-            onClick={() => handleFormatText("*")}
-          />
+        <Image
+          className="cursor-pointer hover:bg-indigo-700 hover:rounded-sm"
+          src="https://www.svgrepo.com/show/491503/text-italic.svg"
+          alt="Italic-icon"
+          width={15}
+          height={15}
+          onClick={() => handleFormatText("*")}
+        />
 
-          <Image
-            className="cursor-pointer hover:bg-indigo-700 hover:rounded-sm"
-            src="https://www.svgrepo.com/show/491504/text-underline.svg"
-            alt="Underline-icon"
-            width={15}
-            height={15}
-            onClick={() => handleFormatText("__")}
-          />
+        <Image
+          className="cursor-pointer hover:bg-indigo-700 hover:rounded-sm"
+          src="https://www.svgrepo.com/show/491504/text-underline.svg"
+          alt="Underline-icon"
+          width={15}
+          height={15}
+          onClick={() => handleFormatText("__")}
+        />
 
-          <Image
-            className="cursor-pointer hover:bg-indigo-700 hover:rounded-sm"
-            src="https://www.svgrepo.com/show/376261/strikethrough.svg"
-            alt="Strikethrough-icon"
-            width={17}
-            height={17}
-            onClick={() => handleFormatText("~~")}
-          />
+        <Image
+          className="cursor-pointer hover:bg-indigo-700 hover:rounded-sm"
+          src="https://www.svgrepo.com/show/376261/strikethrough.svg"
+          alt="Strikethrough-icon"
+          width={17}
+          height={17}
+          onClick={() => handleFormatText("~~")}
+        />
 
-          <Image
-            className="cursor-pointer hover:bg-indigo-700 hover:rounded-sm"
-            src="https://www.svgrepo.com/show/532192/list.svg"
-            alt="BulletsList-icon"
-            width={17}
-            height={17}
-            onClick={handleUnorderedList}
-          />
+        <Image
+          className="cursor-pointer hover:bg-indigo-700 hover:rounded-sm"
+          src="https://www.svgrepo.com/show/532192/list.svg"
+          alt="BulletsList-icon"
+          width={17}
+          height={17}
+          onClick={handleUnorderedList}
+        />
 
-          <Image
-            className="cursor-pointer hover:bg-indigo-700 hover:rounded-sm"
-            src="https://www.svgrepo.com/show/532190/list-ol.svg"
-            alt="NumberedList-icon"
-            width={17}
-            height={17}
-            onClick={handleOrderedList}
-          />
-        </div>
-        <div className="mx-2">
-          <textarea
-            ref={messageRef}
-            className="w-full p-1 text-sm overflow-auto rounded-md bg-indigo-100"
-            value={message}
-            onChange={(e) => {
-              setMessage(e.target.value);
-              clearError();
-            }}
-            onKeyDown={handleKeyDown}
-          />
-        </div>
-        <div className="flex bg-indigo-500 justify-between rounded-md">
-          <Image
-            className="cursor-pointer hover:bg-yellow-500 ml-2"
-            src="https://www.svgrepo.com/show/447618/emoticon-smile.svg"
-            alt="Emoji-icon"
-            width={17}
-            height={17}
-            onClick={handleInsertEmoji}
-          />
-
-          <Image
-            className="cursor-pointer hover:bg-indigo-700 mr-2"
-            src="https://www.svgrepo.com/show/533310/send-alt-1.svg"
-            alt="SendMessage-icon"
-            width={20}
-            height={20}
-            onClick={handleSendMessage}
-          />
-        </div>
-        {showEmojiPicker && (
-          <EmojiPicker
-            onEmojiClick={(emojiObject) => {
-              const updatedMessage = message + emojiObject.emoji;
-              setMessage(updatedMessage);
-            }}
-          />
-        )}
+        <Image
+          className="cursor-pointer hover:bg-indigo-700 hover:rounded-sm"
+          src="https://www.svgrepo.com/show/532190/list-ol.svg"
+          alt="NumberedList-icon"
+          width={17}
+          height={17}
+          onClick={handleOrderedList}
+        />
       </div>
+      <div className="mx-2">
+        <textarea
+          ref={messageRef}
+          className="w-full h-28 p-1 text-sm overflow-auto rounded-md bg-indigo-100"
+          value={message}
+          onChange={(e) => {
+            setMessage(e.target.value);
+            clearError();
+          }}
+          onKeyDown={handleKeyDown}
+        />
+      </div>
+      <div className="flex bg-indigo-500 justify-between rounded-md">
+        <Image
+          className="cursor-pointer hover:bg-yellow-500 ml-2"
+          src="https://www.svgrepo.com/show/447618/emoticon-smile.svg"
+          alt="Emoji-icon"
+          width={17}
+          height={17}
+          onClick={handleInsertEmoji}
+        />
+
+        <Image
+          className="cursor-pointer hover:bg-indigo-700 mr-2"
+          src="https://www.svgrepo.com/show/533310/send-alt-1.svg"
+          alt="SendMessage-icon"
+          width={20}
+          height={20}
+          onClick={handleSendMessage}
+        />
+      </div>
+      {showEmojiPicker && (
+        <EmojiPicker
+          onEmojiClick={(emojiObject) => {
+            const updatedMessage = message + emojiObject.emoji;
+            setMessage(updatedMessage);
+          }}
+        />
+      )}
 
       {error && (
         <p className="flex items-center justify-center m-auto mt-4 py-1 px-3 text-black bg-yellow-300 text-sm font-bold rounded">

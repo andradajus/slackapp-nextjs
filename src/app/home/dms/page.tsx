@@ -108,7 +108,7 @@ export default function DirectMessage() {
       setChosenRecipient(recipient);
       alert("Message will be sent to: " + targetUid);
       setReceiverEmail("");
-      fetchMessages();
+      // fetchMessages();
     } else {
       alert("User not found!");
     }
@@ -117,7 +117,7 @@ export default function DirectMessage() {
   const handleChangeRecipientClick = () => {
     setChosenRecipient(null);
     setReceiverEmail("");
-    fetchMessages();
+    // fetchMessages();
   };
 
   const fetchMessageInterval = () => {
@@ -140,79 +140,80 @@ export default function DirectMessage() {
         }
       };
     }, []);
+  };
 
-    return (
-      <div className="h-screen border-solid border-2 border-white">
-        <div className="m-3 p-3 flex flex-col justify-center content-center bg-indigo-800 rounded">
-          <div className="flex flex-col">
-            <p className="font-sans text-lg font-bold text-white  border-b-2 border-white">
-              Inbox
-            </p>
-            <MessageList messages={messages} />
-          </div>
+  return (
+    <div className="h-screen overflow-hidden border-solid border-2 border-white  bg-indigo-800">
+      <div className="m-2 p-1 flex flex-col justify-center content-center">
+        <p className="font-sans text-lg font-bold text-white border-b-2 border-white">
+          Inbox
+        </p>
+      </div>
+      <div className="h-2/5 p-3 overflow-y-auto flex flex-col">
+        <MessageList messages={messages} />
+        {/* userData={`${firstname}} ${lastname}`} */}
+      </div>
 
-          <form className="flex mt-5 flex-col">
-            <label className="font-sans text-sm text-white font-bold">
-              Send to:
-              {chosenRecipient ? (
-                <p className="ml-3 text-base mb-2 text-yellow-300">
-                  {chosenRecipient.uid}
-                </p>
-              ) : (
-                <p className="ml-3 text-base mb-2 text-yellow-300">
-                  No recipient selected.
-                </p>
-              )}
-            </label>
-
-            <div className="w-1/2">
+      <div className="h-3/5 m-2 p-2">
+        <form className="flex mt-2 flex-col">
+          <p className="flex justify-center font-sans text-base mb-3 text-white font-bold">
+            New Message
+          </p>
+          <label className="flex content-center justify-center font-sans text-sm mb-3 text-white font-bold">
+            Send to:
+            {chosenRecipient ? (
+              <span className="ml-3 text-sm text-yellow-300">
+                {chosenRecipient.uid}
+              </span>
+            ) : (
+              <span className="ml-3 text-sm text-yellow-300">
+                No recipient selected.
+              </span>
+            )}
+            <span>
               {chosenRecipient && (
                 <button
-                  className="m-auto ml-3 p-1 font-semibold border-solid border-2 rounded bg-indigo-500 text-xs hover:bg-indigo-700"
+                  className="ml-3 text-sm font-semibold hover:text-white"
                   type="button"
                   onClick={handleChangeRecipientClick}
                 >
                   Change
                 </button>
               )}
+            </span>
+          </label>
+
+          {chosenRecipient ? null : (
+            <div className="flex content-end justify-end my-2">
+              <input
+                type="text"
+                placeholder="Enter email address"
+                value={receiverEmail}
+                onChange={(e) => setReceiverEmail(e.target.value)}
+                className="bg-indigo-100 p-2 mr-2 text-sm font-sans text-black rounded"
+              />
+
+              <button
+                className="p-1 font-semibold text-xs border-solid border-2 rounded bg-indigo-500 hover:bg-indigo-700"
+                type="button"
+                onClick={handleSearchUserClick}
+              >
+                Search
+              </button>
             </div>
+          )}
+        </form>
 
-            <input
-              type="text"
-              placeholder="Enter email address"
-              value={receiverEmail}
-              onChange={(e) => setReceiverEmail(e.target.value)}
-              className="bg-indigo-100 p-1 mb-2 m-auto text-sm font-mono text-black rounded"
-            />
-
-            <button
-              className="m-auto p-1 font-semibold border-solid border-2 rounded bg-indigo-500 text-xs  hover:bg-indigo-700"
-              type="button"
-              onClick={handleSearchUserClick}
-            >
-              Search User
-            </button>
-          </form>
-
-          <div>
-            <MessageInput
-              receiverId={receiverId}
-              loggedInUser={loggedInUser}
-              messages={messages}
-              setMessages={setMessages}
-              fetchMessages={fetchMessages}
-            />
-          </div>
+        <div>
+          <MessageInput
+            receiverId={receiverId}
+            loggedInUser={loggedInUser}
+            messages={messages}
+            setMessages={setMessages}
+            fetchMessages={fetchMessages}
+          />
         </div>
       </div>
-    );
-  };
+    </div>
+  );
 }
-
-// function fetchMessages() {
-//   throw new Error("Function not implemented.");
-// }
-
-// function fetchUsers() {
-//   throw new Error("Function not implemented.");
-// }

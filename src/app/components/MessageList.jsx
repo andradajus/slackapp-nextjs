@@ -10,10 +10,12 @@ function MessageList({ messages }) {
     );
   }
 
+  const receivedMessages = messages.filter((message) => !message.sent);
+
   return (
-    <div className="mt-4 bg-indigo-200">
-      <ul className="border-solid border-y-2 px-1 text-sm border-white">
-        {messages.map((message, index) => (
+    <div className=" bg-indigo-200">
+      <ul className="overflow-y-auto border-solid border-y-2 px-1 text-sm border-white">
+        {receivedMessages.map((message, index) => (
           <MessageItem key={index} message={message} />
         ))}
       </ul>
