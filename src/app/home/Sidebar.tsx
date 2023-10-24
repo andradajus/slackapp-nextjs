@@ -147,7 +147,7 @@ const Sidebar = () => {
             width={25}
             height={25}
             style={{ height: "auto" }}
-            className={`absolute cursor-pointer -right-3 top-20 w-6 border-dark-purple bg-white
+            className={`absolute cursor-pointer -right-3 top-20 w-6 border-dark-purple bg-slate-100 opacity-50
          hover:bg-orange-200 rounded-full ${!open && "rotate-90"}`}
             onClick={() => setOpen(!open)}
           />

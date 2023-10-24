@@ -140,16 +140,12 @@ const Channels = () => {
           <SubSideBar channels={channels} onChannelClick={handleChannelClick} />
         </div>
 
-        <div className="flex flex-col bg-amber-200 w-full">
-          <div className="flex flex-row bg-red-200 justify-between">
+        <div className="flex flex-col  w-full">
+          <div className="bg-indigo-300 flex flex-row justify-between">
             <div className="flex flex-row">
-              <div className="bg-slate-200 ml-2 p-2 hover:bg-indigo-700 text-lg">
-                <span className="ml-2 p-2">{channelDetails.id}</span>
-              </div>
-
               <Image
-                className="cursor-pointer hover:bg-indigo-700 hover:rounded-sm click:rotate-360 ml-2"
-                src="https://www.svgrepo.com/show/99276/refresh-button.svg"
+                className="cursor-pointer hover:bg-orange-500 hover:rounded-lg ml-2"
+                src="https://www.svgrepo.com/show/465994/refresh-round.svg"
                 alt="Handle Refresh"
                 width={40}
                 height={40}
@@ -157,7 +153,7 @@ const Channels = () => {
             </div>
 
             <span
-              className="cursor-pointer font-bold ml-2 p-2 hover:bg-indigo-700 text-2xl"
+              className="cursor-pointer font-black ml-2 p-2 hover:bg-indigo-700 hover:rounded-lg text-2xl text-white"
               onClick={openChannelDetails}
             >
               {channelDetails.name}
@@ -165,10 +161,10 @@ const Channels = () => {
 
             <div>
               <div className="flex flex-row gap-2 mr-2">
-                <div className="cursor-pointer">
+                <div className="mt-1 cursor-pointer">
                   <Image
-                    className="cursor-pointer hover:bg-indigo-700 hover:rounded-sm"
-                    src="https://www.svgrepo.com/show/310629/channel-add.svg"
+                    className="cursor-pointer fill-white hover:bg-orange-500 hover:rounded-lg"
+                    src="https://www.svgrepo.com/show/467918/add-file-12.svg"
                     alt="Create Channel"
                     width={40}
                     height={40}
@@ -176,10 +172,10 @@ const Channels = () => {
                   />
                 </div>
 
-                <div className="cursor-pointer">
+                <div className="mt-1 cursor-pointer">
                   <Image
-                    className="cursor-pointer hover:bg-indigo-700 hover:rounded-sm"
-                    src="https://www.svgrepo.com/show/513862/user-add.svg"
+                    className="cursor-pointer hover:bg-orange-500 hover:rounded-lg"
+                    src="https://www.svgrepo.com/show/467504/add-user-square-left.svg"
                     alt="Add Members"
                     width={40}
                     height={40}
@@ -187,11 +183,11 @@ const Channels = () => {
                   />
                 </div>
 
-                <div className="cursor-pointer">
+                <div className="mt-1 cursor-pointer">
                   <Image
-                    className="cursor-pointer hover:bg-indigo-700 hover:rounded-sm"
-                    src="https://www.svgrepo.com/show/421147/friend-group-members.svg"
-                    alt="Add Members"
+                    className="cursor-pointer hover:bg-orange-500 hover:rounded-lg"
+                    src="https://www.svgrepo.com/show/467682/edit-user.svg"
+                    alt="Show Members"
                     width={40}
                     height={40}
                     onClick={openMember}
@@ -200,7 +196,7 @@ const Channels = () => {
               </div>
             </div>
           </div>
-          <div className="bg-green-200 h-full">
+          <div className=" mt-1 h-full">
             <ChannelMessages />
           </div>
         </div>

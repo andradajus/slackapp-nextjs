@@ -84,11 +84,7 @@ const MemberModal = ({ closeMember }) => {
       const name = userData
         ? `${userData.firstname} ${userData.lastname}`
         : "Unknown User";
-      return (
-        <li key={user_id}>
-          User ID: {user_id}, Name: {name}
-        </li>
-      );
+      return <li key={user_id}>{name}</li>;
     });
   };
 

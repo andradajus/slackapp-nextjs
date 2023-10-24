@@ -3,6 +3,16 @@ import { useState } from "react";
 
 const AddMemberModal = ({ closeAddMember }) => {
   const [addMember, setAddMember] = useState("");
+  const [searchResult, setSearchResult] = useState(null);
+  const [findUserUID, setFindUserUID] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const resultsPerPage = 7;
+  const headers = new Headers();
+  headers.append("Content-Type", "application/json");
+  headers.append("access-token", sessionStorage.getItem("access-token"));
+  headers.append("client", sessionStorage.getItem("client"));
+  headers.append("expiry", sessionStorage.getItem("expiry"));
+  headers.append("uid", sessionStorage.getItem("uid"));
 
   const handleAddMember = async () => {
     try {
@@ -11,13 +21,6 @@ const AddMemberModal = ({ closeAddMember }) => {
         id: currentChannelID,
         member_id: addMember,
       };
-
-      const headers = new Headers();
-      headers.append("Content-Type", "application/json");
-      headers.append("access-token", sessionStorage.getItem("access-token"));
-      headers.append("client", sessionStorage.getItem("client"));
-      headers.append("expiry", sessionStorage.getItem("expiry"));
-      headers.append("uid", sessionStorage.getItem("uid"));
 
       const response = await fetch(
         `http://206.189.91.54/api/v1/channel/add_member`,
@@ -40,6 +43,36 @@ const AddMemberModal = ({ closeAddMember }) => {
     }
   };
 
+  const handleFindUser = async () => {
+    try {
+      const response = await fetch(`http://206.189.91.54/api/v1/users`, {
+        method: "GET",
+        headers: headers,
+      });
+
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+
+      const data = await response.json();
+      setSearchResult(data);
+      console.log("User", data);
+    } catch (error) {
+      console.error("Error finding user:", error);
+    }
+  };
+
+  const handleUserClick = (uid) => {
+    setAddMember(uid);
+  };
+
+  const loadNextPage = () => {
+    setCurrentPage(currentPage + 1);
+  };
+
+  const startIndex = (currentPage - 1) * resultsPerPage;
+  const endIndex = startIndex + resultsPerPage;
+
   return (
     <>
       <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
@@ -50,7 +83,6 @@ const AddMemberModal = ({ closeAddMember }) => {
             </div>
 
             <div className="relative p-6 flex-auto">
-              Add a Member
               <input
                 className="border-2"
                 key="name"
@@ -68,6 +100,63 @@ const AddMemberModal = ({ closeAddMember }) => {
               >
                 Add Member
               </button>
+            </div>
+
+            <div className="ml-6">
+              <input
+                className="border-2"
+                key="findUserUID"
+                type="text"
+                id="findUserUID"
+                value={findUserUID}
+                onChange={(e) => {
+                  setFindUserUID(e.target.value);
+                }}
+              />
+              <button
+                className="text-blue-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                type="button"
+                onClick={handleFindUser}
+              >
+                Find User
+              </button>
+              <table className="w-full">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>UID</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {searchResult &&
+                    searchResult.data
+                      .filter((user) => user.uid.includes(findUserUID))
+                      .slice(startIndex, endIndex)
+                      .map((user, index) => (
+                        <tr
+                          className="hover:bg-orange-500 gap-2"
+                          key={index}
+                          onClick={() => handleUserClick(user.uid)}
+                          style={{ cursor: "pointer" }}
+                        >
+                          <td>{user.id}</td>
+                          <td>{user.uid}</td>
+                        </tr>
+                      ))}
+                </tbody>
+              </table>
+              {searchResult &&
+                searchResult.data.filter((user) =>
+                  user.uid.includes(findUserUID)
+                ).length > endIndex && (
+                  <button
+                    className="text-blue-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                    type="button"
+                    onClick={loadNextPage}
+                  >
+                    Next Page
+                  </button>
+                )}
             </div>
 
             <div className="flex items-center justify-end p-6 border-t border-solid border-blueGray-200 rounded-b">

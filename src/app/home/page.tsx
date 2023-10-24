@@ -58,7 +58,7 @@ const Home = () => {
                           <span className="line-through">
                             f. User can send message to another user
                           </span>
-                          <span>
+                          <span className="line-through">
                             g. User retrieves message from another user
                           </span>
                         </li>
@@ -89,11 +89,11 @@ const Home = () => {
                       </ul>
 
                       <li className="text-lg text-bold mt-1">
-                        Real-Time Messaging
+                        <span>Real-Time Messaging</span>
                       </li>
                       <ul className="text-xs pl-5 mt-1 space-y-1 list-decimal list-inside">
                         <li className="flex flex-col">
-                          <span>
+                          <span className="line-through">
                             l. It means, if one user sends a message, the other
                             user automatically receives the message on their
                             side.

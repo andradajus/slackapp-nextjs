@@ -23,9 +23,12 @@ const SubSideBar = ({ channels, onChannelClick }) => {
           <div>Conversa</div>
         </div>
         <div className="flex flex-col ml-4">
-          <div>
-            <span className="cursor-pointer" onClick={toggleChannelList}>
-              Channels
+          <div className="text-white font-sans font-semibold">
+            <span
+              className="cursor-pointer text-lg font-black"
+              onClick={toggleChannelList}
+            >
+              Channel List
             </span>
             <div className={`gap-4 ${isChannelListOpen ? "block" : "hidden"}`}>
               <ul className="gap-2">

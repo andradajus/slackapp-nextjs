@@ -1,6 +1,6 @@
 "useClient";
 import Image from "next/image";
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
 
 const ChannelMessages = ({}) => {
   const [message, setMessage] = useState("");
@@ -159,12 +159,13 @@ const ChannelMessages = ({}) => {
   };
 
   const retrieveMessageInterval = () => {
-    const retrieveAndSetMessages = useMemo(async () => {
+    const retrieveAndSetMessages = async () => {
       await retrieveMessages();
-    }, [messages]);
+      setupNextInterval();
+    };
 
     const setupNextInterval = () => {
-      const intervalTime = 3000;
+      const intervalTime = 10000;
       if (!intervalId) {
         const id = setInterval(retrieveAndSetMessages, intervalTime);
         setIntervalId(id);
@@ -192,7 +193,9 @@ const ChannelMessages = ({}) => {
             <div>
               <div className="flex flex-col">
                 <div>
-                  <span className="text-md font-bold">{name}</span>{" "}
+                  <span className="text-md font-bold">
+                    {name ? name : "Unknown User"}
+                  </span>{" "}
                   <span className="text-xs pl-3">
                     {new Date(msg.created_at).toLocaleTimeString()}
                   </span>
@@ -210,9 +213,10 @@ const ChannelMessages = ({}) => {
 
   useEffect(() => {
     const retrieveAndSetup = async () => {
-      retrieveMessageInterval();
       retrieveUserDetails();
       retrieveMessages();
+      retrieveMessageInterval();
+      console.log("Run use Effect");
     };
 
     retrieveAndSetup();
