@@ -144,6 +144,7 @@ const AddMemberModal = ({ closeAddMember }) => {
                         user.uid.includes(findUserUID)
                       )
                       .slice(startIndex, endIndex)
+
                       .map(
                         (
                           user: {

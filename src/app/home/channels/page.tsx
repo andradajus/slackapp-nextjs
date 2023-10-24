@@ -39,14 +39,14 @@ const Channels = () => {
   const showChannelDetails = async () => {
     const url = "http://206.189.91.54/api/v1/channels/";
     headers.append("Content-Type", "application/json");
-    headers.append(
-      "access-token",
-      sessionStorage.getItem("access-token") || ""
-    );
-    headers.append("client", sessionStorage.getItem("client") || "");
-    headers.append("expiry", sessionStorage.getItem("expiry") || "");
-    headers.append("uid", sessionStorage.getItem("uid") || "");
-    const excludedChannelIds = [5129, 5130, 5133, 5108, 5079];
+
+    headers.append("access-token", sessionStorage.getItem("access-token"));
+    headers.append("client", sessionStorage.getItem("client"));
+    headers.append("expiry", sessionStorage.getItem("expiry"));
+    headers.append("uid", sessionStorage.getItem("uid"));
+    const excludedChannelIds = [5129, 5130, 5108, 5079, 5133];
+
+
 
     try {
       const response = await fetch(url, {

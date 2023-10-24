@@ -14,18 +14,110 @@ const LoginPage = () => {
     setError("");
   };
 
-  const handleLogin = async (e: { preventDefault: () => void }) => {
-    e.preventDefault();
-
-    if (!email.trim() || !password.trim()) {
-      setError("Please enter your email address and password.");
-      return;
-    }
-
+  const handleLogin = async () => {
     try {
       const requestBody = {
-        email,
-        password,
+        email: "accounts@conversa.com",
+        password: "conversa",
+      };
+
+      const response = await fetch("http://206.189.91.54/api/v1/auth/sign_in", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(requestBody),
+      });
+
+      if (response.ok) {
+        const accessToken = response.headers.get("access-token");
+        const client = response.headers.get("client");
+        const expiry = response.headers.get("expiry");
+        const uid = response.headers.get("uid");
+        const responseData = await response.json();
+        const id = responseData.data.id;
+        sessionStorage.setItem("admin-access-token", accessToken!);
+        sessionStorage.setItem("admin-client", client!);
+        sessionStorage.setItem("admin-expiry", expiry!);
+        sessionStorage.setItem(
+          "admin-uid",
+          uid!
+        ); /* <!> - an assertion to Typescript that the values are not null */
+        sessionStorage.setItem("admin-id", id);
+        sessionStorage.setItem("email", email!);
+        usernameLogin();
+      } else {
+        console.error("Login failed:", response.statusText);
+        setError("Login failed. Please check your email and password.");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  const usernameLogin = async () => {
+    const uidToMatch = email;
+    const url = `http://206.189.91.54/api/v1/messages?receiver_id=${5133}&receiver_class=Channel`;
+
+    try {
+      const headers = new Headers();
+      headers.append("Content-Type", "application/json");
+      headers.append(
+        "access-token",
+        sessionStorage.getItem("admin-access-token") as string
+      );
+      headers.append(
+        "client",
+        sessionStorage.getItem("admin-client") as string
+      );
+      headers.append(
+        "expiry",
+        sessionStorage.getItem("admin-expiry") as string
+      );
+      headers.append("uid", sessionStorage.getItem("admin-uid") as string);
+
+      const response = await fetch(url, {
+        method: "GET",
+        headers: headers,
+      });
+
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+
+      const data = await response.json();
+      console.log("Data:", data);
+
+      const matchingMessage = data.data.find((message: { body: string }) => {
+        try {
+          const bodyContent = JSON.parse(message.body);
+          return bodyContent.username == uidToMatch;
+        } catch (error) {
+          return false;
+        }
+      });
+
+      if (matchingMessage) {
+        const bodyContent = JSON.parse(matchingMessage.body);
+        const emailFromMessage = bodyContent.email;
+        sessionStorage.setItem("email", emailFromMessage!);
+
+        handleRealLogin();
+      } else {
+        handleRealLogin();
+      }
+    } catch (error) {
+      sessionStorage.removeItem("email");
+      console.error("Error retrieving message:", error);
+    }
+  };
+
+  const handleRealLogin = async () => {
+    try {
+      const loginID = sessionStorage.getItem("email");
+      const requestBody = {
+        email: loginID,
+        password: password,
       };
 
       const response = await fetch("http://206.189.91.54/api/v1/auth/sign_in", {
@@ -54,7 +146,6 @@ const LoginPage = () => {
         ); /* <!> - an assertion to Typescript that the values are not null */
         sessionStorage.setItem("id", id);
         accountsLogin();
-        router.push("/home");
       } else if (response.status === 401) {
         setError("Login failed. Please check your email and password.");
       } else {
@@ -99,7 +190,6 @@ const LoginPage = () => {
         ); /* <!> - an assertion to Typescript that the values are not null */
         sessionStorage.setItem("admin-id", id);
         addUserToChannel();
-        router.push("/home");
       } else {
         console.error("Login failed:", response.statusText);
         setError("Login failed. Please check your email and password.");
@@ -153,6 +243,8 @@ const LoginPage = () => {
       sessionStorage.removeItem("admin-expiry");
       sessionStorage.removeItem("admin-uid");
       sessionStorage.removeItem("admin-id");
+      sessionStorage.removeItem("email");
+      router.push("/home");
       console.log("Member has been added to the channel", data);
     } catch (error) {
       console.error("Error adding member to the channel:", error);
