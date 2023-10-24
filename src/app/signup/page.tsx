@@ -24,6 +24,10 @@ const SignUpPage = () => {
   const handleRegisterButton = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
     if (
+      surname.trim() === "" ||
+      firstName.trim() === "" ||
+      username.trim() === "" ||
+      password.trim() === "" ||
       password.trim() === "" ||
       confirmPassword.trim() === "" ||
       email.trim() === ""
@@ -55,8 +59,8 @@ const SignUpPage = () => {
 
       if (response.ok) {
         const data = await response.json();
-        router.push("/login");
-        console.log("Registration successful:", response);
+        handleLogin();
+        console.log("Registration successful:", data);
       } else {
         const errorData = await response.json();
         console.error("Registration failed:", errorData.errors);
@@ -68,7 +72,203 @@ const SignUpPage = () => {
     }
   };
 
-  //
+  // login registered user here
+  const handleLogin = async (e: { preventDefault: () => void }) => {
+    try {
+      const requestBody = {
+        email: email,
+        password: password,
+      };
+
+      const response = await fetch("http://206.189.91.54/api/v1/auth/sign_in", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(requestBody),
+      });
+
+      if (response.ok) {
+        const accessToken = response.headers.get("access-token");
+        const client = response.headers.get("client");
+        const expiry = response.headers.get("expiry");
+        const uid = response.headers.get("uid");
+
+        const responseData = await response.json();
+        const id = responseData.data.id;
+
+        sessionStorage.setItem("access-token", accessToken!);
+        sessionStorage.setItem("client", client!);
+        sessionStorage.setItem("expiry", expiry!);
+        sessionStorage.setItem(
+          "uid",
+          uid!
+        ); /* <!> - an assertion to Typescript that the values are not null */
+        sessionStorage.setItem("id", id);
+        accountsLogin();
+        console.log("Successful Login of Registered User");
+      } else if (response.status === 401) {
+        setError("Login failed. Please check your email and password.");
+      } else {
+        console.error("Login failed:", response.statusText);
+        setError("An error occurred while logging in. Please try again.");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      setError("An error occurred while logging in. Please try again.");
+    }
+  };
+
+  //upon login log admin user account
+
+  const accountsLogin = async () => {
+    try {
+      const requestBody = {
+        email: "accounts@conversa.com",
+        password: "conversa",
+      };
+
+      const response = await fetch("http://206.189.91.54/api/v1/auth/sign_in", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(requestBody),
+      });
+
+      if (response.ok) {
+        const accessToken = response.headers.get("access-token");
+        const client = response.headers.get("client");
+        const expiry = response.headers.get("expiry");
+        const uid = response.headers.get("uid");
+        const responseData = await response.json();
+        const id = responseData.data.id;
+        sessionStorage.setItem("admin-access-token", accessToken!);
+        sessionStorage.setItem("admin-client", client!);
+        sessionStorage.setItem("admin-expiry", expiry!);
+        sessionStorage.setItem(
+          "admin-uid",
+          uid!
+        ); /* <!> - an assertion to Typescript that the values are not null */
+        sessionStorage.setItem("admin-id", id);
+        addUserToChannel();
+        console.log("Successful Login of Admin Account");
+      } else {
+        console.error("Login failed:", response.statusText);
+        setError("Login failed. Please check your email and password.");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  //add user to admin account channel
+  /*admin task - not client-related*/
+  const addUserToChannel = async () => {
+    try {
+      const memberID = sessionStorage.getItem("id");
+      const requestBody = {
+        id: 5133,
+        member_id: memberID,
+      };
+
+      const headers = new Headers();
+      headers.append("Content-Type", "application/json");
+      headers.append(
+        "access-token",
+        sessionStorage.getItem("admin-access-token") as string
+      );
+      headers.append(
+        "client",
+        sessionStorage.getItem("admin-client") as string
+      );
+      headers.append(
+        "expiry",
+        sessionStorage.getItem("admin-expiry") as string
+      );
+      headers.append("uid", sessionStorage.getItem("admin-uid") as string);
+
+      const response = await fetch(
+        `http://206.189.91.54/api/v1/channel/add_member`,
+        {
+          method: "POST",
+          headers: headers,
+          body: JSON.stringify(requestBody),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      handleAddUserDetails();
+      console.log("User added to channel successfully registered");
+    } catch (error) {
+      console.error("Error adding member to the channel:", error);
+    }
+  };
+
+  //send message to user account
+  const handleAddUserDetails = async () => {
+    const headers = new Headers();
+    headers.append("Content-Type", "application/json");
+    headers.append(
+      "access-token",
+      sessionStorage.getItem("access-token") || ""
+    );
+    headers.append("client", sessionStorage.getItem("client") || "");
+    headers.append("expiry", sessionStorage.getItem("expiry") || "");
+    headers.append("uid", sessionStorage.getItem("uid") || "");
+    const id = sessionStorage.getItem("id");
+    const userDetails = {
+      id: id,
+      uid: email,
+      email: email,
+      username: username,
+      firstname: firstName,
+      middlename: middleName,
+      lastname: surname,
+      // aboutme: aboutMe,
+    };
+
+    const requestBody = {
+      receiver_id: 5133, //Details Channel
+      receiver_class: "Channel",
+      body: JSON.stringify(userDetails),
+    };
+
+    try {
+      const response = await fetch("http://206.189.91.54/api/v1/messages", {
+        method: "POST",
+        headers: headers,
+        body: JSON.stringify(requestBody),
+      });
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      const data = await response.json();
+      setUsername("");
+      setFirstName("");
+      setMiddleName("");
+      setSurname("");
+      setPassword("");
+      setEmail("");
+      // setAboutMe("");
+      sessionStorage.removeItem("admin-access-token");
+      sessionStorage.removeItem("admin-client");
+      sessionStorage.removeItem("admin-expiry");
+      sessionStorage.removeItem("admin-uid");
+      sessionStorage.removeItem("admin-id");
+      sessionStorage.removeItem("access-token");
+      sessionStorage.removeItem("client");
+      sessionStorage.removeItem("expiry");
+      sessionStorage.removeItem("uid");
+      sessionStorage.removeItem("id");
+      router.push("/login");
+      console.log("Successfully sent Details");
+    } catch (error) {
+      console.error("Error sending message:", error);
+    }
+  };
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center text-center bg-indigo-900 text-white">

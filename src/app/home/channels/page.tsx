@@ -43,7 +43,7 @@ const Channels = () => {
     headers.append("client", sessionStorage.getItem("client"));
     headers.append("expiry", sessionStorage.getItem("expiry"));
     headers.append("uid", sessionStorage.getItem("uid"));
-    const excludedChannelIds = [5129, 5130, 5133, 5108, 5079];
+    const excludedChannelIds = [5129, 5130, 5108, 5079, 5133];
 
     try {
       const response = await fetch(url, {

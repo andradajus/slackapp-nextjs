@@ -129,18 +129,6 @@ const MyProfile = () => {
 
       const bodyContent = JSON.parse(data.data.body);
       console.log("Formatted response data (body content):", bodyContent);
-      // const keyValueArray = [
-      //   {
-      //     id: id,
-      //     uid: uid,
-      //     email: uid,
-      //     username: bodyContent.username,
-      //     firstname: bodyContent.firstname,
-      //     middlename: bodyContent.middlename,
-      //     lastname: bodyContent.lastname,
-      //     aboutme: bodyContent.aboutme,
-      //   },
-      // ];
 
       const keyValueArray = [
         {

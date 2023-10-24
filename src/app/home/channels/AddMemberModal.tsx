@@ -136,7 +136,7 @@ const AddMemberModal = ({ closeAddMember }) => {
                         <tr
                           className="hover:bg-orange-500 gap-2"
                           key={index}
-                          onClick={() => handleUserClick(user.uid)}
+                          onClick={() => handleUserClick(user.id)}
                           style={{ cursor: "pointer" }}
                         >
                           <td>{user.id}</td>

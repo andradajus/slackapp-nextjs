@@ -107,7 +107,7 @@ const Home = () => {
                     <ul className="pl-5 mt-1 space-y-1 list-decimal list-inside">
                       <li className="flex flex-col">
                         <ol className="list-inside list-decimal">
-                          <li>
+                          <li className="line-through">
                             Real-time retrieval of message or almost real time -
                             set timeout implementation or socket if theres time
                             to learn
@@ -148,6 +148,16 @@ const Home = () => {
                     <span>
                       User can input details like names in a form and during
                       chat names displays plus user details can be used.
+                    </span>
+                  </li>
+                </ul>
+                <li className="text-lg text-bold">
+                  Dynamic Login using username/email
+                </li>
+                <ul className="text-xs pl-5 mt-1 space-y-1 list-decimal list-inside">
+                  <li className="flex flex-col">
+                    <span>
+                      New or current users can login using their username/email.
                     </span>
                   </li>
                 </ul>
