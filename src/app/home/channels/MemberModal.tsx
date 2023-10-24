@@ -1,8 +1,14 @@
-import React from "react";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 const MemberModal = ({ closeMember }) => {
   const [channelMembers, setChannelMembers] = useState([]);
+  const [filteredData, setFilteredData] = useState([]);
+  const headers = new Headers();
+  headers.append("Content-Type", "application/json");
+  headers.append("access-token", sessionStorage.getItem("access-token"));
+  headers.append("client", sessionStorage.getItem("client"));
+  headers.append("expiry", sessionStorage.getItem("expiry"));
+  headers.append("uid", sessionStorage.getItem("uid"));
 
   useEffect(() => {
     showMemberList();
@@ -16,12 +22,6 @@ const MemberModal = ({ closeMember }) => {
       return;
     }
 
-    const headers = new Headers();
-    headers.append("Content-Type", "application/json");
-    headers.append("access-token", sessionStorage.getItem("access-token"));
-    headers.append("client", sessionStorage.getItem("client"));
-    headers.append("expiry", sessionStorage.getItem("expiry"));
-    headers.append("uid", sessionStorage.getItem("uid"));
     const url = `http://206.189.91.54/api/v1/channels/${currentChannelID}`;
 
     try {
@@ -35,15 +35,61 @@ const MemberModal = ({ closeMember }) => {
       }
 
       const data = await response.json();
-      console.log("Channel Deatails", data);
+      console.log("Channel Details", data);
       const channelMembers = data.data.channel_members.map(
         (member) => member.user_id
       );
       console.log("Channel Members", channelMembers);
       setChannelMembers(channelMembers);
+
+      retrieveUserDetails(channelMembers);
     } catch (error) {
       console.error("Error showing list of members:", error);
     }
+  };
+
+  const retrieveUserDetails = async () => {
+    const url = `http://206.189.91.54/api/v1/messages?receiver_id=${5133}&receiver_class=Channel`;
+    try {
+      const response = await fetch(url, {
+        method: "GET",
+        headers: headers,
+      });
+
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+
+      const data = await response.json();
+
+      const filteredData = data.data.map((item) => {
+        const bodyContent = JSON.parse(item.body);
+        return {
+          firstname: bodyContent.firstname,
+          lastname: bodyContent.lastname,
+          id: bodyContent.id,
+        };
+      });
+      setFilteredData(filteredData);
+      console.log("Filtered Data", filteredData);
+    } catch (error) {
+      console.error("Error retrieving message:", error);
+      return null;
+    }
+  };
+
+  const renderChannelMembers = () => {
+    return channelMembers.map((user_id) => {
+      const userData = filteredData.find((data) => data.id == user_id);
+      const name = userData
+        ? `${userData.firstname} ${userData.lastname}`
+        : "Unknown User";
+      return (
+        <li key={user_id}>
+          User ID: {user_id}, Name: {name}
+        </li>
+      );
+    });
   };
 
   return (
@@ -56,13 +102,7 @@ const MemberModal = ({ closeMember }) => {
             </div>
 
             <div className="relative p-6 flex-auto">
-              {channelMembers?.length > 0 && (
-                <ul>
-                  {channelMembers?.map((user_id) => (
-                    <li key={user_id}>User ID: {user_id}</li>
-                  ))}
-                </ul>
-              )}
+              {channelMembers?.length > 0 && <ul>{renderChannelMembers()}</ul>}
               {channelMembers?.length === 0 && (
                 <p>Loading channel members...</p>
               )}
