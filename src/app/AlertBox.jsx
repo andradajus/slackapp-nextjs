@@ -3,25 +3,27 @@ import React from "react";
 const Alert = ({ message, type }) => {
   let alertColor = "";
 
-  if (type === "success") {
-    alertColor += "green";
-  } else if (type === "warning") {
-    alertColor += "amber";
-  } else if (type === "error") {
-    alertColor += "red";
-  } else if (type === "info") {
-    alertColor += "blue";
+  if (type === "Success!") {
+    alertColor = "green";
+  } else if (type === "Warning!") {
+    alertColor = "amber";
+  } else if (type === "Error!") {
+    alertColor = "red";
+  } else if (type === "Info!") {
+    alertColor = "blue";
   }
 
+  console.log("Alert Color:", alertColor);
   return (
-    <div className="flex w-full flex-col">
-      <ul>
-        <li
-          className={`font-medium fixed top-0 left-1 ms-20 mt-2 w-auto bg-${alertColor}-200`}
-        >
-          {message}{" "}
-        </li>
-      </ul>
+    <div className="fixed top-0 left-1 ms-20 mt-2">
+      <div className={`bg-${alertColor}-500 text-white font-bold px-7 py-2`}>
+        {type}
+      </div>
+      <div
+        className={`border-${alertColor}-400 rounded-b bg-${alertColor}-100 px-9 py-3 text-${alertColor}-700`}
+      >
+        <p>{message}</p>
+      </div>
     </div>
   );
 };

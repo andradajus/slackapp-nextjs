@@ -15,6 +15,7 @@ const AddMemberModal = ({ closeAddMember }) => {
   const [searchResult, setSearchResult] = useState(null);
   const [findUserUID, setFindUserUID] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
+  const [noUsersFound, setNoUsersFound] = useState(false);
   const resultsPerPage = 7;
   const headers = new Headers();
   headers.append("Content-Type", "application/json");
@@ -66,6 +67,12 @@ const AddMemberModal = ({ closeAddMember }) => {
       const data = await response.json();
       setSearchResult(data);
       console.log("User", data);
+
+      if (data.data && data.data.length === 0) {
+        setNoUsersFound(true);
+      } else {
+        setNoUsersFound(false);
+      }
     } catch (error) {
       console.error("Error finding user:", error);
     }
@@ -77,6 +84,12 @@ const AddMemberModal = ({ closeAddMember }) => {
 
   const loadNextPage = () => {
     setCurrentPage(currentPage + 1);
+  };
+
+  const loadPreviousPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
   };
 
   const startIndex = (currentPage - 1) * resultsPerPage;
@@ -120,6 +133,7 @@ const AddMemberModal = ({ closeAddMember }) => {
                 value={findUserUID}
                 onChange={(e) => {
                   setFindUserUID(e.target.value);
+                  setSearchResult("");
                 }}
               />
               <button
@@ -180,7 +194,7 @@ const AddMemberModal = ({ closeAddMember }) => {
                           <tr
                             className="hover:bg-orange-500 gap-2"
                             key={index}
-                            onClick={() => handleUserClick(user.uid)}
+                            onClick={() => handleUserClick(user.id)}
                             style={{ cursor: "pointer" }}
                           >
                             <td className="font-sans text-sm">{user.id}</td>
@@ -194,13 +208,22 @@ const AddMemberModal = ({ closeAddMember }) => {
                 searchResult.data.filter((user: { uid: string | string[] }) =>
                   user.uid.includes(findUserUID)
                 ).length > endIndex && (
-                  <button
-                    className="text-blue-500 font-sans hover:underline background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
-                    type="button"
-                    onClick={loadNextPage}
-                  >
-                    Next Page
-                  </button>
+                  <>
+                    <button
+                      className="text-blue-500 font-sans hover:underline background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                      type="button"
+                      onClick={loadPreviousPage}
+                    >
+                      Previous Page
+                    </button>
+                    <button
+                      className="text-blue-500 font-sans hover:underline background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                      type="button"
+                      onClick={loadNextPage}
+                    >
+                      Next Page
+                    </button>
+                  </>
                 )}
             </div>
 

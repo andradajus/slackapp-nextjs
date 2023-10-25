@@ -3,12 +3,21 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import Alert from "../AlertBox";
 
 const LoginPage = () => {
   const router = useRouter();
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [email, setEmail] = useState("");
+  const [alert, setAlert] = useState([]);
+  const showAlert = (message, type) => {
+    setAlert({ message, type });
+    setTimeout(() => {
+      setAlert(false);
+      setAlert("");
+    }, 3000);
+  };
 
   const clearError = () => {
     setError("");
@@ -244,8 +253,11 @@ const LoginPage = () => {
       sessionStorage.removeItem("admin-uid");
       sessionStorage.removeItem("admin-id");
       sessionStorage.removeItem("email");
-      router.push("/home");
-      console.log("Member has been added to the channel", data);
+      showAlert("Login Successful", "Success!");
+
+      setTimeout(() => {
+        router.push("/home");
+      }, 1000);
     } catch (error) {
       console.error("Error adding member to the channel:", error);
     }
@@ -253,6 +265,7 @@ const LoginPage = () => {
 
   return (
     <>
+      <Alert message={alert.message} type={alert.type} />
       <div className="h-screen overflow-hidden flex flex-col items-center justify-center text-center bg-indigo-900 text-white">
         <header className="m-0 p-10">
           <h1 className="inline-flex text-5xl content-center font-bold mb-0 text-yellow-400 font-serif">

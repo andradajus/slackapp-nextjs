@@ -46,8 +46,6 @@ const Channels = () => {
     headers.append("uid", sessionStorage.getItem("uid"));
     const excludedChannelIds = [5129, 5130, 5108, 5079, 5133];
 
-
-
     try {
       const response = await fetch(url, {
         method: "GET",
@@ -77,7 +75,7 @@ const Channels = () => {
       id: channel.id,
       name: channel.name,
     });
-    showAlert(`Change Channel to:${channel.id}`, "success");
+    showAlert(`Change Channel to:${channel.id}`, "Success!");
     sessionStorage.setItem("currentChannelID", channel.id);
   };
 
