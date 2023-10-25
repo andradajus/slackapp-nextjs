@@ -1,4 +1,5 @@
 import { useState } from "react";
+import Alert from "@/app/AlertBox";
 
 interface CreateChannelModalProps {
   closeChannel: () => void;
@@ -10,6 +11,14 @@ const CreateChannelModal: React.FC<CreateChannelModalProps> = ({
   showChannelDetails,
 }) => {
   const [name, setName] = useState("");
+  const [alert, setAlert] = useState([]);
+
+  const showAlert = (message: any, type: any) => {
+    setAlert({ message, type });
+    setTimeout(() => {
+      setAlert(false);
+    }, 3000);
+  };
 
   const handleCreateChannel = async () => {
     try {
@@ -39,8 +48,7 @@ const CreateChannelModal: React.FC<CreateChannelModalProps> = ({
         throw new Error("Network response was not ok");
       }
 
-      const data = await response.json();
-      console.log("Channel has been created", data);
+      showAlert("Channel has been created", "Success!");
       closeChannel();
       showChannelDetails();
     } catch (error) {
@@ -50,6 +58,7 @@ const CreateChannelModal: React.FC<CreateChannelModalProps> = ({
 
   return (
     <>
+      <Alert message={alert.message} type={alert.type} />
       <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
         <div className="relative w-auto my-6 mx-auto max-w-3xl">
           <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">

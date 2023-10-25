@@ -4,10 +4,11 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useState, useEffect } from "react";
+import Alert from "../AlertBox";
 
 const Sidebar = () => {
   const router = useRouter();
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
   const uid = sessionStorage.getItem("uid");
   const [keyValueArray, setKeyValueArray] = useState<
     {
@@ -20,9 +21,19 @@ const Sidebar = () => {
       aboutme?: string;
     }[]
   >([]);
+  const [alert, setAlert] = useState([]);
+  const showAlert = (message: any, type: any) => {
+    setAlert({ message, type });
+    setTimeout(() => {
+      setAlert(false);
+    }, 3000);
+  };
 
   useEffect(() => {
     retrieveUserDetails();
+    setTimeout(() => {
+      setOpen(true);
+    }, 4000);
   }, []);
 
   const retrieveUserDetails = async () => {
@@ -74,6 +85,12 @@ const Sidebar = () => {
         ];
         setKeyValueArray(keyValueData);
       } else {
+        setTimeout(() => {
+          showAlert(
+            "Hi, we've detected that you haven't registered yet. Please proceed to MyProfile",
+            "Warning!"
+          );
+        }, 1000);
         console.log("No user with matching UID found.");
       }
     } catch (error) {
@@ -89,7 +106,6 @@ const Sidebar = () => {
     sessionStorage.removeItem("id");
     sessionStorage.removeItem("currentChannelID");
     sessionStorage.removeItem("storedReceiverId");
-    router.push("/");
   };
 
   const Menus = [
@@ -130,6 +146,7 @@ const Sidebar = () => {
 
   return (
     <>
+      <Alert message={alert.message} type={alert.type} />
       <div className="flex border-r border-solid border-indigo-600">
         <div
           className={` ${
@@ -160,7 +177,7 @@ const Sidebar = () => {
                 }`}
               />
               <h1
-                className={`block text-lg font-bold mb-0 text-yellow-400 font-serif origin-left duration-200  hover:text-orange-300 hover:underline hover:scale-110 ${
+                className={` text-lg font-bold mb-0 text-yellow-400 font-serif origin-left duration-200  hover:text-orange-300 hover:underline hover:scale-110 ${
                   !open && "scale-0"
                 }`}
               >
