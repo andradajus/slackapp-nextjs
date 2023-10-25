@@ -10,6 +10,7 @@ type SentMessage = {
   sent: boolean;
   sender: User;
 };
+
 const MessageInput: React.FC<MessageInputProps> = ({
   receiverId,
   setMessages,
@@ -86,10 +87,12 @@ const MessageInput: React.FC<MessageInputProps> = ({
 
   const handleFormatText = (format: string) => {
     const text = message;
-    const selectionStart = messageRef.current?.selectionStart;
-    const selectionEnd = messageRef.current?.selectionEnd;
+    const messageElement = messageRef.current;
 
-    if (selectionStart !== undefined && selectionEnd !== undefined) {
+    if (messageElement) {
+      const selectionStart = messageElement.selectionStart || 0;
+      const selectionEnd = messageElement.selectionEnd || 0;
+
       const selectedText = text.slice(selectionStart, selectionEnd);
       let newText = "";
 
@@ -112,15 +115,44 @@ const MessageInput: React.FC<MessageInputProps> = ({
   };
 
   const handleDeleteOrderedList = () => {
-    const cursorPosition = messageRef.current?.selectionStart || 0;
-    const textBeforeCursor = message.slice(0, cursorPosition);
-    const textAfterCursor = message.slice(cursorPosition);
+    const messageElement = messageRef.current;
+    if (messageElement) {
+      const cursorPosition = messageElement.selectionStart || 0;
+      const textBeforeCursor = message.slice(0, cursorPosition);
+      const textAfterCursor = message.slice(cursorPosition);
 
-    if (textBeforeCursor.endsWith("\n1. ")) {
-      setOrderedListCount(1);
+      if (textBeforeCursor.endsWith(`\n${orderedListCount}. `)) {
+        setOrderedListCount(orderedListCount - 1);
+      }
+
+      setMessage(textBeforeCursor + textAfterCursor);
     }
+  };
 
-    setMessage(textBeforeCursor + textAfterCursor);
+  const handleOrderedList = () => {
+    const messageElement = messageRef.current;
+    if (messageElement) {
+      const cursorPosition = messageElement.selectionStart || 0;
+      const formattedListItem = `${
+        orderedListCount === 0 ? 1 : orderedListCount
+      }. `;
+
+      const textBeforeCursor = message.slice(0, cursorPosition);
+      const textAfterCursor = message.slice(cursorPosition);
+
+      const updatedMessage =
+        textBeforeCursor + formattedListItem + textAfterCursor;
+
+      setOrderedListCount(orderedListCount + 1);
+
+      const newCursorPosition = cursorPosition + formattedListItem.length;
+
+      setMessage(updatedMessage);
+
+      messageElement.selectionStart = newCursorPosition;
+      messageElement.selectionEnd = newCursorPosition;
+      messageElement.focus();
+    }
   };
 
   const handleKeyDown = (e: { key: string }) => {
@@ -129,34 +161,47 @@ const MessageInput: React.FC<MessageInputProps> = ({
     }
   };
 
-  const handleOrderedList = () => {
-    const cursorPosition = messageRef.current?.selectionStart || 0;
-    const formattedListItem = `${orderedListCount}. `;
-    const updatedMessage =
-      message.slice(0, cursorPosition) +
-      formattedListItem +
-      message.slice(cursorPosition);
-    setOrderedListCount(orderedListCount + 1);
-    setMessage(updatedMessage);
-  };
-
   const handleUnorderedList = () => {
-    const cursorPosition = messageRef.current?.selectionStart || 0;
-    const formattedListItem = `• `;
-    const updatedMessage =
-      message.slice(0, cursorPosition) +
-      formattedListItem +
-      message.slice(cursorPosition);
-    setMessage(updatedMessage);
+    const messageElement = messageRef.current;
+    if (messageElement) {
+      const cursorPosition = messageElement.selectionStart || 0;
+      const formattedListItem = `• `;
+
+      const textBeforeCursor = message.slice(0, cursorPosition);
+      const textAfterCursor = message.slice(cursorPosition);
+
+      const updatedMessage =
+        textBeforeCursor + formattedListItem + textAfterCursor;
+
+      setMessage(updatedMessage);
+
+      const newCursorPosition = cursorPosition + formattedListItem.length;
+      messageElement.selectionStart = newCursorPosition;
+      messageElement.selectionEnd = newCursorPosition;
+      messageElement.focus();
+    }
   };
 
   const handleInsertEmoji = () => {
-    setShowEmojiPicker(true);
+    setShowEmojiPicker((prevShowEmojiPicker) => !prevShowEmojiPicker);
   };
+
+  const emojiPickerContainerClasses = `
+    absolute
+    z-50
+    bg-white
+    border
+    border-gray-300
+    rounded
+    max-h-32
+    overflow-y-auto
+    right-0
+    bottom-10
+  `;
 
   return (
     <div className="bg-indigo-500 rounded-md content-center">
-      <div className="flex gap-2 m-1 py-1 ml-2">
+      <div className="flex gap-2 m-1 pt-2 ml-2">
         <Image
           className="cursor-pointer hover:bg-indigo-700 hover:rounded-sm"
           src="https://www.svgrepo.com/show/491501/text-bold.svg"
@@ -214,7 +259,7 @@ const MessageInput: React.FC<MessageInputProps> = ({
       <div className="mx-2">
         <textarea
           ref={messageRef}
-          className="w-full h-28 p-1 text-sm overflow-auto rounded-md bg-indigo-100"
+          className="w-full h-28 p-2 text-sm overflow-auto rounded-md bg-indigo-100"
           value={message}
           onChange={(e) => {
             setMessage(e.target.value);
@@ -234,7 +279,9 @@ const MessageInput: React.FC<MessageInputProps> = ({
         />
 
         <div className="flex bg-indigo-500 hover:bg-yellow-200 justify-between rounded-md cursor-pointer">
-          <span className="pt-1 pb-1 pr-1 font-semibold text-sm">Send</span>
+          <span className="pt-1 pb-1 pr-1 ml-2 font-semibold text-sm">
+            Send
+          </span>
           <Image
             className="cursor-pointer mr-2"
             src="https://www.svgrepo.com/show/533310/send-alt-1.svg"
@@ -246,17 +293,21 @@ const MessageInput: React.FC<MessageInputProps> = ({
         </div>
       </div>
 
-      {showEmojiPicker && (
-        <EmojiPicker
-          onEmojiClick={(emojiObject) => {
-            const updatedMessage = message + emojiObject.emoji;
-            setMessage(updatedMessage);
-          }}
-        />
-      )}
+      <div className="relative">
+        <div className={emojiPickerContainerClasses}>
+          {showEmojiPicker && (
+            <EmojiPicker
+              onEmojiClick={(emojiObject) => {
+                const updatedMessage = message + emojiObject.emoji;
+                setMessage(updatedMessage);
+              }}
+            />
+          )}
+        </div>
+      </div>
 
       {error && (
-        <p className="flex items-center justify-center m-auto mt-4 py-1 px-3 text-black bg-yellow-300 text-sm font-bold rounded">
+        <p className="flex items-center justify-center m-auto mt-1 px-3 text-black bg-yellow-300 text-sm font-bold rounded">
           {error}
         </p>
       )}

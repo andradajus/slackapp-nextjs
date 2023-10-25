@@ -147,12 +147,12 @@ export default function DirectMessage() {
         <MessageList messages={messages} />
       </div>
 
-      <div className="h-3/5 m-2 p-2">
-        <form className="flex mt-2 flex-col">
+      <div className="h-3/5 m-2 p-1">
+        <form className="flex flex-col">
           <p className="flex justify-center font-sans text-base mb-3 text-white font-bold">
             New Message
           </p>
-          <label className="flex content-center justify-center font-sans text-sm mb-3 text-white font-bold">
+          <label className="flex content-center justify-center font-sans text-sm mb-2 text-white font-bold">
             Send to:
             {chosenRecipient ? (
               <span className="ml-3 text-sm text-yellow-300">
@@ -177,13 +177,13 @@ export default function DirectMessage() {
           </label>
 
           {chosenRecipient ? null : (
-            <div className="flex content-end justify-end my-2">
+            <div className="flex content-end justify-end mt-2 mb-1">
               <input
                 type="text"
                 placeholder="Enter email address"
                 value={receiverEmail}
                 onChange={(e) => setReceiverEmail(e.target.value)}
-                className="bg-indigo-100 p-2 mr-2 text-sm font-sans text-black rounded"
+                className="bg-indigo-100 p-1 mr-2 text-sm font-sans text-black rounded"
               />
 
               <button
