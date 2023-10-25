@@ -16,12 +16,6 @@ const MemberModal = ({ closeMember }) => {
 
   const showMemberList = async () => {
     const currentChannelID = sessionStorage.getItem("currentChannelID");
-
-    if (!currentChannelID) {
-      console.error("No currentChannelID found in sessionStorage.");
-      return;
-    }
-
     const url = `http://206.189.91.54/api/v1/channels/${currentChannelID}`;
 
     try {

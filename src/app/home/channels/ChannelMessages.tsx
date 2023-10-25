@@ -226,8 +226,7 @@ const ChannelMessages = ({}) => {
     const currentChannelID = sessionStorage.getItem("currentChannelID");
 
     if (!currentChannelID) {
-      console.error("No currentChannelID found in sessionStorage.");
-      return;
+      return null;
     }
 
     const url = `http://206.189.91.54/api/v1/channels/${currentChannelID}`;
@@ -387,14 +386,13 @@ const ChannelMessages = ({}) => {
           </div>
           <div className="mx-2">
             <textarea
-              ref={messageRef}
-              className="w-full h-28 p-2 text-sm overflow-auto rounded-md bg-indigo-100"
+              className="w-full h-28 p-1 text-sm overflow-auto rounded-md bg-indigo-100"
+
               value={message}
               onChange={(e) => {
                 setMessage(e.target.value);
                 clearError();
               }}
-              onKeyDown={handleKeyDown}
             />
           </div>
 
