@@ -22,7 +22,6 @@ const Channels = () => {
   });
   const [channels, setChannels] = useState([]);
   const [alert, setAlert] = useState([]);
-  const [dontShowChannels, setDontShowChannels] = useState([]);
   const [excludedChannelIds, setExcludedChannelIds] = useState([
     5129, 5130, 5108, 5079, 5133,
   ]);
@@ -66,7 +65,6 @@ const Channels = () => {
       });
       console.log("getFilteredChannels", filteredData);
       excludedChannelIds.push(...filteredData);
-      setDontShowChannels(filteredData);
       showChannelDetails(filteredData);
     } catch (error) {
       console.error("Error retrieving message:", error);
@@ -233,6 +231,7 @@ const Channels = () => {
                 alt="Handle Refresh"
                 width={40}
                 height={40}
+                onClick={getFilteredChannels}
               />
 
               <Image
