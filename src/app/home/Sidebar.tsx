@@ -31,6 +31,9 @@ const Sidebar = () => {
 
   useEffect(() => {
     retrieveUserDetails();
+    setTimeout(() => {
+      setOpen(true);
+    }, 4000);
   }, []);
 
   const retrieveUserDetails = async () => {
@@ -87,7 +90,7 @@ const Sidebar = () => {
             "Hi, we've detected that you haven't registered yet. Please proceed to MyProfile",
             "Warning!"
           );
-        }, 2000);
+        }, 1000);
         console.log("No user with matching UID found.");
       }
     } catch (error) {

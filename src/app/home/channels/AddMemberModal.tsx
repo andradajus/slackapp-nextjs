@@ -9,6 +9,7 @@ import {
   ReactPortal,
   useState,
 } from "react";
+import Alert from "@/app/AlertBox";
 
 const AddMemberModal = ({ closeAddMember }) => {
   const [addMember, setAddMember] = useState("");
@@ -23,6 +24,14 @@ const AddMemberModal = ({ closeAddMember }) => {
   headers.append("client", sessionStorage.getItem("client") || "");
   headers.append("expiry", sessionStorage.getItem("expiry") || "");
   headers.append("uid", sessionStorage.getItem("uid") || "");
+  const [alert, setAlert] = useState([]);
+  const showAlert = (message, type) => {
+    setAlert({ message, type });
+    setTimeout(() => {
+      setAlert(false);
+      setAlert("");
+    }, 3000);
+  };
 
   const handleAddMember = async () => {
     try {
@@ -45,11 +54,10 @@ const AddMemberModal = ({ closeAddMember }) => {
         throw new Error("Network response was not ok");
       }
 
-      const data = await response.json();
-      console.log("Member has been added to the channel", data);
-      closeAddMember();
+      showAlert("Member has been added to the channel", "Success!");
     } catch (error) {
-      console.error("Error adding member to the channel:", error);
+      showAlert(error, "Error!");
+      console.log("Error:", error);
     }
   };
 
@@ -97,6 +105,7 @@ const AddMemberModal = ({ closeAddMember }) => {
 
   return (
     <>
+      <Alert message={alert.message} type={alert.type} />
       <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
         <div className="relative w-auto my-6 mx-auto max-w-3xl">
           <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
