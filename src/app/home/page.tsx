@@ -121,9 +121,12 @@ const Home = () => {
                             Create a more dynamic way of account data
                             &#40;Change user names, email, etc.&#41;
                           </li>
-                          <li>Transfer adding of details to signup</li>
-                          <li>Alert Boxes</li>
-                          <li>Form Validations </li>
+                          <li className="line-through">
+                            {" "}
+                            Transfer adding of details to signup
+                          </li>
+                          <li className="line-through">Alert Boxes</li>
+                          <li className="line-through">Form Validations </li>
                           <li>
                             Tweak codes for better performance and readability
                           </li>

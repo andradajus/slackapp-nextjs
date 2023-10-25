@@ -71,6 +71,7 @@ const MyProfile = () => {
         console.log("Formatted response data (body content):", bodyContent);
         const keyValueData = [
           {
+            id: bodyContent.id,
             uid: uidToMatch,
             email: uidToMatch,
             username: bodyContent.username,
@@ -162,96 +163,109 @@ const MyProfile = () => {
 
           {keyValueArray.length > 0 ? (
             keyValueArray.map((item, index) => (
-              <div
-                className="bg-indigo-800 shadow-md rounded-md m-3"
-                key={index}
-              >
-                <div className="flex justify-center">
-                  <Image
-                    src="https://www.svgrepo.com/show/497407/profile-circle.svg"
-                    alt="ConversaImage"
-                    width={150}
-                    height={150}
-                    className="mt-2 object-contain bg-indigo-100 rounded-full"
-                  />
-                </div>
+              <>
+                <div
+                  className="bg-indigo-800 shadow-md rounded-md m-3"
+                  key={index}
+                >
+                  <div className="flex justify-center">
+                    <Image
+                      src="https://www.svgrepo.com/show/497407/profile-circle.svg"
+                      alt="ConversaImage"
+                      width={150}
+                      height={150}
+                      className="mt-2 object-contain bg-indigo-100 rounded-full"
+                    />
+                  </div>
 
-                <div className="ml-2 border-gray-100">
-                  <dl className="divide-y divide-gray-100">
-                    <div className="px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-                      <dt className="text-sm font-semibold leading-6 mb-0 text-yellow-300 font-serif">
-                        First Name
-                      </dt>
-                      <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
-                        <span className="font-semibold text-white">
-                          {item.firstname}
-                        </span>
-                      </dd>
-                    </div>
+                  <div className="ml-2 border-gray-100">
+                    <dl className="divide-y divide-gray-100">
+                      <div className="px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                        <dt className="text-sm font-semibold leading-6 mb-0 text-yellow-300 font-serif">
+                          Account ID
+                        </dt>
+                        <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+                          <span className="font-semibold text-white">
+                            {item.id}
+                          </span>
+                        </dd>
+                      </div>
 
-                    <div className="px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-                      <dt className="text-sm font-semibold leading-6 text-yellow-300 font-serif">
-                        Middle Name
-                      </dt>
-                      <dd className="mt-1 text-sm font-semibold leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
-                        <span className="font-semibold text-white">
-                          {item.middlename}
-                        </span>
-                      </dd>
-                    </div>
+                      <div className="px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                        <dt className="text-sm font-semibold leading-6 mb-0 text-yellow-300 font-serif">
+                          First Name
+                        </dt>
+                        <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+                          <span className="font-semibold text-white">
+                            {item.firstname}
+                          </span>
+                        </dd>
+                      </div>
 
-                    <div className="px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-                      <dt className="text-sm font-semibold leading-6 text-yellow-300 font-serif">
-                        Last Name
-                      </dt>
-                      <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
-                        <span className="font-semibold text-white">
-                          {item.lastname}
-                        </span>
-                      </dd>
-                    </div>
+                      <div className="px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                        <dt className="text-sm font-semibold leading-6 text-yellow-300 font-serif">
+                          Middle Name
+                        </dt>
+                        <dd className="mt-1 text-sm font-semibold leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+                          <span className="font-semibold text-white">
+                            {item.middlename}
+                          </span>
+                        </dd>
+                      </div>
 
-                    <div className="px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-                      <dt className="font-semibold text-sm font-semiboldleading-6 text-yellow-300 font-serif">
-                        Username
-                      </dt>
-                      <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
-                        <span className="font-semibold text-white">
-                          {item.username}
-                        </span>
-                      </dd>
-                    </div>
-                    <div className="px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-                      <dt className="text-sm font-semibold leading-6 text-yellow-300 font-serif">
-                        <span className="text-yellow-400">Email address</span>
-                      </dt>
-                      <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
-                        <span className="font-semibold text-white">
-                          {item.email}
-                        </span>
-                      </dd>
-                    </div>
-                    <div className="px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-                      <dt className="font-semibold text-sm leading-6 text-yellow-300 font-serif">
-                        About me
-                      </dt>
-                      <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
-                        <span className="font-semibold text-white italic">
-                          {item.aboutme}
-                        </span>
-                      </dd>
-                    </div>
-                  </dl>
-                </div>
+                      <div className="px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                        <dt className="text-sm font-semibold leading-6 text-yellow-300 font-serif">
+                          Last Name
+                        </dt>
+                        <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+                          <span className="font-semibold text-white">
+                            {item.lastname}
+                          </span>
+                        </dd>
+                      </div>
 
-                {/* <p>UID: {item.uid}</p>
+                      <div className="px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                        <dt className="font-semibold text-sm font-semiboldleading-6 text-yellow-300 font-serif">
+                          Username
+                        </dt>
+                        <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+                          <span className="font-semibold text-white">
+                            {item.username}
+                          </span>
+                        </dd>
+                      </div>
+                      <div className="px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                        <dt className="text-sm font-semibold leading-6 text-yellow-300 font-serif">
+                          <span className="text-yellow-400">Email address</span>
+                        </dt>
+                        <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+                          <span className="font-semibold text-white">
+                            {item.email}
+                          </span>
+                        </dd>
+                      </div>
+                      <div className="px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                        <dt className="font-semibold text-sm leading-6 text-yellow-300 font-serif">
+                          About me
+                        </dt>
+                        <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+                          <span className="font-semibold text-white italic">
+                            {item.aboutme}
+                          </span>
+                        </dd>
+                      </div>
+                    </dl>
+                  </div>
+
+                  {/* <p>UID: {item.uid}</p>
                   <p>Email: {item.email}</p>
                   <p>Username: {item.username}</p>
                   <p>First Name: {item.firstname}</p>
                   <p>Middle Name: {item.middlename}</p>
                   <p>Last Name: {item.lastname}</p>
                   <p>About Me: {item.aboutme}</p> */}
-              </div>
+                </div>
+              </>
             ))
           ) : (
             <div className="self-center text-center m-3 gap-1">

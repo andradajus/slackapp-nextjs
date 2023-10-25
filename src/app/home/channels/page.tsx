@@ -22,6 +22,10 @@ const Channels = () => {
   });
   const [channels, setChannels] = useState([]);
   const [alert, setAlert] = useState([]);
+  const [dontShowChannels, setDontShowChannels] = useState([]);
+  const [excludedChannelIds, setExcludedChannelIds] = useState([
+    5129, 5130, 5108, 5079, 5133,
+  ]);
 
   const headers = new Headers();
 
@@ -33,19 +37,51 @@ const Channels = () => {
   };
 
   useEffect(() => {
-    showChannelDetails();
+    getFilteredChannels();
   }, []);
 
-  const showChannelDetails = async () => {
-    const url = "http://206.189.91.54/api/v1/channels/";
+  const getFilteredChannels = async () => {
+    const url = `http://206.189.91.54/api/v1/messages?receiver_id=4102&receiver_class=User`;
+    const headers = new Headers();
     headers.append("Content-Type", "application/json");
-
     headers.append("access-token", sessionStorage.getItem("access-token"));
     headers.append("client", sessionStorage.getItem("client"));
     headers.append("expiry", sessionStorage.getItem("expiry"));
     headers.append("uid", sessionStorage.getItem("uid"));
-    const excludedChannelIds = [5129, 5130, 5108, 5079, 5133];
+    try {
+      const response = await fetch(url, {
+        method: "GET",
+        headers: headers,
+      });
 
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+
+      const data = await response.json();
+
+      const filteredData = data.data.map((item) => {
+        const bodyContent = JSON.parse(item.body);
+        return Number(bodyContent.channel);
+      });
+      console.log("getFilteredChannels", filteredData);
+      excludedChannelIds.push(...filteredData);
+      setDontShowChannels(filteredData);
+      showChannelDetails(filteredData);
+    } catch (error) {
+      console.error("Error retrieving message:", error);
+      return null;
+    }
+  };
+
+  const showChannelDetails = async () => {
+    const url = "http://206.189.91.54/api/v1/channels/";
+    headers.append("Content-Type", "application/json");
+    headers.append("access-token", sessionStorage.getItem("access-token"));
+    headers.append("client", sessionStorage.getItem("client"));
+    headers.append("expiry", sessionStorage.getItem("expiry"));
+    headers.append("uid", sessionStorage.getItem("uid"));
+    console.log("Excluded Channel Details scd", excludedChannelIds);
     try {
       const response = await fetch(url, {
         method: "GET",
@@ -55,7 +91,7 @@ const Channels = () => {
 
       if (data?.data?.length > 0) {
         const filteredChannels = data.data.filter(
-          (channel: { id: number }) => !excludedChannelIds.includes(channel.id)
+          (channel) => !excludedChannelIds.includes(channel.id)
         );
         const [firstChannel] = filteredChannels;
         setChannels(filteredChannels);
@@ -64,6 +100,7 @@ const Channels = () => {
           name: firstChannel.name,
         });
         console.log("Channel details:", data);
+        console.log("Filtered Channels", filteredChannels);
       }
     } catch (error) {
       console.error("Error showing channel details:", error);
@@ -119,6 +156,52 @@ const Channels = () => {
     console.log("closeChannelModal");
   };
 
+  //current edit
+
+  //send details to conversadb user 4102
+  const sendChannelID = async () => {
+    const headers = new Headers();
+    headers.append("Content-Type", "application/json");
+    headers.append(
+      "access-token",
+      sessionStorage.getItem("access-token") || ""
+    );
+    headers.append("client", sessionStorage.getItem("client") || "");
+    headers.append("expiry", sessionStorage.getItem("expiry") || "");
+    headers.append("uid", sessionStorage.getItem("uid") || "");
+    const channelID = sessionStorage.getItem("currentChannelID");
+    const id = sessionStorage.getItem("id");
+
+    const requestMessage = {
+      id: id,
+      channel: channelID,
+    };
+
+    const requestBody = {
+      receiver_id: 4102,
+      receiver_class: "User",
+      body: JSON.stringify(requestMessage),
+    };
+
+    try {
+      const response = await fetch("http://206.189.91.54/api/v1/messages", {
+        method: "POST",
+        headers: headers,
+        body: JSON.stringify(requestBody),
+      });
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      const data = await response.json();
+      getFilteredChannels();
+      console.log("Successfully sent channel request", data);
+    } catch (error) {
+      console.error("Error sending message:", error);
+    }
+  };
+
+  //
+
   return (
     <>
       <Alert message={alert.message} type={alert.type} />
@@ -150,6 +233,15 @@ const Channels = () => {
                 alt="Handle Refresh"
                 width={40}
                 height={40}
+              />
+
+              <Image
+                className="cursor-pointer hover:bg-orange-500 hover:rounded-lg ml-2"
+                src="https://www.svgrepo.com/show/468533/delete-alt.svg"
+                alt="Delete"
+                width={40}
+                height={40}
+                onClick={sendChannelID}
               />
             </div>
 
