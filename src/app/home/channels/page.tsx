@@ -246,14 +246,14 @@ const Channels = () => {
             </div>
 
             <span
-              className="cursor-pointer font-black m-2 p-2 hover:bg-indigo-700 hover:rounded-lg text-2xl text-white"
+              className="cursor-pointer font-black m-1 p-1 hover:bg-indigo-700 hover:rounded-lg text-2xl text-white"
               onClick={openChannelDetails}
             >
               {channelDetails.name}
             </span>
 
             <div>
-              <div className="flex flex-row gap-2 mr-2">
+              <div className="flex flex-row gap-1 mr-2">
                 <div className="mt-1 cursor-pointer">
                   <Image
                     className="cursor-pointer fill-white hover:bg-orange-500 hover:rounded-lg"
