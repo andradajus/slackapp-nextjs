@@ -6,15 +6,14 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 
 const SignUpPage = () => {
-  // const [surname, setSurname] = useState("");
-  // const [firstName, setFirstName] = useState("");
-  // const [middleName, setMiddleName] = useState("");
-  // const [username, setUsername] = useState("");
+  const [surname, setSurname] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [middleName, setMiddleName] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
-  const [uid, setUid] = useState("");
   const router = useRouter();
 
   const clearError = () => {
@@ -39,6 +38,13 @@ const SignUpPage = () => {
       setPassword("");
       setConfirmPassword("");
       setError("Passwords do not match");
+      return;
+    }
+
+    const isUsernameTaken = await matchUsername();
+
+    if (isUsernameTaken) {
+      setError("Username is already taken.");
       return;
     }
 
@@ -270,6 +276,99 @@ const SignUpPage = () => {
     }
   };
 
+  const checkUsername = async () => {
+    try {
+      const requestBody = {
+        email: "accounts@conversa.com",
+        password: "conversa",
+      };
+
+      const response = await fetch("http://206.189.91.54/api/v1/auth/sign_in", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(requestBody),
+      });
+
+      if (response.ok) {
+        const accessToken = response.headers.get("access-token");
+        const client = response.headers.get("client");
+        const expiry = response.headers.get("expiry");
+        const uid = response.headers.get("uid");
+        const responseData = await response.json();
+        const id = responseData.data.id;
+        sessionStorage.setItem("admin-access-token", accessToken!);
+        sessionStorage.setItem("admin-client", client!);
+        sessionStorage.setItem("admin-expiry", expiry!);
+        sessionStorage.setItem("admin-uid", uid!);
+        sessionStorage.setItem("admin-id", id);
+        sessionStorage.setItem("email", email!);
+        const isUsernameTaken = await matchUsername();
+
+        if (isUsernameTaken) {
+          setError("Username is already taken.");
+        } else {
+          setError("Username is valid.");
+        }
+      } else {
+        console.error("Login failed:", response.statusText);
+        setError("Login failed. Please check your email and password.");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  const matchUsername = async () => {
+    const uidToMatch = username;
+    const url = `http://206.189.91.54/api/v1/messages?receiver_id=${5133}&receiver_class=Channel`;
+
+    try {
+      const headers = new Headers();
+      headers.append("Content-Type", "application/json");
+      headers.append(
+        "access-token",
+        sessionStorage.getItem("admin-access-token") as string
+      );
+      headers.append(
+        "client",
+        sessionStorage.getItem("admin-client") as string
+      );
+      headers.append(
+        "expiry",
+        sessionStorage.getItem("admin-expiry") as string
+      );
+      headers.append("uid", sessionStorage.getItem("admin-uid") as string);
+
+      const response = await fetch(url, {
+        method: "GET",
+        headers: headers,
+      });
+
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+
+      const data = await response.json();
+      console.log("Data:", data);
+
+      const matchingMessage = data.data.find((message: { body: string }) => {
+        try {
+          const bodyContent = JSON.parse(message.body);
+          return bodyContent.username === uidToMatch;
+        } catch (error) {
+          return false;
+        }
+      });
+
+      return !!matchingMessage;
+    } catch (error) {
+      console.error("Error retrieving message:", error);
+      return false;
+    }
+  };
+
   return (
     <div className="h-screen overflow-hidden flex flex-col items-center justify-center text-center bg-indigo-900 text-white">
       <header className="m-0 p-5">
@@ -294,7 +393,7 @@ const SignUpPage = () => {
       </h5>
 
       <form className="flex flex-col text-sm font-medium font-sans">
-        {/* <div className="flex items-center mb-5">
+        <div className="flex items-center mb-5">
           <div className="w-1/3">
             <label htmlFor="Surname" className="m-1 block">
               Surname
@@ -345,7 +444,7 @@ const SignUpPage = () => {
               }}
             />
           </div>
-        </div> */}
+        </div>
 
         <label htmlFor="Email Address" className="m-1">
           Email Address
@@ -361,21 +460,31 @@ const SignUpPage = () => {
             clearError();
           }}
         />
+        <div>
+          <span className="cursor-pointer" onClick={checkUsername}>
+            Check
+          </span>
+          {/* <small>{message}</small> */}
 
-        {/* <label htmlFor="Username" className="m-1">
-          Username
-        </label>
-        <input
-          className="text-black font-mono mb-3 px-1 w-48 mx-auto rounded-lg"
-          key="username"
-          type="text"
-          id="username"
-          value={username}
-          onChange={(e) => {
-            setUsername(e.target.value);
-            clearError();
-          }}
-        /> */}
+          <div>
+            <label htmlFor="Username" className="m-1">
+              Username
+            </label>
+            <div>
+              <input
+                className="text-black font-mono mb-3 px-1 w-48 mx-auto rounded-lg"
+                key="username"
+                type="text"
+                id="username"
+                value={username}
+                onChange={(e) => {
+                  setUsername(e.target.value);
+                  clearError();
+                }}
+              />
+            </div>
+          </div>
+        </div>
 
         <label htmlFor="Password" className="m-1">
           Password
@@ -442,7 +551,3 @@ const SignUpPage = () => {
 };
 
 export default SignUpPage;
-
-// function handleAddUserDetails() {
-//   throw new Error("Function not implemented.");
-// }

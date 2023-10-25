@@ -132,12 +132,6 @@ const ChannelMessages = ({}) => {
       body: message,
     };
 
-    const newMessage = {
-      sender: senderUID,
-      body: message,
-      timestamp: new Date(),
-    };
-
     try {
       const response = await fetch("http://206.189.91.54/api/v1/messages", {
         method: "POST",
@@ -149,7 +143,7 @@ const ChannelMessages = ({}) => {
         throw new Error("Network response was not ok");
       }
       setMessage("");
-      retrieveMessages();
+      retrieveMessages;
     } catch (error) {
       console.error("Error sending message:", error);
     }

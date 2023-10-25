@@ -106,7 +106,7 @@ export default function DirectMessage() {
       setChosenRecipient(recipient);
       alert("Message will be sent to: " + targetUid);
       setReceiverEmail("");
-      // fetchMessages();
+      fetchMessages();
     } else {
       alert("User not found!");
     }
@@ -115,7 +115,7 @@ export default function DirectMessage() {
   const handleChangeRecipientClick = () => {
     setChosenRecipient(null);
     setReceiverEmail("");
-    // fetchMessages();
+    fetchMessages();
   };
 
   const fetchMessageInterval = () => {
