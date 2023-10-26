@@ -1,7 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import MessageInput from "@/app/components/MessageInput";
-import MessageList from "@/app/components/MessageList";
 import { Message, User } from "@/app/components/types";
 
 export default function DirectMessage() {
@@ -17,6 +16,7 @@ export default function DirectMessage() {
   const [intervalId, setIntervalId] = useState<number | null>(null);
   const [users, setUsers] = useState<User[]>([]);
   const [chosenRecipient, setChosenRecipient] = useState<User | null>(null);
+  const [filteredData, setFilteredData] = useState([]);
 
   const receiverId = parseInt(
     sessionStorage.getItem("storedReceiverId") || "0",
@@ -136,6 +136,40 @@ export default function DirectMessage() {
     }, []);
   };
 
+  const renderMessages = () => {
+    return messages.map((message, index) => {
+      const senderId = message.sender.id;
+      const loggedInUser = filteredData.find((data) => data.id == senderId);
+      const name = loggedInUser
+        ? `${loggedInUser.firstname} ${loggedInUser.lastname}`
+        : "Unknown User";
+
+      return (
+        <ul key={index}>
+          <li className="border-t border-black">
+            <div>
+              <div className="flex flex-col">
+                <div>
+                  <span className="text-sm font-bold">
+                    {name ? name : "Unknown User"}
+                  </span>{" "}
+                  <span className="text-xs pl-3">
+                    {new Date(message.created_at).toLocaleTimeString()}
+                  </span>
+                </div>
+                <div className="pb-1">
+                  <span className="max-w-sm break-all text-sm">
+                    {message.body}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </li>
+        </ul>
+      );
+    });
+  };
+
   return (
     <div className="h-screen overflow-hidden border-solid border-3 border-white  bg-indigo-800">
       <div className="m-2 p-1 flex flex-col justify-center content-center">
@@ -144,7 +178,7 @@ export default function DirectMessage() {
         </p>
       </div>
       <div className="h-2/5 p-3 overflow-y-auto flex flex-col">
-        <MessageList messages={messages} />
+        {renderMessages()}
       </div>
 
       <div className="h-3/5 m-2 p-1">

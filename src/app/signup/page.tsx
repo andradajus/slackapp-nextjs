@@ -4,7 +4,6 @@ import Link from "next/link";
 import LoginPage from "../login/page";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import Alert from "../AlertBox";
 
 const SignUpPage = () => {
   const [surname, setSurname] = useState("");
@@ -16,19 +15,6 @@ const SignUpPage = () => {
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
   const router = useRouter();
-  const [alert, setAlert] = useState([]);
-
-  const showAlert = (message, type) => {
-    setAlert({ message, type });
-    setTimeout(() => {
-      setAlert(false);
-      setAlert("");
-    }, 3000);
-  };
-
-  useEffect(() => {
-    showAlert("Please fill out the required fields *", "Info!");
-  }, []);
 
   const clearError = () => {
     setError("");
@@ -93,7 +79,7 @@ const SignUpPage = () => {
   };
 
   // login registered user here
-  const handleLogin = async (e: { preventDefault: () => void }) => {
+  const handleLogin = async (e?: { preventDefault: () => void }) => {
     try {
       const requestBody = {
         email: email,
@@ -321,9 +307,9 @@ const SignUpPage = () => {
         const isUsernameTaken = await matchUsername();
 
         if (isUsernameTaken) {
-          showAlert("Username is already taken", "Error!");
+          setError("Username is already taken");
         } else {
-          showAlert("Username is valid", "Success!");
+          setError("Username available");
         }
       } else {
         console.error("Login failed:", response.statusText);
@@ -384,191 +370,184 @@ const SignUpPage = () => {
   };
 
   return (
-    <>
-      <Alert message={alert.message} type={alert.type} />
-      <div className="h-screen overflow-hidden flex flex-col items-center justify-center text-center bg-indigo-900 text-white">
-        <header className="m-0 p-5">
-          <h1 className="inline-flex text-5xl font-bold content-center mb-0 text-yellow-400 font-serif">
-            Conversa
-            <Image
-              src="/ConversaImage.png"
-              alt="ConversaImage"
-              width={100}
-              height={100}
-              className="px-5 mx-auto"
+    <div className="h-screen overflow-y-hidden flex flex-col items-center justify-center text-center bg-indigo-900 text-white">
+      <header className="m-0 p-5">
+        <h1 className="inline-flex text-5xl font-bold content-center mb-0 text-yellow-400 font-serif">
+          Conversa
+          <Image
+            src="/ConversaImage.png"
+            alt="ConversaImage"
+            width={100}
+            height={100}
+            className="px-5 mx-auto"
+          />
+        </h1>
+        <p className="text-sm mb-2 italic">Your Communication Friend Online</p>
+      </header>
+
+      <h2 className="inline-flex text-lg font-sans font-semibold mt-2 mb-0 text-yellow-300">
+        Account Registration
+      </h2>
+      <h5 className="text-base mb-4 font-sans">
+        Please complete the registration form below:
+      </h5>
+
+      <form className="flex flex-col text-sm font-medium font-sans">
+        <div className="flex items-center mb-2">
+          <div className="w-1/3">
+            <label htmlFor="Surname" className="m-1 block">
+              Surname <span className="text-red-600">*</span>
+            </label>
+            <input
+              className=" text-black font-mono mb-1 px-1 w-48 rounded-lg"
+              key="surname"
+              type="text"
+              id="surname"
+              value={surname}
+              onChange={(e) => {
+                setSurname(e.target.value);
+                clearError();
+              }}
             />
-          </h1>
-          <p className="text-sm mb-4 italic">
-            Your Communication Friend Online
-          </p>
-        </header>
-
-        <h2 className="inline-flex text-lg font-sans font-semibold mt-4 mb-0 text-yellow-300">
-          Account Registration
-        </h2>
-        <h5 className="text-base mb-6 font-sans">
-          Please complete the registration form below:
-        </h5>
-
-        <form className="flex flex-col text-sm font-medium font-sans">
-          <div className="flex items-center mb-5">
-            <div className="w-1/3">
-              <label htmlFor="Surname" className="m-1 block">
-                Surname <span className="text-red-600">*</span>
-              </label>
-              <input
-                className=" text-black font-mono mb-1 px-1 w-48 rounded-lg"
-                key="surname"
-                type="text"
-                id="surname"
-                value={surname}
-                onChange={(e) => {
-                  setSurname(e.target.value);
-                  clearError();
-                }}
-              />
-            </div>
-
-            <div className="w-1/3">
-              <label htmlFor="First Name" className="m-1 block">
-                First Name<span className="text-red-600">*</span>
-              </label>
-              <input
-                className="text-black font-mono mb-1 px-1 w-48 rounded-lg"
-                key="firstName"
-                type="text"
-                id="firstName"
-                value={firstName}
-                onChange={(e) => {
-                  setFirstName(e.target.value);
-                  clearError();
-                }}
-              />
-            </div>
-
-            <div className="w-1/3">
-              <label htmlFor="Middle Name" className="m-1 block">
-                Middle Name
-              </label>
-              <input
-                className="text-black font-mono mb-1 px-1 w-48 rounded-lg"
-                key="middleName"
-                type="text"
-                id="middleName"
-                value={middleName}
-                onChange={(e) => {
-                  setMiddleName(e.target.value);
-                  clearError();
-                }}
-              />
-            </div>
           </div>
 
-          <label htmlFor="Email Address" className="m-1">
-            Email Address<span className="text-red-600">*</span>
+          <div className="w-1/3">
+            <label htmlFor="First Name" className="m-1 block">
+              First Name<span className="text-red-600">*</span>
+            </label>
+            <input
+              className="text-black font-mono mb-1 px-1 w-48 rounded-lg"
+              key="firstName"
+              type="text"
+              id="firstName"
+              value={firstName}
+              onChange={(e) => {
+                setFirstName(e.target.value);
+                clearError();
+              }}
+            />
+          </div>
+
+          <div className="w-1/3">
+            <label htmlFor="Middle Name" className="m-1 block">
+              Middle Name
+            </label>
+            <input
+              className="text-black font-mono mb-1 px-1 w-48 rounded-lg"
+              key="middleName"
+              type="text"
+              id="middleName"
+              value={middleName}
+              onChange={(e) => {
+                setMiddleName(e.target.value);
+                clearError();
+              }}
+            />
+          </div>
+        </div>
+
+        <label htmlFor="Email Address" className="m-1">
+          Email Address<span className="text-red-600">*</span>
+        </label>
+        <input
+          className="text-black font-mono mb-3 px-1 w-48 mx-auto rounded-lg"
+          key="email"
+          type="email"
+          id="email"
+          value={email}
+          onChange={(e) => {
+            setEmail(e.target.value);
+            clearError();
+          }}
+        />
+
+        <div className="flex flex-row justify-center mt-5">
+          <label htmlFor="Username" className="m-1">
+            Username<span className="text-red-600">*</span>
           </label>
-          <input
-            className="text-black font-mono mb-3 px-1 w-48 mx-auto rounded-lg"
-            key="email"
-            type="email"
-            id="email"
-            value={email}
-            onChange={(e) => {
-              setEmail(e.target.value);
-              clearError();
-            }}
-          />
           <div>
-            <span
-              className="flex items-center justify-center m-auto text-sm font-bold font-sans w-20 h-6 rounded bg-yellow-100  text-black  cursor-pointer hover:text-orange-300 hover:underline"
-              onClick={checkUsername}
-            >
-              Check
-            </span>
-            {/* <small>{message}</small> */}
-
-            <div>
-              <label htmlFor="Username" className="m-1">
-                Username<span className="text-red-600">*</span>
-              </label>
-              <div>
-                <input
-                  className="text-black font-mono mb-3 px-1 w-48 mx-auto rounded-lg"
-                  key="username"
-                  type="text"
-                  id="username"
-                  value={username}
-                  onChange={(e) => {
-                    setUsername(e.target.value);
-                    clearError();
-                  }}
-                />
-              </div>
-            </div>
+            <input
+              className="text-black font-mono mr-2 mb-3 px-1 w-48 mx-auto rounded-lg"
+              key="username"
+              type="text"
+              id="username"
+              value={username}
+              onChange={(e) => {
+                setUsername(e.target.value);
+                clearError();
+              }}
+            />
           </div>
 
-          <label htmlFor="Password" className="m-1">
-            Password<span className="text-red-600">*</span>
-          </label>
-          <input
-            className="text-black font-mono mb-3 px-1 w-48 mx-auto rounded-lg"
-            key="password"
-            type="password"
-            id="password"
-            value={password}
-            onChange={(e) => {
-              setPassword(e.target.value);
-              clearError();
-            }}
-          />
-
-          <label htmlFor="Confirm Password" className="m-1">
-            Confirm Password<span className="text-red-600">*</span>
-          </label>
-          <input
-            className="text-black font-mono mb-3 px-1 w-48 mx-auto rounded-lg"
-            key="confirmPassword"
-            type="password"
-            id="confirmPassword"
-            value={confirmPassword}
-            onChange={(e) => {
-              setConfirmPassword(e.target.value);
-              clearError();
-            }}
-          />
-
-          {error && (
-            <p className="flex items-center justify-center m-auto mt-4 py-1 px-3 text-black bg-yellow-300 text-sm font-bold rounded">
-              {error}
-            </p>
-          )}
-          <h5 className="mt-5 p-1 text-sm">
-            Before clicking 'Register', please review and ensure correct
-            information in the registration details. <br />
-            <br />
-            <button
-              className="flex items-center justify-center m-auto text-sm font-bold font-sans w-20 h-6 rounded bg-yellow-100  text-black  cursor-pointer hover:text-orange-300 hover:underline"
-              type="submit"
-              onClick={handleRegisterButton}
-            >
-              Register
-            </button>
-          </h5>
-        </form>
-        <h6 className="mt-5 p-4 text-base font-sans">
-          Already have an account? <br />
-          <Link
-            href="/login"
-            className="block font-sans hover:text-orange-300 hover:underline"
+          <span
+            className="mb-3 px-1 border-solid border-2 text-black rounded text-xs font-semibold bg-indigo-400 cursor-pointer hover:text-white hover:underline"
+            onClick={checkUsername}
           >
-            Login!
-          </Link>
-        </h6>
-        <footer className="mt-6 pb-4">
-          <h6 className="text-xs">&copy; 2023 Conversa</h6>
-        </footer>
-      </div>
-    </>
+            Check Availability
+          </span>
+          {/* <small>{message}</small> */}
+        </div>
+
+        <label htmlFor="Password" className="m-1">
+          Password<span className="text-red-600">*</span>
+        </label>
+        <input
+          className="text-black font-mono mb-3 px-1 w-48 mx-auto rounded-lg"
+          key="password"
+          type="password"
+          id="password"
+          value={password}
+          onChange={(e) => {
+            setPassword(e.target.value);
+            clearError();
+          }}
+        />
+
+        <label htmlFor="Confirm Password" className="m-1">
+          Confirm Password<span className="text-red-600">*</span>
+        </label>
+        <input
+          className="text-black font-mono mb-3 px-1 w-48 mx-auto rounded-lg"
+          key="confirmPassword"
+          type="password"
+          id="confirmPassword"
+          value={confirmPassword}
+          onChange={(e) => {
+            setConfirmPassword(e.target.value);
+            clearError();
+          }}
+        />
+
+        {error && (
+          <p className="flex items-center justify-center m-auto mt-0 py-1 px-3 text-black bg-yellow-300 text-sm font-bold rounded">
+            {error}
+          </p>
+        )}
+        <h5 className="mt-2 text-sm">
+          Before clicking 'Register', please review and ensure correct
+          information in the registration details.
+          <button
+            className="flex items-center mt-2 justify-center mx-auto text-sm font-bold font-sans w-20 rounded bg-yellow-100  text-black  cursor-pointer hover:text-orange-300 hover:underline"
+            type="submit"
+            onClick={handleRegisterButton}
+          >
+            Register
+          </button>
+        </h5>
+      </form>
+      <h6 className="mt-3 p-2 text-sm font-sans">
+        Already have an account? <br />
+        <Link
+          href="/login"
+          className="block font-sans hover:text-orange-300 hover:underline"
+        >
+          Login!
+        </Link>
+      </h6>
+      <footer className="mt-2 pb-2">
+        <h6 className="text-xs">&copy; 2023 Conversa</h6>
+      </footer>
+    </div>
   );
 };
 

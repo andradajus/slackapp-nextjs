@@ -21,20 +21,12 @@ const Channels = () => {
     name: "None",
   });
   const [channels, setChannels] = useState([]);
-  const [alert, setAlert] = useState([]);
   const [dontShowChannels, setDontShowChannels] = useState([]);
   const [excludedChannelIds, setExcludedChannelIds] = useState([
     5129, 5130, 5108, 5079, 5133,
   ]);
 
   const headers = new Headers();
-
-  const showAlert = (message: any, type: any) => {
-    setAlert({ message, type });
-    setTimeout(() => {
-      setAlert(false);
-    }, 3000);
-  };
 
   useEffect(() => {
     getFilteredChannels();
@@ -112,7 +104,6 @@ const Channels = () => {
       id: channel.id,
       name: channel.name,
     });
-    showAlert(`Change Channel to:${channel.id}`, "Success!");
     sessionStorage.setItem("currentChannelID", channel.id);
   };
 
@@ -204,7 +195,6 @@ const Channels = () => {
 
   return (
     <>
-      <Alert message={alert.message} type={alert.type} />
       {isAddMemberModalOpen && (
         <AddMemberModal closeAddMember={closeAddMember} />
       )}

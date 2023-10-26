@@ -31,6 +31,7 @@ const ChannelMessages = ({}) => {
   const handleFormatText = (format: string) => {
     const text = message;
     const messageElement = messageRef.current;
+    console.log("Formatted Text");
 
     if (messageElement) {
       const selectionStart = messageElement.selectionStart || 0;
@@ -54,11 +55,13 @@ const ChannelMessages = ({}) => {
       }
 
       setMessage(newText);
+      console.log("New Message: ", newText);
     }
   };
 
   const handleDeleteOrderedList = () => {
     const messageElement = messageRef.current;
+
     if (messageElement) {
       const cursorPosition = messageElement.selectionStart || 0;
       const textBeforeCursor = message.slice(0, cursorPosition);
@@ -387,12 +390,12 @@ const ChannelMessages = ({}) => {
           <div className="mx-2">
             <textarea
               className="w-full h-28 p-1 text-sm overflow-auto rounded-md bg-indigo-100"
-
               value={message}
               onChange={(e) => {
                 setMessage(e.target.value);
                 clearError();
               }}
+              onKeyDown={handleKeyDown}
             />
           </div>
 
@@ -406,7 +409,10 @@ const ChannelMessages = ({}) => {
               onClick={handleInsertEmoji}
             />
 
-            <div className="flex bg-indigo-500 hover:bg-yellow-200 rounded-md cursor-pointer">
+            <div
+              className="flex bg-indigo-500 hover:bg-yellow-200 rounded-md cursor-pointer"
+              onClick={handleSendMessage}
+            >
               <span className="pt-1 pb-1 pr-1 ml-2 font-semibold text-sm">
                 Send
               </span>
@@ -416,7 +422,6 @@ const ChannelMessages = ({}) => {
                 alt="SendMessage-icon"
                 width={20}
                 height={20}
-                onClick={handleSendMessage}
               />
             </div>
           </div>

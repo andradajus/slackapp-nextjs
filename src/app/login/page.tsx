@@ -3,21 +3,12 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import Alert from "../AlertBox";
 
 const LoginPage = () => {
   const router = useRouter();
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [email, setEmail] = useState("");
-  const [alert, setAlert] = useState([]);
-  const showAlert = (message, type) => {
-    setAlert({ message, type });
-    setTimeout(() => {
-      setAlert(false);
-      setAlert("");
-    }, 3000);
-  };
 
   const clearError = () => {
     setError("");
@@ -253,7 +244,6 @@ const LoginPage = () => {
       sessionStorage.removeItem("admin-uid");
       sessionStorage.removeItem("admin-id");
       sessionStorage.removeItem("email");
-      showAlert("Login Successful", "Success!");
 
       setTimeout(() => {
         router.push("/home");
@@ -265,7 +255,6 @@ const LoginPage = () => {
 
   return (
     <>
-      <Alert message={alert.message} type={alert.type} />
       <div className="h-screen overflow-hidden flex flex-col items-center justify-center text-center bg-indigo-900 text-white">
         <header className="m-0 p-10">
           <h1 className="inline-flex text-5xl content-center font-bold mb-0 text-yellow-400 font-serif">
@@ -293,7 +282,7 @@ const LoginPage = () => {
           onSubmit={handleLogin}
         >
           <label htmlFor="email" className="m-1">
-            Username or Email Address
+            <p>Username</p> or Email Address
           </label>
           <input
             className="text-black font-sans text-sm mb-3 px-1 rounded-lg"
@@ -336,7 +325,7 @@ const LoginPage = () => {
           </span>
         </form>
 
-        <h5 className="mt-9 mb-2 p-4 text-base font-sans">
+        <h5 className="mt-7 mb-2 p-4 text-sm font-sans">
           Don't have an account yet?
           <Link
             href="/signup"
