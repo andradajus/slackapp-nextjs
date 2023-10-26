@@ -30,8 +30,13 @@ const ChannelMessages = ({}) => {
 
   const handleFormatText = (format: string) => {
     const text = message;
-    const selectionStart = messageRef.current?.selectionStart;
-    const selectionEnd = messageRef.current?.selectionEnd;
+
+    const messageElement = messageRef.current;
+    console.log("Formatted Text");
+
+    if (messageElement) {
+      const selectionStart = messageElement.selectionStart || 0;
+      const selectionEnd = messageElement.selectionEnd || 0;
 
     if (selectionStart !== undefined && selectionEnd !== undefined) {
       const selectedText = text.slice(selectionStart, selectionEnd);
@@ -52,13 +57,22 @@ const ChannelMessages = ({}) => {
       }
 
       setMessage(newText);
+      console.log("New Message: ", newText);
     }
   };
 
   const handleDeleteOrderedList = () => {
-    const cursorPosition = messageRef.current?.selectionStart || 0;
-    const textBeforeCursor = message.slice(0, cursorPosition);
-    const textAfterCursor = message.slice(cursorPosition);
+
+    const messageElement = messageRef.current;
+
+    if (messageElement) {
+      const cursorPosition = messageElement.selectionStart || 0;
+      const textBeforeCursor = message.slice(0, cursorPosition);
+      const textAfterCursor = message.slice(cursorPosition);
+
+      if (textBeforeCursor.endsWith(`\n${orderedListCount}. `)) {
+        setOrderedListCount(orderedListCount - 1);
+      }
 
     if (textBeforeCursor.endsWith("\n1. ")) {
       setOrderedListCount(1);
@@ -347,6 +361,7 @@ const ChannelMessages = ({}) => {
                 setMessage(e.target.value);
                 clearError();
               }}
+              onKeyDown={handleKeyDown}
             />
           </div>
 
@@ -364,7 +379,8 @@ const ChannelMessages = ({}) => {
               className="flex bg-indigo-500 hover:bg-yellow-200 rounded-md cursor-pointer"
               onClick={handleSendMessage}
             >
-              <span className="pt-1 pb-1 pr-1 ml-1 font-semibold text-sm">
+
+              <span className="pt-1 pb-1 pr-1 ml-2 font-semibold text-sm">
                 Send
               </span>
               <Image

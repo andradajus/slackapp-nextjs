@@ -1,8 +1,7 @@
 import React from "react";
-import MessageItem from "./MessageItem";
 
-function MessageList({ messages }) {
-  if (!Array.isArray(messages) || messages.length === 0) {
+function MessageList({ message }) {
+  if (!Array.isArray(message) || message.length === 0) {
     return (
       <div className="mt-4 px-1 font-sans text-base bg-indigo-200">
         <p>No messages available</p>
@@ -10,14 +9,20 @@ function MessageList({ messages }) {
     );
   }
 
-  const receivedMessages = messages.filter((message) => !message.sent);
+  const isSent = message.sent;
+  const backgroundColor = isSent ? "bg-blue-500" : "bg-received";
 
   return (
     <div className=" bg-indigo-200">
       <ul className="overflow-y-auto border-solid border-y-2 px-1 text-sm border-white">
-        {receivedMessages.map((message, index) => (
-          <MessageItem key={index} message={message} />
-        ))}
+        <li
+          className={`max-h-52 flex flex-row place-content-between text-black ${backgroundColor}`}
+        >
+          <strong>{message.sender.uid}: </strong> {message.body}
+          <span className="text-xs pl-5">
+            {new Date(message.created_at).toLocaleTimeString()}
+          </span>
+        </li>
       </ul>
     </div>
   );
