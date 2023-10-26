@@ -133,7 +133,7 @@ const Home = () => {
                           <li>
                             Tailwind Media Query for medium and large screen
                           </li>
-                          <li>Fix some states</li>
+                          <li className="line-through">Fix some states</li>
                         </ol>
                       </li>
                     </ul>

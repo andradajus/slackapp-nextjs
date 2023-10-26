@@ -282,7 +282,7 @@ const LoginPage = () => {
           onSubmit={handleLogin}
         >
           <label htmlFor="email" className="m-1">
-            <p>Username</p> or Email Address
+            <p>Username or Email Address </p>
           </label>
           <input
             className="text-black font-sans text-sm mb-3 px-1 rounded-lg"

@@ -38,31 +38,31 @@ const ChannelMessages = ({}) => {
       const selectionStart = messageElement.selectionStart || 0;
       const selectionEnd = messageElement.selectionEnd || 0;
 
-    if (selectionStart !== undefined && selectionEnd !== undefined) {
-      const selectedText = text.slice(selectionStart, selectionEnd);
-      let newText = "";
+      if (selectionStart !== undefined && selectionEnd !== undefined) {
+        const selectedText = text.slice(selectionStart, selectionEnd);
+        let newText = "";
 
-      if (selectedText.startsWith(format) && selectedText.endsWith(format)) {
-        newText =
-          text.slice(0, selectionStart) +
-          selectedText.slice(format.length, -format.length) +
-          text.slice(selectionEnd);
-      } else {
-        newText =
-          text.slice(0, selectionStart) +
-          format +
-          selectedText +
-          format +
-          text.slice(selectionEnd);
+        if (selectedText.startsWith(format) && selectedText.endsWith(format)) {
+          newText =
+            text.slice(0, selectionStart) +
+            selectedText.slice(format.length, -format.length) +
+            text.slice(selectionEnd);
+        } else {
+          newText =
+            text.slice(0, selectionStart) +
+            format +
+            selectedText +
+            format +
+            text.slice(selectionEnd);
+        }
+
+        setMessage(newText);
+        console.log("New Message: ", newText);
       }
-
-      setMessage(newText);
-      console.log("New Message: ", newText);
     }
   };
 
   const handleDeleteOrderedList = () => {
-
     const messageElement = messageRef.current;
 
     if (messageElement) {
@@ -74,11 +74,12 @@ const ChannelMessages = ({}) => {
         setOrderedListCount(orderedListCount - 1);
       }
 
-    if (textBeforeCursor.endsWith("\n1. ")) {
-      setOrderedListCount(1);
-    }
+      if (textBeforeCursor.endsWith("\n1. ")) {
+        setOrderedListCount(1);
+      }
 
-    setMessage(textBeforeCursor + textAfterCursor);
+      setMessage(textBeforeCursor + textAfterCursor);
+    }
   };
 
   const handleKeyDown = (e: { key: string }) => {
@@ -379,7 +380,6 @@ const ChannelMessages = ({}) => {
               className="flex bg-indigo-500 hover:bg-yellow-200 rounded-md cursor-pointer"
               onClick={handleSendMessage}
             >
-
               <span className="pt-1 pb-1 pr-1 ml-2 font-semibold text-sm">
                 Send
               </span>
