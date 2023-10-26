@@ -58,7 +58,6 @@ const Channels = () => {
       });
       console.log("getFilteredChannels", filteredData);
       excludedChannelIds.push(...filteredData);
-      setDontShowChannels(filteredData);
       showChannelDetails(filteredData);
     } catch (error) {
       console.error("Error retrieving message:", error);
@@ -223,6 +222,7 @@ const Channels = () => {
                 alt="Handle Refresh"
                 width={40}
                 height={40}
+                onClick={getFilteredChannels}
               />
 
               <Image
