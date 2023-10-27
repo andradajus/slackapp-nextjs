@@ -159,7 +159,7 @@ export default function DirectMessage() {
                 </div>
                 <div className="pb-1">
                   <span className="max-w-sm break-all text-sm">
-                    {message.body}
+                    {message.text}
                   </span>
                 </div>
               </div>
