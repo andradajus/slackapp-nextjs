@@ -461,7 +461,7 @@ const SignUpPage = () => {
           }}
         />
 
-        <div className="flex flex-row justify-center mt-5">
+        <div className="flex flex-row justify-center mt-5 ml-8">
           <label htmlFor="Username" className="m-1">
             Username<span className="text-red-600">*</span>
           </label>
