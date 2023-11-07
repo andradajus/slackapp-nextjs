@@ -3,6 +3,12 @@ export interface User {
   uid: string;
 }
 
+export interface FilteredData {
+  firstname: string,
+  lastname: string,
+  id: number,
+}
+
 export interface Message {
   created_at: string | number | Date;
   receiverId: number;
