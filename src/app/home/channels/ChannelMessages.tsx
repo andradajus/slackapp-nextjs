@@ -2,14 +2,14 @@
 import Image from "next/image";
 import EmojiPicker from "emoji-picker-react";
 import { useState, useEffect, useRef } from "react";
+import { FilteredData, Message, User } from "@/app/components/types";
 
 const ChannelMessages = ({}) => {
-  const [message, setMessage] = useState("");
-  const [messages, setMessages] = useState([]);
+  const [message, setMessage] = useState<string>("");
+  const [messages, setMessages] = useState<Message[]>([]);
   const [channelMembers, setChannelMembers] = useState([]);
   const currentChannelID = sessionStorage.getItem("currentChannelID");
-  const [intervalId, setIntervalId] = useState<number | null>(null);
-  const [filteredData, setFilteredData] = useState([]);
+  const [filteredData, setFilteredData] = useState<FilteredData[]>([]);
   const senderUID = sessionStorage.getItem("uid");
 
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
@@ -171,7 +171,7 @@ const ChannelMessages = ({}) => {
         throw new Error("Network response was not ok");
       }
       setMessage("");
-      retrieveMessages;
+      await retrieveMessages();
     } catch (error) {
       console.error("Error sending message:", error);
     }
@@ -237,40 +237,19 @@ const ChannelMessages = ({}) => {
     }
   };
 
-  const retrieveMessageInterval = () => {
+  useEffect(() => {
     const retrieveAndSetMessages = async () => {
       await retrieveMessages();
-      retrieveUserDetails();
-      setupNextInterval();
+      await retrieveUserDetails();
     };
 
-    const setupNextInterval = () => {
-      const intervalTime = 20000;
-      if (!intervalId) {
-        const id = setInterval(retrieveAndSetMessages, intervalTime);
-        setIntervalId(id);
-      }
-    };
-
-    setupNextInterval();
+    const intervalTime = 20000;
+    const id = setInterval(retrieveAndSetMessages, intervalTime);
 
     return () => {
-      clearInterval(intervalId);
+      clearInterval(id);
     };
-  };
-
-  useEffect(() => {
-    const retrieveAndSetup = async () => {
-      retrieveMessageInterval();
-      console.log("Run use Effect");
-    };
-
-    retrieveAndSetup();
-
-    return () => {
-      retrieveMessageInterval();
-    };
-  }, []);
+  }, [retrieveMessages, retrieveUserDetails]);
 
   const renderMessages = () => {
     return messages.map((msg, index) => {
