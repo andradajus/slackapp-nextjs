@@ -17,7 +17,7 @@ const Home = () => {
     <div className="h-screen overflow-y-auto">
       <div className="ml-4">
         <header className="m-0 p-5">
-          <h1 className="inline-flex text-5xl font-bold content-center mb-0 text-yellow-400 font-serif">
+          {/* <h1 className="inline-flex text-5xl font-bold content-center mb-0 text-yellow-400 font-serif">
             Conversa
             <Image
               src="/ConversaImage.png"
@@ -26,10 +26,10 @@ const Home = () => {
               height={100}
               className="px-5 mx-auto"
             />
+          </h1> */}
+          <h1 className="text-3xl font-semibold mb-2 text-yellow-400">
+            Tasks:
           </h1>
-          <p className="text-sm mb-2 italic text-white">
-            Your Communication Friend Online
-          </p>
         </header>
 
         <div className="text-white">

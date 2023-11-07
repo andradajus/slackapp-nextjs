@@ -1,9 +1,10 @@
 "use client";
-import { useEffect, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
 type KeyValueData = {
+  id: ReactNode;
   uid: string | null;
   email: string | null;
   username: any;
@@ -153,7 +154,7 @@ const MyProfile = () => {
   return (
     <div className="h-screen overflow-y-auto">
       <div className="min-h-screen flex flex-col text-left  text-white">
-        <div className="m-4 text-2xl block font-bold text-yellow-400 font-serif text-center">
+        <div className="m-3 mt-5 text-2xl block font-bold text-yellow-400 font-serif text-center">
           <span>Profile Information</span>
         </div>
         <main className="flex flex-col font-san text-sm">
@@ -180,7 +181,7 @@ const MyProfile = () => {
 
                   <div className="ml-2 border-gray-100">
                     <dl className="divide-y divide-gray-100">
-                      <div className="px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                      <div className="p-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
                         <dt className="text-sm font-semibold leading-6 mb-0 text-yellow-300 font-serif">
                           Account ID
                         </dt>
@@ -191,7 +192,7 @@ const MyProfile = () => {
                         </dd>
                       </div>
 
-                      <div className="px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                      <div className="p-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
                         <dt className="text-sm font-semibold leading-6 mb-0 text-yellow-300 font-serif">
                           First Name
                         </dt>
@@ -202,7 +203,7 @@ const MyProfile = () => {
                         </dd>
                       </div>
 
-                      <div className="px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                      <div className="p-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
                         <dt className="text-sm font-semibold leading-6 text-yellow-300 font-serif">
                           Middle Name
                         </dt>
@@ -213,7 +214,7 @@ const MyProfile = () => {
                         </dd>
                       </div>
 
-                      <div className="px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                      <div className="p-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
                         <dt className="text-sm font-semibold leading-6 text-yellow-300 font-serif">
                           Last Name
                         </dt>
@@ -224,7 +225,7 @@ const MyProfile = () => {
                         </dd>
                       </div>
 
-                      <div className="px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                      <div className="p-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
                         <dt className="font-semibold text-sm font-semiboldleading-6 text-yellow-300 font-serif">
                           Username
                         </dt>
@@ -234,7 +235,7 @@ const MyProfile = () => {
                           </span>
                         </dd>
                       </div>
-                      <div className="px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                      <div className="p-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
                         <dt className="text-sm font-semibold leading-6 text-yellow-300 font-serif">
                           <span className="text-yellow-400">Email address</span>
                         </dt>
@@ -244,7 +245,7 @@ const MyProfile = () => {
                           </span>
                         </dd>
                       </div>
-                      <div className="px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                      <div className="p-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
                         <dt className="font-semibold text-sm leading-6 text-yellow-300 font-serif">
                           About me
                         </dt>
@@ -332,8 +333,12 @@ const MyProfile = () => {
               </div>
               <div className="relative mb-2">
                 <input
-                  className="block rounded-sm shadow-md px-2.5 pb-2 pt-5  text-md w-full text-gray-900 bg-gray-50 dark:bg-gray-700 border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                  placeholder="You may type in your motto, favorite quotes, hobbies, etc."
+                  className="block rounded-sm shadow-md px-2.5 pb-2 pt-5 text-md w-full text-gray-900 bg-gray-50 dark:bg-gray-700 border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                  placeholder=" "
+                  value={aboutMe}
+                  onChange={(e) => {
+                    setAboutMe(e.target.value);
+                  }}
                 />
                 <label className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] left-2.5 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4">
                   About Me

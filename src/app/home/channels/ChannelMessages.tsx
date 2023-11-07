@@ -110,8 +110,21 @@ const ChannelMessages = ({}) => {
   };
 
   const handleInsertEmoji = () => {
-    setShowEmojiPicker(true);
+    setShowEmojiPicker((prevShowEmojiPicker) => !prevShowEmojiPicker);
   };
+
+  const emojiPickerContainerClasses = `
+    absolute
+    z-50
+    bg-white
+    border
+    border-gray-300
+    rounded
+    max-h-32
+    overflow-y-auto
+    right-0
+    bottom-10
+  `;
 
   const retrieveMessages = async () => {
     const currentChannelID = sessionStorage.getItem("currentChannelID");
@@ -232,7 +245,7 @@ const ChannelMessages = ({}) => {
     };
 
     const setupNextInterval = () => {
-      const intervalTime = 10000;
+      const intervalTime = 20000;
       if (!intervalId) {
         const id = setInterval(retrieveAndSetMessages, intervalTime);
         setIntervalId(id);
@@ -272,7 +285,7 @@ const ChannelMessages = ({}) => {
           <li className="border-t border-black">
             <div>
               <div className="flex flex-col">
-                <div>
+                <div className="flex flex-row justify-between">
                   <span className="text-sm font-bold">
                     {name ? name : "Unknown User"}
                   </span>{" "}
@@ -393,14 +406,18 @@ const ChannelMessages = ({}) => {
             </div>
           </div>
 
-          {showEmojiPicker && (
-            <EmojiPicker
-              onEmojiClick={(emojiObject) => {
-                const updatedMessage = message + emojiObject.emoji;
-                setMessage(updatedMessage);
-              }}
-            />
-          )}
+          <div className="relative">
+            <div className={emojiPickerContainerClasses}>
+              {showEmojiPicker && (
+                <EmojiPicker
+                  onEmojiClick={(emojiObject) => {
+                    const updatedMessage = message + emojiObject.emoji;
+                    setMessage(updatedMessage);
+                  }}
+                />
+              )}
+            </div>
+          </div>
 
           {error && (
             <p className="flex items-center justify-center m-auto mt-4 py-1 px-3 text-black bg-yellow-300 text-sm font-bold rounded">

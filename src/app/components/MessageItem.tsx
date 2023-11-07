@@ -1,23 +1,23 @@
-import React from "react";
-import { ForMessageInput } from "./types";
+// import React from "react";
+// import { ForMessageInput } from "./types";
 
-function MessageItem({ message }: { message: ForMessageInput }) {
-  const isSent = message.sent;
-  const backgroundColor = isSent ? "bg-blue-500" : "bg-received";
+// function MessageItem({ message }: { message: ForMessageInput }) {
+//   const isSent = message.sent;
+//   const backgroundColor = isSent ? "bg-blue-500" : "bg-received";
 
-  return (
-    <li
-      className={`max-h-52 flex flex-row place-content-between text-black ${backgroundColor}`}
-    >
-      <strong>{message.sender.uid}: </strong> {message.body}
-      <span className="text-xs pl-5">
-        {new Date(message.created_at).toLocaleTimeString()}
-      </span>
-    </li>
-  );
-}
+//   return (
+//     <li
+//       className={`max-h-52 flex flex-row place-content-between text-black ${backgroundColor}`}
+//     >
+//       <strong>{message.sender.uid}: </strong> {message.body}
+//       <span className="text-xs pl-5">
+//         {new Date(message.created_at).toLocaleTimeString()}
+//       </span>
+//     </li>
+//   );
+// }
 
-export default MessageItem;
+// export default MessageItem;
 
 // import React from "react";
 // import { ForMessageInput, User } from "./types";
