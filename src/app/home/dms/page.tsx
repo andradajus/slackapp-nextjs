@@ -7,16 +7,18 @@ export default function DirectMessage() {
   const loggedInUser = {
     id: parseInt(sessionStorage.getItem("id") || "0"),
     uid: sessionStorage.getItem("uid") || "",
-    firstname: sessionStorage.getItem("firstname") || "",
-    lastname: sessionStorage.getItem("lastname") || "",
   };
 
   const [messages, setMessages] = useState<Message[]>([]);
   const [receiverEmail, setReceiverEmail] = useState("");
   const [intervalId, setIntervalId] = useState<number | null>(null);
   const [users, setUsers] = useState<User[]>([]);
+  //Gamit ko para sa filtering ng messages since doble nalabas sa inbox
+  const [userMap, setUserMap] = useState<Map<number, User>>(new Map());
+
   const [chosenRecipient, setChosenRecipient] = useState<User | null>(null);
-  const [filteredData, setFilteredData] = useState([]);
+  //Para to dun sa kung gagamit ng first/lastnames
+  //const [filteredData, setFilteredData] = useState<User[]>([]);
 
   const receiverId = parseInt(
     sessionStorage.getItem("storedReceiverId") || "0",
@@ -79,6 +81,12 @@ export default function DirectMessage() {
       if (response.ok) {
         const data = await response.json();
         setUsers(data.data);
+
+        const userMap = new Map();
+        data.data.forEach((user: User) => {
+          userMap.set(user.id, user);
+        });
+        setUserMap(userMap);
       } else {
         throw new Error("User not found.");
       }
@@ -92,7 +100,6 @@ export default function DirectMessage() {
 
     if (recipient) {
       sessionStorage.setItem("storedReceiverId", recipient.id.toString());
-      fetchMessages();
       return recipient;
     }
     return null;
@@ -106,7 +113,6 @@ export default function DirectMessage() {
       setChosenRecipient(recipient);
       alert("Message will be sent to: " + targetUid);
       setReceiverEmail("");
-      fetchMessages();
     } else {
       alert("User not found!");
     }
@@ -115,7 +121,6 @@ export default function DirectMessage() {
   const handleChangeRecipientClick = () => {
     setChosenRecipient(null);
     setReceiverEmail("");
-    fetchMessages();
   };
 
   const fetchMessageInterval = () => {
@@ -136,37 +141,62 @@ export default function DirectMessage() {
     }, []);
   };
 
-  const renderMessages = () => {
-    return messages.map((message, index) => {
-      const senderId = message.sender.id;
-      const loggedInUser = filteredData.find((data) => data.id == senderId);
-      const name = loggedInUser
-        ? `${loggedInUser.firstname} ${loggedInUser.lastname}`
-        : "Unknown User";
+  //Codes sana for having first and lastname kaso dahil wala naman stored sa storage mismo, wala nareretrieve
+  // const renderMessages = () => {
+  //   const renderedMessageIds = new Set();
 
-      return (
-        <ul key={index}>
-          <li className="border-t border-black">
-            <div>
-              <div className="flex flex-col">
-                <div>
-                  <span className="text-sm font-bold">
-                    {name ? name : "Unknown User"}
-                  </span>{" "}
-                  <span className="text-xs pl-3">
-                    {new Date(message.created_at).toLocaleTimeString()}
-                  </span>
-                </div>
-                <div className="pb-1">
-                  <span className="max-w-sm break-all text-sm">
-                    {message.text}
-                  </span>
+  //   return messages.map((message, index) => {
+  //     const messageId = message.id;
+  //     const senderId = message.sender.id;
+
+  //     if (!renderedMessageIds.has(messageId)) {
+  //       renderedMessageIds.add(messageId);
+
+  // const senderId = message.sender.id;
+  // const userData = filteredData.find((data) => data.id == senderId);
+  // const name = userData
+  //   ? `${userData.firstname} ${userData.lastname}`
+  //   : "Unknown User";
+
+  const renderMessages = () => {
+    const renderedMessageIds = new Set();
+
+    return messages.map((message, index) => {
+      const messageId = message.id;
+      const senderId = message.sender.id;
+
+      if (!renderedMessageIds.has(messageId)) {
+        renderedMessageIds.add(messageId);
+
+        const senderInfo = userMap.get(senderId);
+        const senderName = senderInfo ? `${senderInfo.uid}` : "Unknown User";
+
+        return (
+          <ul key={index}>
+            <li className="border-t border-black">
+              <div>
+                <div className="flex flex-col">
+                  <div className="flex flex-row justify-between">
+                    <span className="text-sm font-semibold text-yellow-300">
+                      Sender: {senderName}
+                    </span>{" "}
+                    <span className="text-xs pl-3 items-end text-white">
+                      {new Date(message.created_at).toLocaleTimeString()}
+                    </span>
+                  </div>
+                  <div className="pb-1 text-white">
+                    <span className="max-w-sm break-all text-sm">
+                      {message.body}
+                    </span>
+                  </div>
                 </div>
               </div>
-            </div>
-          </li>
-        </ul>
-      );
+            </li>
+          </ul>
+        );
+      } else {
+        return null;
+      }
     });
   };
 

@@ -3,14 +3,6 @@ import Image from "next/image";
 import EmojiPicker from "emoji-picker-react";
 import { MessageInputProps, User } from "./types";
 
-type SentMessage = {
-  id: number;
-  uid: string;
-  text: string;
-  sent: boolean;
-  sender: User;
-};
-
 const MessageInput: React.FC<MessageInputProps> = ({
   receiverId,
   setMessages,
@@ -23,7 +15,7 @@ const MessageInput: React.FC<MessageInputProps> = ({
   const [error, setError] = useState("");
   const [orderedListCount, setOrderedListCount] = useState(1);
 
-  const messageRef = useRef<HTMLTextAreaElement | null>(null);
+  const messageTextAreaRef = useRef<HTMLTextAreaElement | null>(null);
 
   const clearError = () => {
     setError("");
@@ -66,14 +58,6 @@ const MessageInput: React.FC<MessageInputProps> = ({
         console.log("Data Sent:", data);
         console.log("Receiver ID:", receiverId);
         alert("Message sent!");
-
-        const sentMessage: SentMessage = {
-          id: loggedInUser.id,
-          uid: loggedInUser.uid,
-          text: message,
-          sent: true,
-          sender: loggedInUser,
-        };
         setMessage("");
         fetchMessages();
       } else {
@@ -87,7 +71,7 @@ const MessageInput: React.FC<MessageInputProps> = ({
 
   const handleFormatText = (format: string) => {
     const text = message;
-    const messageElement = messageRef.current;
+    const messageElement = messageTextAreaRef.current;
 
     if (messageElement) {
       const selectionStart = messageElement.selectionStart || 0;
@@ -115,7 +99,7 @@ const MessageInput: React.FC<MessageInputProps> = ({
   };
 
   const handleDeleteOrderedList = () => {
-    const messageElement = messageRef.current;
+    const messageElement = messageTextAreaRef.current;
     if (messageElement) {
       const cursorPosition = messageElement.selectionStart || 0;
       const textBeforeCursor = message.slice(0, cursorPosition);
@@ -130,7 +114,7 @@ const MessageInput: React.FC<MessageInputProps> = ({
   };
 
   const handleOrderedList = () => {
-    const messageElement = messageRef.current;
+    const messageElement = messageTextAreaRef.current;
     if (messageElement) {
       const cursorPosition = messageElement.selectionStart || 0;
       const formattedListItem = `${
@@ -162,7 +146,7 @@ const MessageInput: React.FC<MessageInputProps> = ({
   };
 
   const handleUnorderedList = () => {
-    const messageElement = messageRef.current;
+    const messageElement = messageTextAreaRef.current;
     if (messageElement) {
       const cursorPosition = messageElement.selectionStart || 0;
       const formattedListItem = `• `;
@@ -258,7 +242,7 @@ const MessageInput: React.FC<MessageInputProps> = ({
       </div>
       <div className="mx-2">
         <textarea
-          ref={messageRef}
+          ref={messageTextAreaRef}
           className="w-full h-28 p-2 text-sm overflow-auto rounded-md bg-indigo-100"
           value={message}
           onChange={(e) => {

@@ -13,7 +13,6 @@ const Alert = ({ message, type }) => {
     alertColor = "blue";
   }
 
-  console.log("Alert Color:", alertColor);
   return (
     <div className="fixed top-0 left-1 ms-20 mt-2">
       <div className={`bg-${alertColor}-500 text-white font-bold px-7 py-2`}>
