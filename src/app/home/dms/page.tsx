@@ -43,7 +43,7 @@ export default function DirectMessage() {
       headers.append("uid", sessionStorage.getItem("uid") || "");
 
       const response = await fetch(
-        `http://206.189.91.54/api/v1/messages?receiver_id=${loggedInUser.id}&receiver_class=User`,
+        `http://206.189.91.54/api/v1/messages?receiver_id=${receiverId}&receiver_class=User`,
         {
           method: "GET",
           headers: headers,

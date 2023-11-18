@@ -243,7 +243,7 @@ const ChannelMessages = ({}) => {
       await retrieveUserDetails();
     };
 
-    const intervalTime = 20000;
+    const intervalTime = 10000;
     const id = setInterval(retrieveAndSetMessages, intervalTime);
 
     return () => {
